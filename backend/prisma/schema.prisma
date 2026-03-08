@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  ci        String   @unique
+  telefono  String?
+  direccion String?
+  correo    String   @unique
+  password  String
+  rol       Rol      @default(CLIENTE)
+  pedidos   Pedido[]
+}
+
+enum Rol {
+  CLIENTE
+  ADMINISTRADOR
+}
+
+model Categoria {
+  id            Int             @id @default(autoincrement())
+  nombre        String
+  descripcion   String?
+  subcategorias Subcategoria[]
+}
+
+model Subcategoria {
+  id          Int         @id @default(autoincrement())
+  nombre      String
+  descripcion String?
+  categoria_id Int
+  categoria   Categoria   @relation(fields: [categoria_id], references: [id])
+  productos   Producto[]
+}
+
+model Producto {
+  id               Int             @id @default(autoincrement())
+  nombre           String
+  descripcion      String?
+  precio_minorista Decimal         @db.Decimal(10, 2)
+  precio_mayorista Decimal         @db.Decimal(10, 2)
+  presentacion     String?
+  olor            String?
+  color           String?
+  imagen          String?
+  stock           Int             @default(0)
+  subcategoria_id  Int
+  subcategoria    Subcategoria    @relation(fields: [subcategoria_id], references: [id])
+  detalles_pedido DetallePedido[]
+  proveedores     ProductoProveedor[]
+}
+
+// Relación M:N entre Productos y Proveedores (Añadido por requisito del QA)
+model Proveedor {
+  id        Int                 @id @default(autoincrement())
+  nombre    String
+  contacto  String?
+  productos ProductoProveedor[]
+}
+
+model ProductoProveedor {
+  id          Int       @id @default(autoincrement())
+  producto_id Int
+  proveedor_id Int
+  producto    Producto  @relation(fields: [producto_id], references: [id])
+  proveedor   Proveedor @relation(fields: [proveedor_id], references: [id])
+
+  @@unique([producto_id, proveedor_id])
+}
+
+model Pedido {
+  id          Int             @id @default(autoincrement())
+  fecha       DateTime        @default(now())
+  estado      EstadoPedido    @default(PENDIENTE)
+  cliente_id  Int
+  cliente     Usuario         @relation(fields: [cliente_id], references: [id])
+  detalles    DetallePedido[]
+}
+
+enum EstadoPedido {
+  PENDIENTE
+  APROBADO
+  EN_DESPACHO
+  ENTREGADO
+  CANCELADO
+}
+
+model DetallePedido {
+  id          Int      @id @default(autoincrement())
+  cantidad    Int
+  precio      Decimal  @db.Decimal(10, 2)
+  pedido_id   Int
+  producto_id Int
+  pedido      Pedido   @relation(fields: [pedido_id], references: [id])
+  producto    Producto @relation(fields: [producto_id], references: [id])
+}
