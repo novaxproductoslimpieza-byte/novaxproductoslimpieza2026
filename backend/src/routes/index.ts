@@ -4,6 +4,7 @@ import productRoutes from './productRoutes';
 import categoryRoutes from './categoryRoutes';
 import orderRoutes from './orderRoutes';
 import userRoutes from './userRoutes';
+import geolocationRoutes from './geolocationRoutes';
 
 const router = Router();
 
@@ -14,6 +15,7 @@ router.get('/health', (_req, res) => {
 
 // Rutas del sistema
 router.use('/auth', authRoutes);
+router.use('/geoubicacion', geolocationRoutes);
 router.use('/', categoryRoutes);
 router.use('/', productRoutes);
 router.use('/', orderRoutes);

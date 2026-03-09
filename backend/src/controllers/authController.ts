@@ -4,7 +4,7 @@ import { hashPassword, comparePassword, generateToken } from '../utils/auth';
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { nombre, ci, telefono, direccion, correo, password } = req.body;
+    const { nombre, ci, telefono, direccion, correo, password, latitud, longitud, zona_id } = req.body;
 
     // Verificar si existe el CI o correo
     const existingUser = await prisma.usuario.findFirst({
@@ -29,6 +29,9 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         correo,
         password: hashedPassword,
         rol: 'CLIENTE',
+        latitud: latitud ? Number(latitud) : null,
+        longitud: longitud ? Number(longitud) : null,
+        zona_id: zona_id ? Number(zona_id) : null,
       }
     });
 

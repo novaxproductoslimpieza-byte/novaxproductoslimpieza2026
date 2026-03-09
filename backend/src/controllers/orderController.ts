@@ -104,24 +104,6 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response): Promis
       return;
     }
 
-    // QA Respuesta #6: Cancelación de pedidos, retorna stock si estaba aprobado
-    if (estado === 'CANCELADO' && pedido.estado === 'APROBADO') {
-      await prisma.$transaction(async (tx) => {
-        for (const detalle of pedido.detalles) {
-          await tx.producto.update({
-            where: { id: detalle.producto_id },
-            data: { stock: { increment: detalle.cantidad } }
-          });
-        }
-        await tx.pedido.update({
-          where: { id: Number(id) },
-          data: { estado }
-        });
-      });
-      res.json({ message: 'Pedido cancelado y stock respuesto.' });
-      return;
-    }
-
     // Solo actualiza estado si no cae en condiciones de stock
     await prisma.pedido.update({
       where: { id: Number(id) },
@@ -131,5 +113,58 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response): Promis
     res.json({ message: 'Estado del pedido actualizado exitosamente.' });
   } catch (error) {
     res.status(500).json({ error: 'Error al actualizar pedido.' });
+  }
+};
+
+// DELETE /api/orders/:id (Admin or Owner)
+export const deleteOrder = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const pedido = await prisma.pedido.findUnique({
+      where: { id: Number(id) },
+      include: { detalles: true }
+    });
+
+    if (!pedido) {
+      res.status(404).json({ error: 'Pedido no encontrado' });
+      return;
+    }
+
+    // Si no es admin, solo puede borrar sus propios pedidos PENDIENTES
+    if (req.user.rol !== 'ADMINISTRADOR') {
+      if (pedido.cliente_id !== req.user.id) {
+        res.status(403).json({ error: 'No autorizado para borrar este pedido.' });
+        return;
+      }
+      if (pedido.estado !== 'PENDIENTE') {
+        res.status(400).json({ error: 'No puedes borrar un pedido que ya ha sido procesado.' });
+        return;
+      }
+    }
+
+    // Si el pedido estaba aprobado o en despacho, devolver stock
+    if (pedido.estado === 'APROBADO' || pedido.estado === 'EN_DESPACHO') {
+      await prisma.$transaction(async (tx) => {
+        for (const detalle of pedido.detalles) {
+          await tx.producto.update({
+            where: { id: detalle.producto_id },
+            data: { stock: { increment: detalle.cantidad } }
+          });
+        }
+        await tx.pedido.delete({
+          where: { id: Number(id) }
+        });
+      });
+    } else {
+      await prisma.pedido.delete({
+        where: { id: Number(id) }
+      });
+    }
+
+    res.json({ message: 'Pedido eliminado correctamente.' });
+  } catch (error) {
+    console.error('Error in deleteOrder:', error);
+    res.status(500).json({ error: 'Error al eliminar el pedido.' });
   }
 };

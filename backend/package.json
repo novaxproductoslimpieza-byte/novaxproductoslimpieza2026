@@ -7,7 +7,7 @@
     "start": "node dist/server.js",
     "dev": "ts-node src/server.ts",
     "db:push": "prisma db push",
-    "seed": "ts-node ../../database/seeds/seed.ts"
+    "seed": "ts-node --transpile-only prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.11.0",
@@ -26,5 +26,8 @@
     "prisma": "^5.11.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
+  },
+  "prisma": {
+    "seed": "ts-node --transpile-only prisma/seed.ts"
   }
 }

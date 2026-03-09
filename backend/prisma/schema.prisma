@@ -16,12 +16,46 @@ model Usuario {
   correo    String   @unique
   password  String
   rol       Rol      @default(CLIENTE)
+  
+  // Geolocalización
+  latitud   Float?
+  longitud  Float?
+  zona_id   Int?
+  zona      Zona?    @relation(fields: [zona_id], references: [id])
+
   pedidos   Pedido[]
 }
 
 enum Rol {
   CLIENTE
   ADMINISTRADOR
+}
+
+// Modelos de Geoubicación
+model Departamento {
+  id         Int         @id @default(autoincrement())
+  nombre     String      @unique
+  provincias Provincia[]
+}
+
+model Provincia {
+  id              Int          @id @default(autoincrement())
+  nombre          String
+  departamento_id Int
+  departamento    Departamento @relation(fields: [departamento_id], references: [id])
+  zonas           Zona[]
+
+  @@unique([nombre, departamento_id])
+}
+
+model Zona {
+  id           Int       @id @default(autoincrement())
+  nombre       String
+  provincia_id Int
+  provincia    Provincia @relation(fields: [provincia_id], references: [id])
+  usuarios     Usuario[]
+
+  @@unique([nombre, provincia_id])
 }
 
 model Categoria {
@@ -89,7 +123,6 @@ enum EstadoPedido {
   APROBADO
   EN_DESPACHO
   ENTREGADO
-  CANCELADO
 }
 
 model DetallePedido {
