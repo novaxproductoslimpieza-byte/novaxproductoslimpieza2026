@@ -32,65 +32,123 @@ export default function ProductDetailPage() {
   const stock = product.stock ?? 0;
 
   return (
-    <div className="page container">
-      <Link href="/" className="btn btn-secondary btn-sm" style={{ marginBottom: '1.5rem', display: 'inline-flex' }}>← Volver</Link>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', alignItems: 'start' }}>
+    <div className="container py-5">
+      <Link href="/" className="btn btn-outline-secondary btn-sm rounded-pill px-4 mb-4 border-secondary border-opacity-25 text-light transition-scale">
+        <span className="me-2">←</span> Volver
+      </Link>
+      
+      <div className="row g-5">
         {/* Imagen */}
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', aspectRatio: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '6rem' }}>
-          {product.imagen ? <img src={product.imagen} alt={product.nombre} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '16px' }} /> : '🧴'}
+        <div className="col-lg-6">
+          <div className="card bg-dark border-secondary border-opacity-25 shadow-lg overflow-hidden ratio ratio-1x1" style={{ borderRadius: '2rem' }}>
+            <div className="d-flex align-items-center justify-content-center bg-secondary bg-opacity-5">
+              {product.imagen ? (
+                <img src={product.imagen} alt={product.nombre} className="img-fluid w-100 h-100 object-fit-cover shadow-sm" />
+              ) : (
+                <div className="display-1 opacity-25">🧴</div>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Info */}
-        <div>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>{product.subcategoria?.nombre}</div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '1rem' }}>{product.nombre}</h1>
-          <p style={{ color: 'var(--text-light)', lineHeight: 1.7, marginBottom: '1.5rem' }}>{product.descripcion || 'Sin descripción disponible.'}</p>
+        <div className="col-lg-6">
+          <div className="ps-lg-4">
+            <nav aria-label="breadcrumb" className="mb-2">
+              <ol className="breadcrumb small mb-0">
+                <li className="breadcrumb-item"><Link href="/" className="text-secondary text-decoration-none">Catálogo</Link></li>
+                <li className="breadcrumb-item active text-primary" aria-current="page">{product.subcategoria?.nombre}</li>
+              </ol>
+            </nav>
+            
+            <h1 className="display-5 fw-bold text-light mb-3">{product.nombre}</h1>
+            <p className="lead text-muted mb-4" style={{ lineHeight: '1.8' }}>{product.descripcion || 'Sin descripción disponible.'}</p>
 
-          {/* Atributos */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1.5rem' }}>
-            {product.presentacion && <div className="card" style={{ padding: '0.75rem' }}><div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Presentación</div><div style={{ fontWeight: 600 }}>{product.presentacion}</div></div>}
-            {product.olor && <div className="card" style={{ padding: '0.75rem' }}><div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Aroma</div><div style={{ fontWeight: 600 }}>{product.olor}</div></div>}
-            {product.color && <div className="card" style={{ padding: '0.75rem' }}><div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Color</div><div style={{ fontWeight: 600 }}>{product.color}</div></div>}
-            <div className="card" style={{ padding: '0.75rem' }}><div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Stock</div><div style={{ fontWeight: 600, color: stock > 10 ? 'var(--accent)' : stock > 0 ? 'var(--warning)' : 'var(--danger)' }}>{stock > 0 ? `${stock} unidades` : 'Agotado'}</div></div>
-          </div>
-
-          {/* Precios */}
-          {user ? (
-            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '1.25rem', marginBottom: '1.5rem' }}>
-              <div style={{ display: 'flex', gap: '2rem' }}>
-                <div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.2rem' }}>Precio Minorista</div>
-                  <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--accent)' }}>Bs. {Number(product.precio_minorista).toFixed(2)}</div>
-                </div>
-                {product.precio_mayorista && (
-                  <div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.2rem' }}>Precio Mayorista</div>
-                    <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--primary)' }}>Bs. {Number(product.precio_mayorista).toFixed(2)}</div>
+            {/* Atributos */}
+            <div className="row g-2 mb-4">
+              {product.presentacion && (
+                <div className="col-6 col-md-4">
+                  <div className="card bg-secondary bg-opacity-10 border-secondary border-opacity-10 p-2 text-center" style={{ borderRadius: '1rem' }}>
+                    <div className="extra-small text-muted text-uppercase fw-bold mb-1">Presentación</div>
+                    <div className="small fw-semibold text-light">{product.presentacion}</div>
                   </div>
-                )}
+                </div>
+              )}
+              {product.olor && (
+                <div className="col-6 col-md-4">
+                  <div className="card bg-secondary bg-opacity-10 border-secondary border-opacity-10 p-2 text-center" style={{ borderRadius: '1rem' }}>
+                    <div className="extra-small text-muted text-uppercase fw-bold mb-1">Aroma</div>
+                    <div className="small fw-semibold text-light">{product.olor}</div>
+                  </div>
+                </div>
+              )}
+              {product.color && (
+                <div className="col-6 col-md-4">
+                  <div className="card bg-secondary bg-opacity-10 border-secondary border-opacity-10 p-2 text-center" style={{ borderRadius: '1rem' }}>
+                    <div className="extra-small text-muted text-uppercase fw-bold mb-1">Color</div>
+                    <div className="small fw-semibold text-light">{product.color}</div>
+                  </div>
+                </div>
+              )}
+              <div className="col-6 col-md-4">
+                <div className="card bg-secondary bg-opacity-10 border-secondary border-opacity-10 p-2 text-center" style={{ borderRadius: '1rem' }}>
+                  <div className="extra-small text-muted text-uppercase fw-bold mb-1">Stock</div>
+                  <div className={`small fw-bold ${stock > 10 ? 'text-success' : stock > 0 ? 'text-warning' : 'text-danger'}`}>
+                    {stock > 0 ? `${stock} unidades` : 'Agotado'}
+                  </div>
+                </div>
               </div>
             </div>
-          ) : (
-            <div className="alert alert-error" style={{ marginBottom: '1.5rem' }}>
-              🔒 <Link href="/login" style={{ color: 'var(--primary)' }}>Iniciá sesión</Link> para ver los precios y agregar al carrito.
-            </div>
-          )}
 
-          {/* Cantidad + Agregar */}
-          {user && stock > 0 && (
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <div className="qty-controls">
-                <button className="qty-btn" onClick={() => setCantidad(q => Math.max(1, q - 1))}>−</button>
-                <span className="qty-num">{cantidad}</span>
-                <button className="qty-btn" onClick={() => setCantidad(q => Math.min(stock, q + 1))}>+</button>
+            {/* Precios */}
+            {user ? (
+              <div className="card bg-primary bg-opacity-10 border-primary border-opacity-10 mb-4" style={{ borderRadius: '1.5rem' }}>
+                <div className="card-body p-4">
+                  <div className="row g-4">
+                    <div className="col-6">
+                      <div className="extra-small text-primary text-uppercase fw-bold mb-1">Minorista</div>
+                      <div className="h2 fw-bold text-light mb-0">Bs. <span className="text-accent">{Number(product.precio_minorista).toFixed(2)}</span></div>
+                    </div>
+                    {product.precio_mayorista && (
+                      <div className="col-6">
+                        <div className="extra-small text-primary text-uppercase fw-bold mb-1">Mayorista</div>
+                        <div className="h2 fw-bold text-light mb-0">Bs. {Number(product.precio_mayorista).toFixed(2)}</div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-              <button className="btn btn-accent btn-lg" style={{ flex: 1 }} onClick={handleAdd}>
-                {added ? '✓ Agregado' : '+ Agregar al carrito'}
-              </button>
-            </div>
-          )}
+            ) : (
+              <div className="alert alert-dark border-secondary border-opacity-25 mb-4 text-center py-4" style={{ borderRadius: '1.5rem' }}>
+                <span className="fs-4 d-block mb-2">🔒</span>
+                <p className="mb-0 small text-muted">
+                  <Link href="/login" className="text-primary fw-bold text-decoration-none">Iniciá sesión</Link> para ver los precios y realizar tu pedido.
+                </p>
+              </div>
+            )}
+
+            {/* Cantidad + Agregar */}
+            {user && stock > 0 && (
+              <div className="d-flex flex-column flex-sm-row gap-3 align-items-sm-center">
+                <div className="btn-group border border-secondary border-opacity-25 rounded-pill p-1 bg-dark shadow-sm" style={{ maxWidth: '160px' }}>
+                  <button className="btn btn-dark rounded-circle border-0 py-2 fs-5" onClick={() => setCantidad(q => Math.max(1, q - 1))}>−</button>
+                  <span className="btn btn-dark border-0 disabled opacity-100 fw-bold fs-5 px-3 min-w-40">{cantidad}</span>
+                  <button className="btn btn-dark rounded-circle border-0 py-2 fs-5" onClick={() => setCantidad(q => Math.min(stock, q + 1))}>+</button>
+                </div>
+                <button className={`btn btn-primary btn-lg flex-grow-1 rounded-pill fw-bold shadow-sm transition-scale ${added ? 'btn-success' : ''}`} onClick={handleAdd}>
+                  {added ? '✓ ¡Agregado!' : '+ Agregar al carrito'}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
+      
+      <style jsx>{`
+        .extra-small { font-size: 0.65rem; }
+        .min-w-40 { min-width: 40px; }
+        .object-fit-cover { object-fit: cover; }
+      `}</style>
     </div>
   );
 }

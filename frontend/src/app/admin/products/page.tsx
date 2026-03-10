@@ -43,62 +43,146 @@ export default function AdminProductsPage() {
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => setForm(f => ({ ...f, [k]: e.target.value }));
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h1 className="page-title">Productos</h1>
-        <button className="btn btn-primary" onClick={() => { setShowForm(true); setEditing(null); setForm(EMPTY); }}>+ Nuevo producto</button>
+    <div className="py-2">
+      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+        <h1 className="h3 fw-bold text-light mb-0">Productos</h1>
+        <button className="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" onClick={() => { setShowForm(true); setEditing(null); setForm(EMPTY); }}>
+          <span className="me-2">+</span> Nuevo producto
+        </button>
       </div>
 
       {showForm && (
-        <div className="card" style={{ marginBottom: '1.5rem' }}>
-          <h3 style={{ marginBottom: '1.2rem', fontWeight: 700 }}>{editing ? 'Editar producto' : 'Nuevo producto'}</h3>
-          {error && <div className="alert alert-error" style={{ marginBottom: '1rem' }}>{error}</div>}
-          <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div className="form-group"><label className="form-label">Nombre *</label><input className="form-input" value={form.nombre} onChange={set('nombre')} required /></div>
-            <div className="form-group"><label className="form-label">Subcategoría *</label>
-              <select className="form-input form-select" value={form.subcategoria_id} onChange={set('subcategoria_id')} required>
-                <option value="">Seleccionar...</option>
-                {subcats.map(s => <option key={s.id} value={s.id}>{s.catNombre} — {s.nombre}</option>)}
-              </select>
-            </div>
-            <div className="form-group"><label className="form-label">Precio Minorista (Bs.)*</label><input className="form-input" type="number" step="0.01" value={form.precio_minorista} onChange={set('precio_minorista')} required /></div>
-            <div className="form-group"><label className="form-label">Precio Mayorista (Bs.)*</label><input className="form-input" type="number" step="0.01" value={form.precio_mayorista} onChange={set('precio_mayorista')} required /></div>
-            <div className="form-group"><label className="form-label">Stock inicial</label><input className="form-input" type="number" value={form.stock} onChange={set('stock')} /></div>
-            <div className="form-group"><label className="form-label">Presentación</label><input className="form-input" value={form.presentacion} onChange={set('presentacion')} placeholder="Ej: Botella 1L" /></div>
-            <div className="form-group"><label className="form-label">Olor / Aroma</label><input className="form-input" value={form.olor} onChange={set('olor')} /></div>
-            <div className="form-group"><label className="form-label">Color</label><input className="form-input" value={form.color} onChange={set('color')} /></div>
-            <div className="form-group" style={{ gridColumn: '1/-1' }}><label className="form-label">Imagen (URL)</label><input className="form-input" value={form.imagen} onChange={set('imagen')} /></div>
-            <div className="form-group" style={{ gridColumn: '1/-1' }}><label className="form-label">Descripción</label><textarea className="form-input" value={form.descripcion} onChange={set('descripcion')} rows={3} style={{ resize: 'vertical' }} /></div>
-            <div style={{ gridColumn: '1/-1', display: 'flex', gap: '0.75rem' }}>
-              <button className="btn btn-primary" type="submit" disabled={saving}>{saving ? 'Guardando...' : editing ? 'Actualizar' : 'Crear producto'}</button>
-              <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>Cancelar</button>
-            </div>
-          </form>
+        <div className="card bg-dark border-secondary border-opacity-25 shadow-lg mb-4" style={{ borderRadius: '1rem' }}>
+          <div className="card-body p-4">
+            <h5 className="card-title text-light fw-bold mb-4">{editing ? 'Editar producto' : 'Nuevo producto'}</h5>
+            {error && <div className="alert alert-danger border-0 small py-2 mb-4">⚠️ {error}</div>}
+            
+            <form onSubmit={handleSubmit}>
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <label className="form-label text-light small fw-semibold">Nombre *</label>
+                  <input className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light" value={form.nombre} onChange={set('nombre')} required />
+                </div>
+                
+                <div className="col-md-6">
+                  <label className="form-label text-light small fw-semibold">Subcategoría *</label>
+                  <select className="form-select bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light" value={form.subcategoria_id} onChange={set('subcategoria_id')} required>
+                    <option value="" className="bg-dark">Seleccionar...</option>
+                    {subcats.map(s => <option key={s.id} value={s.id} className="bg-dark">{s.catNombre} — {s.nombre}</option>)}
+                  </select>
+                </div>
+                
+                <div className="col-md-3 col-6">
+                  <label className="form-label text-light small fw-semibold">Precio Minorista (Bs.)*</label>
+                  <input className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light" type="number" step="0.01" value={form.precio_minorista} onChange={set('precio_minorista')} required />
+                </div>
+                
+                <div className="col-md-3 col-6">
+                  <label className="form-label text-light small fw-semibold">Precio Mayorista (Bs.)*</label>
+                  <input className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light" type="number" step="0.01" value={form.precio_mayorista} onChange={set('precio_mayorista')} required />
+                </div>
+                
+                <div className="col-md-3 col-6">
+                  <label className="form-label text-light small fw-semibold">Stock inicial</label>
+                  <input className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light" type="number" value={form.stock} onChange={set('stock')} />
+                </div>
+                
+                <div className="col-md-3 col-6">
+                  <label className="form-label text-light small fw-semibold">Presentación</label>
+                  <input className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light" value={form.presentacion} onChange={set('presentacion')} placeholder="Ej: Botella 1L" />
+                </div>
+                
+                <div className="col-md-4">
+                  <label className="form-label text-light small fw-semibold">Olor / Aroma</label>
+                  <input className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light" value={form.olor} onChange={set('olor')} />
+                </div>
+                
+                <div className="col-md-4">
+                  <label className="form-label text-light small fw-semibold">Color</label>
+                  <input className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light" value={form.color} onChange={set('color')} />
+                </div>
+                
+                <div className="col-md-4">
+                  <label className="form-label text-light small fw-semibold">Imagen (URL)</label>
+                  <input className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light" value={form.imagen} onChange={set('imagen')} />
+                </div>
+                
+                <div className="col-12">
+                  <label className="form-label text-light small fw-semibold">Descripción</label>
+                  <textarea className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light" value={form.descripcion} onChange={set('descripcion')} rows={2} style={{ resize: 'vertical' }} />
+                </div>
+              </div>
+              
+              <div className="mt-4 d-flex gap-2">
+                <button className="btn btn-primary px-4 fw-bold rounded-pill" type="submit" disabled={saving}>
+                  {saving ? (
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  ) : null}
+                  {saving ? 'Guardando...' : editing ? 'Actualizar' : 'Crear producto'}
+                </button>
+                <button type="button" className="btn btn-outline-secondary px-4 rounded-pill border-secondary border-opacity-25" onClick={() => setShowForm(false)}>
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
-      <div className="table-wrap">
-        <table>
-          <thead><tr><th>Producto</th><th>Subcategoría</th><th>P. Minorista</th><th>P. Mayorista</th><th>Stock</th><th>Acciones</th></tr></thead>
-          <tbody>
-            {loading ? Array(5).fill(0).map((_, i) => <tr key={i}><td colSpan={6}><div className="skeleton" style={{ height: '36px' }} /></td></tr>) :
-              products.map(p => (
-                <tr key={p.id}>
-                  <td><div style={{ fontWeight: 600 }}>{p.nombre}</div><div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{p.presentacion}</div></td>
-                  <td>{p.subcategoria?.nombre}</td>
-                  <td style={{ color: 'var(--accent)', fontWeight: 700 }}>Bs. {Number(p.precio_minorista).toFixed(2)}</td>
-                  <td>Bs. {Number(p.precio_mayorista).toFixed(2)}</td>
-                  <td><span style={{ color: p.stock === 0 ? 'var(--danger)' : p.stock < 10 ? 'var(--warning)' : 'var(--accent)', fontWeight: 600 }}>{p.stock}</span></td>
-                  <td style={{ display: 'flex', gap: '0.4rem' }}>
-                    <button className="btn btn-secondary btn-sm" onClick={() => handleEdit(p)}>✏️ Editar</button>
-                    <button className="btn btn-danger btn-sm" onClick={() => handleDelete(p.id)}>🗑</button>
-                  </td>
+      <div className="card bg-dark border-secondary border-opacity-25 overflow-hidden shadow-sm" style={{ borderRadius: '1rem' }}>
+        <div className="table-responsive">
+          <table className="table table-dark table-hover align-middle mb-0">
+            <thead className="bg-secondary bg-opacity-10 text-muted small text-uppercase">
+              <tr>
+                <th className="px-4 py-3 border-0">Producto</th>
+                <th className="py-3 border-0">Subcategoría</th>
+                <th className="py-3 border-0">P. Minorista</th>
+                <th className="py-3 border-0">P. Mayorista</th>
+                <th className="py-3 border-0">Stock</th>
+                <th className="pe-4 py-3 border-0 text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody className="border-0">
+              {loading ? Array(5).fill(0).map((_, i) => (
+                <tr key={i}>
+                  <td colSpan={6} className="p-3"><div className="skeleton" style={{ height: '36px' }} /></td>
                 </tr>
-              ))
-            }
-          </tbody>
-        </table>
+              )) :
+                products.map(p => (
+                  <tr key={p.id}>
+                    <td className="px-4">
+                      <div className="fw-bold text-light">{p.nombre}</div>
+                      <div className="text-muted extra-small">{p.presentacion}</div>
+                    </td>
+                    <td className="text-muted small">{p.subcategoria?.nombre}</td>
+                    <td className="text-accent fw-bold small">Bs. {Number(p.precio_minorista).toFixed(2)}</td>
+                    <td className="text-muted small">Bs. {Number(p.precio_mayorista).toFixed(2)}</td>
+                    <td>
+                      <span className={`fw-bold small px-2 py-1 rounded-pill bg-opacity-10 bg-${p.stock === 0 ? 'danger text-danger' : p.stock < 10 ? 'warning text-warning' : 'success text-success'}`}>
+                        {p.stock}
+                      </span>
+                    </td>
+                    <td className="pe-4 text-end">
+                      <div className="d-flex justify-content-end gap-2">
+                        <button className="btn btn-outline-primary btn-sm border-secondary border-opacity-25 rounded-circle p-2" onClick={() => handleEdit(p)} title="Editar">
+                           ✏️
+                        </button>
+                        <button className="btn btn-outline-danger btn-sm border-secondary border-opacity-25 rounded-circle p-2" onClick={() => handleDelete(p.id)} title="Eliminar">
+                           🗑
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
+      
+      <style jsx>{`
+        .extra-small { font-size: 0.7rem; }
+      `}</style>
     </div>
   );
 }

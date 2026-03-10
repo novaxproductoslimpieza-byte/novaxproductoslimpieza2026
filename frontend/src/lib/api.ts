@@ -25,11 +25,29 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 
 // ── Auth ──
 export const authApi = {
-  register: (data: { nombre: string; ci: string; telefono: string; direccion: string; correo: string; password: string }) =>
+  register: (data: { 
+    nombre: string; 
+    ci: string; 
+    telefono: string; 
+    direccion: string; 
+    correo: string; 
+    password: string;
+    latitud?: number;
+    longitud?: number;
+    zona_id?: number;
+  }) =>
     request<{ token: string; user: any }>('/auth/register', { method: 'POST', body: JSON.stringify(data) }),
 
   login: (data: { ci_or_correo: string; password: string }) =>
     request<{ token: string; user: any }>('/auth/login', { method: 'POST', body: JSON.stringify(data) }),
+};
+
+// ── Geoubicación ──
+export const geoApi = {
+  getDepartamentos: () => request<any[]>('/geoubicacion/departamentos'),
+  getProvincias: (departamentoId: number) => request<any[]>(`/geoubicacion/provincias/${departamentoId}`),
+  getZonas: (provinciaId: number) => request<any[]>(`/geoubicacion/zonas/${provinciaId}`),
+  getAdminMap: () => request<any[]>('/geoubicacion/admin'),
 };
 
 // ── Catálogo ──

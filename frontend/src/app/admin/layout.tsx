@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 const adminLinks = [
   { href: '/admin', label: '📊 Dashboard' },
   { href: '/admin/orders', label: '📦 Pedidos' },
+  { href: '/admin/geoubicacion', label: '📍 Geoubicación' },
   { href: '/admin/products', label: '🧴 Productos' },
   { href: '/admin/categories', label: '🏷️ Categorías' },
   { href: '/admin/clients', label: '👥 Clientes' },
@@ -26,18 +27,49 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (!isAdmin) return null;
 
   return (
-    <div className="page container">
-      <div className="admin-layout">
-        <aside className="admin-sidebar">
-          <div className="admin-sidebar-title">Panel Admin</div>
-          {adminLinks.map(link => (
-            <Link key={link.href} href={link.href} className={`admin-nav-link ${path === link.href ? 'active' : ''}`}>
-              {link.label}
-            </Link>
-          ))}
+    <div className="container py-4">
+      <div className="row g-4 admin-layout">
+        <aside className="col-lg-3 col-xl-2">
+          <div className="card bg-dark border-secondary border-opacity-25 shadow-sm h-100 p-3" style={{ borderRadius: '1rem' }}>
+            <div className="d-flex d-lg-block justify-content-between align-items-center mb-lg-4 px-2">
+              <div className="h6 fw-bold text-muted text-uppercase small letter-spacing-1 mb-0 mb-lg-3">Panel Admin</div>
+              <button className="btn btn-dark btn-sm d-lg-none border-secondary border-opacity-25" type="button" data-bs-toggle="collapse" data-bs-target="#adminMenu">
+                ☰
+              </button>
+            </div>
+            
+            <div className="collapse d-lg-block" id="adminMenu">
+              <nav className="nav flex-column gap-1">
+                {adminLinks.map(link => (
+                  <Link 
+                    key={link.href} 
+                    href={link.href} 
+                    className={`nav-link rounded-3 py-2 px-3 fw-medium transition-all ${path === link.href ? 'bg-primary text-white shadow-sm' : 'text-light border border-transparent hover-bg-card2 opacity-75'}`}
+                  >
+                    <span className="me-2">{link.label.split(' ')[0]}</span>
+                    {link.label.split(' ').slice(1).join(' ')}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+          </div>
         </aside>
-        <div className="admin-main">{children}</div>
+        
+        <main className="col-lg-9 col-xl-10">
+          <div className="admin-main">
+            {children}
+          </div>
+        </main>
       </div>
+
+      <style jsx>{`
+        .hover-bg-card2:hover {
+          background-color: var(--bg-card2);
+          opacity: 1 !important;
+        }
+        .letter-spacing-1 { letter-spacing: 1px; }
+        .transition-all { transition: all 0.2s ease; }
+      `}</style>
     </div>
   );
 }

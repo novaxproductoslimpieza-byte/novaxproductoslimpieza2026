@@ -6,11 +6,57 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Iniciando seed de la base de datos NOVAX...');
 
-  // ── 1. ADMINISTRADOR ──
+  // ── 3. GEOLOCALIZACIÓN ──
+  console.log('🌍 Cargando Departamentos, Provincias y Zonas...');
+  
+  const departamentos = [
+    'Beni', 'Chuquisaca', 'Cochabamba', 'La Paz', 'Oruro', 'Pando', 'Potosí', 'Santa Cruz', 'Tarija'
+  ];
+
+  for (const dep of departamentos) {
+    await prisma.departamento.upsert({
+      where: { nombre: dep },
+      update: {},
+      create: { nombre: dep },
+    });
+  }
+
+  const depCbba = await prisma.departamento.findUnique({ where: { nombre: 'Cochabamba' } });
+  
+  if (depCbba) {
+    const provinciasCbba = ['Cercado', 'Quillacollo', 'Sacaba', 'Punata', 'Tapacarí', 'Chapare'];
+    for (const prov of provinciasCbba) {
+      await prisma.provincia.upsert({
+        where: { nombre_departamento_id: { nombre: prov, departamento_id: depCbba.id } },
+        update: {},
+        create: { nombre: prov, departamento_id: depCbba.id },
+      });
+    }
+
+    const provCercado = await prisma.provincia.findFirst({ where: { nombre: 'Cercado', departamento_id: depCbba.id } });
+    if (provCercado) {
+      const zonasCercado = ['Zona Norte', 'Zona Centro', 'Zona Sur', 'Calacala', 'Queru Queru', 'Sarco'];
+      for (const zona of zonasCercado) {
+        await prisma.zona.upsert({
+          where: { nombre_provincia_id: { nombre: zona, provincia_id: provCercado.id } },
+          update: {},
+          create: { nombre: zona, provincia_id: provCercado.id },
+        });
+      }
+    }
+  }
+
+  const defaultZona = await prisma.zona.findFirst({ where: { nombre: 'Zona Norte' } });
+
+  // ── 4. ADMINISTRADOR Y CLIENTE CON GEOLOCALIZACIÓN ──
   const adminPassword = await bcrypt.hash('admin1234', 10);
-  const admin = await prisma.usuario.upsert({
+  await prisma.usuario.upsert({
     where: { correo: 'admin@novax.com' },
-    update: {},
+    update: {
+      latitud: -17.37,
+      longitud: -66.15,
+      zona_id: defaultZona?.id
+    },
     create: {
       nombre: 'Administrador Novax',
       ci: '0000001',
@@ -19,15 +65,20 @@ async function main() {
       correo: 'admin@novax.com',
       password: adminPassword,
       rol: 'ADMINISTRADOR',
+      latitud: -17.37,
+      longitud: -66.15,
+      zona_id: defaultZona?.id
     },
   });
-  console.log(`✅ Admin creado: ${admin.correo}`);
 
-  // ── 2. CLIENTE DE PRUEBA ──
   const clientPassword = await bcrypt.hash('cliente1234', 10);
-  const cliente = await prisma.usuario.upsert({
+  await prisma.usuario.upsert({
     where: { correo: 'cliente@novax.com' },
-    update: {},
+    update: {
+      latitud: -17.38,
+      longitud: -66.16,
+      zona_id: defaultZona?.id
+    },
     create: {
       nombre: 'Juan Pérez',
       ci: '1234567',
@@ -36,11 +87,14 @@ async function main() {
       correo: 'cliente@novax.com',
       password: clientPassword,
       rol: 'CLIENTE',
+      latitud: -17.38,
+      longitud: -66.16,
+      zona_id: defaultZona?.id
     },
   });
-  console.log(`✅ Cliente creado: ${cliente.correo}`);
+  console.log('✅ Usuarios con geolocalización actualizados');
 
-  // ── 3. CATEGORÍAS & SUBCATEGORÍAS ──
+  // ── 5. CATEGORÍAS & SUBCATEGORÍAS ──
   const catHogar = await prisma.categoria.upsert({
     where: { id: 1 },
     update: {},

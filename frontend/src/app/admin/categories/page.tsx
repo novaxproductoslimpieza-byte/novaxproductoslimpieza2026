@@ -26,58 +26,110 @@ export default function AdminCategoriesPage() {
   const handleDelSub = async (id: number) => { if (!confirm('¿Eliminar subcategoría?')) return; await adminCategoriesApi.deleteSubcategory(id); await load(); };
 
   return (
-    <div>
-      <div className="page-header"><h1 className="page-title">Categorías</h1></div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-        {/* Nueva categoría */}
-        <div className="card">
-          <h3 style={{ marginBottom: '1rem', fontWeight: 700 }}>Nueva categoría</h3>
-          <form onSubmit={handleCat} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <div className="form-group"><label className="form-label">Nombre *</label><input className="form-input" value={catForm.nombre} onChange={e => setCatForm(f => ({ ...f, nombre: e.target.value }))} required /></div>
-            <div className="form-group"><label className="form-label">Descripción</label><input className="form-input" value={catForm.descripcion} onChange={e => setCatForm(f => ({ ...f, descripcion: e.target.value }))} /></div>
-            <button className="btn btn-primary btn-sm" type="submit" disabled={saving}>+ Crear categoría</button>
-          </form>
+    <div className="py-2">
+      <div className="row mb-4">
+        <div className="col">
+          <h1 className="h3 fw-bold text-light mb-0">Categorías</h1>
         </div>
-        {/* Nueva subcategoría */}
-        <div className="card">
-          <h3 style={{ marginBottom: '1rem', fontWeight: 700 }}>Nueva subcategoría</h3>
-          <form onSubmit={handleSub} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <div className="form-group"><label className="form-label">Categoría padre *</label>
-              <select className="form-input form-select" value={subForm.categoria_id} onChange={e => setSubForm(f => ({ ...f, categoria_id: e.target.value }))} required>
-                <option value="">Seleccionar...</option>
-                {categories.map(c => <option key={c.id} value={c.id}>{c.nombre}</option>)}
-              </select>
+      </div>
+      
+      <div className="row g-4 mb-5">
+        {/* Nueva categoría */}
+        <div className="col-md-6">
+          <div className="card bg-dark border-secondary border-opacity-25 h-100 shadow-sm" style={{ borderRadius: '1rem' }}>
+            <div className="card-body p-4">
+              <h5 className="card-title text-light fw-bold mb-4">Nueva categoría</h5>
+              <form onSubmit={handleCat} className="d-flex flex-column gap-3">
+                <div>
+                  <label className="form-label text-light small fw-semibold">Nombre *</label>
+                  <input className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light" value={catForm.nombre} onChange={e => setCatForm(f => ({ ...f, nombre: e.target.value }))} required />
+                </div>
+                <div>
+                  <label className="form-label text-light small fw-semibold">Descripción</label>
+                  <input className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light" value={catForm.descripcion} onChange={e => setCatForm(f => ({ ...f, descripcion: e.target.value }))} />
+                </div>
+                <button className="btn btn-primary rounded-pill px-4 fw-bold mt-2" type="submit" disabled={saving}>
+                  {saving ? '...' : '+ Crear categoría'}
+                </button>
+              </form>
             </div>
-            <div className="form-group"><label className="form-label">Nombre *</label><input className="form-input" value={subForm.nombre} onChange={e => setSubForm(f => ({ ...f, nombre: e.target.value }))} required /></div>
-            <div className="form-group"><label className="form-label">Descripción</label><input className="form-input" value={subForm.descripcion} onChange={e => setSubForm(f => ({ ...f, descripcion: e.target.value }))} /></div>
-            <button className="btn btn-primary btn-sm" type="submit" disabled={saving}>+ Crear subcategoría</button>
-          </form>
+          </div>
+        </div>
+        
+        {/* Nueva subcategoría */}
+        <div className="col-md-6">
+          <div className="card bg-dark border-secondary border-opacity-25 h-100 shadow-sm" style={{ borderRadius: '1rem' }}>
+            <div className="card-body p-4">
+              <h5 className="card-title text-light fw-bold mb-4">Nueva subcategoría</h5>
+              <form onSubmit={handleSub} className="d-flex flex-column gap-3">
+                <div>
+                  <label className="form-label text-light small fw-semibold">Categoría padre *</label>
+                  <select className="form-select bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light" value={subForm.categoria_id} onChange={e => setSubForm(f => ({ ...f, categoria_id: e.target.value }))} required>
+                    <option value="" className="bg-dark">Seleccionar...</option>
+                    {categories.map(c => <option key={c.id} value={c.id} className="bg-dark">{c.nombre}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="form-label text-light small fw-semibold">Nombre *</label>
+                  <input className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light" value={subForm.nombre} onChange={e => setSubForm(f => ({ ...f, nombre: e.target.value }))} required />
+                </div>
+                <div>
+                  <label className="form-label text-light small fw-semibold">Descripción</label>
+                  <input className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light" value={subForm.descripcion} onChange={e => setSubForm(f => ({ ...f, descripcion: e.target.value }))} />
+                </div>
+                <button className="btn btn-primary rounded-pill px-4 fw-bold mt-2" type="submit" disabled={saving}>
+                  {saving ? '...' : '+ Crear subcategoría'}
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Árbol de categorías */}
-      <div style={{ marginTop: '2rem' }}>
-        {loading ? <div className="skeleton" style={{ height: '200px', borderRadius: '12px' }} /> :
+      <h2 className="h4 fw-bold text-light mb-4">Árbol de categorías</h2>
+      <div className="row g-3">
+        {loading ? (
+          <div className="col-12"><div className="skeleton" style={{ height: '200px', borderRadius: '1rem' }} /></div>
+        ) : categories.length === 0 ? (
+          <div className="col-12 text-center py-5 text-muted opacity-50">No hay categorías configuradas.</div>
+        ) :
           categories.map(cat => (
-            <div key={cat.id} className="card" style={{ marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                <div><div style={{ fontWeight: 700 }}>{cat.nombre}</div><div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>{cat.descripcion}</div></div>
-                <button className="btn btn-danger btn-sm" onClick={() => handleDelCat(cat.id)}>🗑</button>
-              </div>
-              {cat.subcategorias?.length > 0 && (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                  {cat.subcategorias.map((sub: any) => (
-                    <div key={sub.id} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'var(--bg-card2)', border: '1px solid var(--border)', borderRadius: '999px', padding: '0.2rem 0.7rem 0.2rem 0.9rem', fontSize: '0.82rem' }}>
-                      {sub.nombre}
-                      <button style={{ background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', fontSize: '0.8rem' }} onClick={() => handleDelSub(sub.id)}>✕</button>
-                    </div>
-                  ))}
+            <div key={cat.id} className="col-12">
+              <div className="card bg-dark border-secondary border-opacity-25 shadow-sm overflow-hidden" style={{ borderRadius: '1rem' }}>
+                <div className="card-header bg-secondary bg-opacity-10 border-0 p-3 d-flex justify-content-between align-items-center">
+                  <div>
+                    <div className="fw-bold text-light mb-0">{cat.nombre}</div>
+                    <div className="text-muted extra-small">{cat.descripcion}</div>
+                  </div>
+                  <button className="btn btn-outline-danger btn-sm rounded-circle p-2 border-0" onClick={() => handleDelCat(cat.id)} title="Eliminar categoría">
+                    🗑
+                  </button>
                 </div>
-              )}
+                <div className="card-body p-3">
+                  {cat.subcategorias?.length > 0 ? (
+                    <div className="d-flex flex-wrap gap-2">
+                      {cat.subcategorias.map((sub: any) => (
+                        <div key={sub.id} className="d-flex align-items-center gap-2 bg-secondary bg-opacity-25 border border-secondary border-opacity-25 rounded-pill py-1 ps-3 pe-2 small transition-all hover-bg-light">
+                          <span className="text-light small">{sub.nombre}</span>
+                          <button className="btn btn-sm btn-link text-danger p-0 border-0 fs-6 text-decoration-none" onClick={() => handleDelSub(sub.id)}>✕</button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-muted small mb-0 opacity-50 px-2 italic">Sin subcategorías</p>
+                  )}
+                </div>
+              </div>
             </div>
           ))
         }
       </div>
+      
+      <style jsx>{`
+        .extra-small { font-size: 0.75rem; }
+        .hover-bg-light:hover { background-color: rgba(255,255,255,0.1) !important; }
+      `}</style>
     </div>
   );
 }

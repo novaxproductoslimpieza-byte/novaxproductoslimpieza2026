@@ -26,44 +26,82 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <div className="page-header">
-        <h1 className="page-title">Dashboard</h1>
-        <p className="page-subtitle">Resumen del sistema Novax ERP</p>
+    <div className="py-2">
+      <div className="row mb-4">
+        <div className="col">
+          <h1 className="h2 fw-bold text-light mb-1">Dashboard</h1>
+          <p className="text-muted small">Resumen del sistema Novax ERP</p>
+        </div>
       </div>
 
       {/* Stat cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
-        {loading ? Array(4).fill(0).map((_, i) => <div key={i} className="skeleton" style={{ height: '100px', borderRadius: '12px' }} />) :
+      <div className="row g-3 mb-5">
+        {loading ? Array(4).fill(0).map((_, i) => (
+          <div key={i} className="col-6 col-md-3">
+            <div className="skeleton" style={{ height: '120px', borderRadius: '1rem' }} />
+          </div>
+        )) :
           statCards.map(s => (
-            <Link href={s.link} key={s.label} className="card" style={{ textDecoration: 'none', cursor: 'pointer' }}>
-              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{s.icon}</div>
-              <div style={{ fontSize: '2rem', fontWeight: 800, color: s.color }}>{s.value}</div>
-              <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>{s.label}</div>
-            </Link>
+            <div key={s.label} className="col-6 col-md-3">
+              <Link href={s.link} className="card bg-dark border-secondary border-opacity-25 h-100 p-3 text-decoration-none transition-scale product-card-hover" style={{ borderRadius: '1rem' }}>
+                <div className="d-flex justify-content-between align-items-start mb-2">
+                  <div className="fs-3">{s.icon}</div>
+                </div>
+                <div>
+                  <div className="h2 fw-bold mb-0" style={{ color: s.color }}>{s.value}</div>
+                  <div className="text-muted small fw-medium">{s.label}</div>
+                </div>
+              </Link>
+            </div>
           ))
         }
       </div>
 
       {/* Pedidos recientes */}
-      <h2 style={{ fontWeight: 700, marginBottom: '1rem' }}>Últimos pedidos</h2>
-      <div className="table-wrap">
-        <table>
-          <thead><tr><th>#</th><th>Cliente</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
-          <tbody>
-            {loading ? (
-              <tr><td colSpan={5}><div className="skeleton" style={{ height: '40px' }} /></td></tr>
-            ) : recentOrders.map(o => (
-              <tr key={o.id}>
-                <td>#{o.id}</td>
-                <td>{o.cliente?.nombre}</td>
-                <td>{new Date(o.fecha).toLocaleDateString('es-BO')}</td>
-                <td><span className={`badge badge-${o.estado.toLowerCase().replace('_', '-')}`}>{o.estado}</span></td>
-                <td><Link href="/admin/orders" className="btn btn-secondary btn-sm">Ver</Link></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="row">
+        <div className="col">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h2 className="h4 fw-bold text-light mb-0">Últimos pedidos</h2>
+            <Link href="/admin/orders" className="btn btn-outline-primary btn-sm rounded-pill px-3">Ver todos</Link>
+          </div>
+          
+          <div className="card bg-dark border-secondary border-opacity-25 overflow-hidden" style={{ borderRadius: '1rem' }}>
+            <div className="table-responsive">
+              <table className="table table-dark table-hover align-middle mb-0">
+                <thead className="bg-secondary bg-opacity-10 text-muted small text-uppercase">
+                  <tr>
+                    <th className="px-4 py-3 border-0">#</th>
+                    <th className="py-3 border-0">Cliente</th>
+                    <th className="py-3 border-0">Fecha</th>
+                    <th className="py-3 border-0">Estado</th>
+                    <th className="pe-4 py-3 border-0 text-end">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="border-0">
+                  {loading ? (
+                    <tr><td colSpan={5} className="p-4"><div className="skeleton" style={{ height: '40px' }} /></td></tr>
+                  ) : recentOrders.map(o => (
+                    <tr key={o.id}>
+                      <td className="px-4 text-muted">#{o.id}</td>
+                      <td className="fw-bold text-light">{o.cliente?.nombre}</td>
+                      <td className="text-muted small">{new Date(o.fecha).toLocaleDateString('es-BO')}</td>
+                      <td>
+                        <span className={`badge rounded-pill bg-opacity-10 py-1 px-2 small bg-${o.estado === 'PENDIENTE' ? 'warning text-warning' : o.estado === 'APROBADO' ? 'primary text-primary' : o.estado === 'ENTREGADO' ? 'success text-success' : 'info text-info'}`}>
+                          {o.estado}
+                        </span>
+                      </td>
+                      <td className="pe-4 text-end">
+                        <Link href="/admin/orders" className="btn btn-secondary btn-sm rounded-pill px-3 border-secondary border-opacity-25">Ver</Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
     </div>
   );
 }

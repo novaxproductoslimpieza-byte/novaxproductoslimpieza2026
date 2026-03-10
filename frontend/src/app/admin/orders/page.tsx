@@ -25,56 +25,86 @@ export default function AdminOrdersPage() {
   const filtered = filterEstado ? orders.filter(o => o.estado === filterEstado) : orders;
 
   return (
-    <div>
-      <div className="page-header">
-        <h1 className="page-title">Gestión de Pedidos</h1>
-      </div>
-      <div className="filters-bar" style={{ marginBottom: '1.5rem' }}>
-        <div className="filter-chips">
-          <button className={`chip ${!filterEstado ? 'active' : ''}`} onClick={() => setFilterEstado('')}>Todos</button>
-          {ESTADOS.map(e => <button key={e} className={`chip ${filterEstado === e ? 'active' : ''}`} onClick={() => setFilterEstado(e)}>{ESTADO_LABELS[e]}</button>)}
+    <div className="py-2">
+      <div className="row mb-4">
+        <div className="col">
+          <h1 className="h3 fw-bold text-light mb-0">Gestión de Pedidos</h1>
         </div>
       </div>
-      <div className="table-wrap">
-        <table>
-          <thead>
-            <tr><th>#</th><th>Cliente</th><th>Fecha</th><th>Productos</th><th>Total</th><th>Estado</th><th>Acción</th></tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              Array(5).fill(0).map((_, i) => <tr key={i}><td colSpan={7}><div className="skeleton" style={{ height: '36px' }} /></td></tr>)
-            ) : filtered.map(o => {
-              const total = o.detalles?.reduce((s: number, d: any) => s + Number(d.precio) * d.cantidad, 0) || 0;
-              const next: Record<string, string> = { PENDIENTE: 'APROBADO', APROBADO: 'EN_DESPACHO', EN_DESPACHO: 'ENTREGADO' };
-              return (
-                <tr key={o.id}>
-                  <td>#{o.id}</td>
-                  <td>
-                    <div style={{ fontWeight: 600 }}>{o.cliente?.nombre}</div>
-                    <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{o.cliente?.correo}</div>
-                  </td>
-                  <td>{new Date(o.fecha).toLocaleDateString('es-BO')}</td>
-                  <td style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>{o.detalles?.length} ítem(s)</td>
-                  <td style={{ fontWeight: 700, color: 'var(--accent)' }}>Bs. {total.toFixed(2)}</td>
-                  <td><span className={`badge ${BADGE_CLS[o.estado] || ''}`}>{ESTADO_LABELS[o.estado]}</span></td>
-                  <td>
-                    <div style={{ display: 'flex', gap: '0.4rem' }}>
-                      {next[o.estado] && (
-                        <button className="btn btn-primary btn-sm" disabled={updating === o.id} onClick={() => handleStatus(o.id, next[o.estado])}>
-                          → {ESTADO_LABELS[next[o.estado]]}
-                        </button>
-                      )}
-                      {o.estado !== 'ENTREGADO' && o.estado !== 'CANCELADO' && (
-                        <button className="btn btn-danger btn-sm" disabled={updating === o.id} onClick={() => handleStatus(o.id, 'CANCELADO')}>✕</button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+
+      <div className="filter-scroll-container mb-4 pb-2">
+        <div className="d-flex gap-2">
+          <button className={`btn rounded-pill px-4 btn-sm ${!filterEstado ? 'btn-primary shadow-sm' : 'btn-outline-secondary border-secondary border-opacity-25 text-light'}`} onClick={() => setFilterEstado('')}>Todos</button>
+          {ESTADOS.map(e => (
+            <button key={e} className={`btn rounded-pill px-4 btn-sm ${filterEstado === e ? 'btn-primary shadow-sm' : 'btn-outline-secondary border-secondary border-opacity-25 text-light'}`} onClick={() => setFilterEstado(e)}>
+              {ESTADO_LABELS[e]}
+            </button>
+          ))}
+        </div>
       </div>
+
+      <div className="card bg-dark border-secondary border-opacity-25 overflow-hidden shadow-sm" style={{ borderRadius: '1rem' }}>
+        <div className="table-responsive">
+          <table className="table table-dark table-hover align-middle mb-0">
+            <thead className="bg-secondary bg-opacity-10 text-muted small text-uppercase">
+              <tr>
+                <th className="px-4 py-3 border-0">#</th>
+                <th className="py-3 border-0">Cliente</th>
+                <th className="py-3 border-0 text-center">Ítems</th>
+                <th className="py-3 border-0">Total</th>
+                <th className="py-3 border-0">Estado</th>
+                <th className="pe-4 py-3 border-0 text-end">Acción</th>
+              </tr>
+            </thead>
+            <tbody className="border-0">
+              {loading ? (
+                Array(5).fill(0).map((_, i) => <tr key={i}><td colSpan={6} className="p-3"><div className="skeleton" style={{ height: '36px' }} /></td></tr>)
+              ) : filtered.map(o => {
+                const total = o.detalles?.reduce((s: number, d: any) => s + Number(d.precio) * d.cantidad, 0) || 0;
+                const next: Record<string, string> = { PENDIENTE: 'APROBADO', APROBADO: 'EN_DESPACHO', EN_DESPACHO: 'ENTREGADO' };
+                return (
+                  <tr key={o.id}>
+                    <td className="px-4 text-muted small">#{o.id}</td>
+                    <td>
+                      <div className="fw-bold text-light">{o.cliente?.nombre}</div>
+                      <div className="text-muted extra-small">{o.cliente?.correo}</div>
+                    </td>
+                    <td className="text-center">
+                      <span className="badge bg-secondary bg-opacity-25 text-light fw-normal rounded-pill px-3">{o.detalles?.length}</span>
+                    </td>
+                    <td className="text-accent fw-bold small">Bs. {total.toFixed(2)}</td>
+                    <td>
+                      <span className={`badge rounded-pill bg-opacity-10 py-1 px-3 small bg-${o.estado === 'PENDIENTE' ? 'warning text-warning' : o.estado === 'APROBADO' ? 'primary text-primary' : o.estado === 'ENTREGADO' ? 'success text-success' : o.estado === 'CANCELADO' ? 'danger text-danger' : 'info text-info'}`}>
+                        {ESTADO_LABELS[o.estado]}
+                      </span>
+                    </td>
+                    <td className="pe-4 text-end">
+                      <div className="d-flex justify-content-end gap-2">
+                        {next[o.estado] && (
+                          <button className="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" disabled={updating === o.id} onClick={() => handleStatus(o.id, next[o.estado])}>
+                            {updating === o.id ? '...' : `→ ${ESTADO_LABELS[next[o.estado]]}`}
+                          </button>
+                        )}
+                        {o.estado !== 'ENTREGADO' && o.estado !== 'CANCELADO' && (
+                          <button className="btn btn-outline-danger btn-sm rounded-circle p-2 border-secondary border-opacity-25" disabled={updating === o.id} onClick={() => handleStatus(o.id, 'CANCELADO')} title="Cancelar">
+                            ✕
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <style jsx>{`
+        .filter-scroll-container { overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+        .filter-scroll-container::-webkit-scrollbar { display: none; }
+        .extra-small { font-size: 0.7rem; }
+      `}</style>
     </div>
   );
 }

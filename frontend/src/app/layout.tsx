@@ -15,6 +15,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
+      <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" async></script>
+      </head>
       <body className={inter.className}>
         <AuthProvider>
           <CartProvider>
@@ -25,7 +29,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </main>
               <footer className="footer">
                 <div className="footer-inner">
-                  <span className="footer-logo">Novax</span>
+                  <div className="d-flex align-items-center gap-2 mb-2">
+                    <img src="/logonovax.png" alt="Logo" height="30" className="rounded-1" />
+                    <span className="footer-logo">Novax</span>
+                  </div>
                   <p>© 2026 Novax Productos de Limpieza. Todos los derechos reservados.</p>
                 </div>
               </footer>

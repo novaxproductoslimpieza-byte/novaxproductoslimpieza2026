@@ -16,44 +16,79 @@ export default function AdminClientsPage() {
   );
 
   return (
-    <div>
-      <div className="page-header">
-        <h1 className="page-title">Clientes</h1>
-        <p className="page-subtitle">{clients.length} clientes registrados</p>
-      </div>
-      <div className="filters-bar">
-        <div className="search-input-wrap" style={{ maxWidth: '320px' }}>
-          <span className="search-icon">🔍</span>
-          <input className="form-input search-input" placeholder="Buscar por nombre, CI o correo..." value={search} onChange={e => setSearch(e.target.value)} />
+    <div className="py-2">
+      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+        <div>
+          <h1 className="h3 fw-bold text-light mb-0">Clientes</h1>
+          <p className="text-muted small mb-0">{clients.length} clientes registrados</p>
         </div>
       </div>
-      <div className="table-wrap">
-        <table>
-          <thead><tr><th>Nombre</th><th>CI</th><th>Correo</th><th>Teléfono</th><th>Dirección</th></tr></thead>
-          <tbody>
-            {loading ? (
-              Array(5).fill(0).map((_, i) => <tr key={i}><td colSpan={5}><div className="skeleton" style={{ height: '36px' }} /></td></tr>)
-            ) : filtered.length === 0 ? (
-              <tr><td colSpan={5} style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>No se encontraron clientes.</td></tr>
-            ) : filtered.map(c => (
-              <tr key={c.id}>
-                <td>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary), var(--accent))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
-                      {c.nombre.charAt(0).toUpperCase()}
-                    </div>
-                    <span style={{ fontWeight: 600 }}>{c.nombre}</span>
-                  </div>
-                </td>
-                <td style={{ color: 'var(--text-muted)' }}>{c.ci}</td>
-                <td>{c.correo}</td>
-                <td>{c.telefono || '—'}</td>
-                <td style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--text-muted)' }}>{c.direccion || '—'}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+      <div className="row mb-4">
+        <div className="col-md-6 col-lg-4">
+          <div className="position-relative">
+            <span className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted">🔍</span>
+            <input 
+              className="form-control bg-dark border-secondary border-opacity-25 text-light ps-5 rounded-pill" 
+              placeholder="Buscar por nombre, CI o correo..." 
+              value={search} 
+              onChange={e => setSearch(e.target.value)} 
+            />
+          </div>
+        </div>
       </div>
+
+      <div className="card bg-dark border-secondary border-opacity-25 overflow-hidden shadow-sm" style={{ borderRadius: '1rem' }}>
+        <div className="table-responsive">
+          <table className="table table-dark table-hover align-middle mb-0">
+            <thead className="bg-secondary bg-opacity-10 text-muted small text-uppercase">
+              <tr>
+                <th className="px-4 py-3 border-0">Nombre</th>
+                <th className="py-3 border-0">CI</th>
+                <th className="py-3 border-0">Correo</th>
+                <th className="py-3 border-0">Teléfono</th>
+                <th className="pe-4 py-3 border-0">Dirección</th>
+              </tr>
+            </thead>
+            <tbody className="border-0">
+              {loading ? (
+                Array(5).fill(0).map((_, i) => <tr key={i}><td colSpan={5} className="p-3"><div className="skeleton" style={{ height: '36px' }} /></td></tr>)
+              ) : filtered.length === 0 ? (
+                <tr><td colSpan={5} className="p-5 text-center text-muted">No se encontraron clientes.</td></tr>
+              ) : filtered.map(c => (
+                <tr key={c.id}>
+                  <td className="px-4">
+                    <div className="d-flex align-items-center gap-3">
+                      <div className="client-avatar" style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary), var(--accent))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
+                        {c.nombre.charAt(0).toUpperCase()}
+                      </div>
+                      <span className="fw-bold text-light">{c.nombre}</span>
+                    </div>
+                  </td>
+                  <td className="text-muted small">{c.ci}</td>
+                  <td className="small">{c.correo}</td>
+                  <td className="small">{c.telefono || <span className="opacity-25">—</span>}</td>
+                  <td className="pe-4">
+                    <div className="d-flex align-items-center gap-2">
+                      <div className="text-muted small text-truncate" style={{ maxWidth: '150px' }} title={c.direccion || ''}>
+                        {c.direccion || <span className="opacity-25">—</span>}
+                      </div>
+                      {c.latitud && c.longitud ? (
+                        <span className="badge rounded-pill bg-primary bg-opacity-10 text-primary extra-small border border-primary border-opacity-10" title={`${c.latitud}, ${c.longitud}`}>📍 Ubicado</span>
+                      ) : (
+                        <span className="badge rounded-pill bg-secondary bg-opacity-10 text-muted extra-small border border-secondary border-opacity-10">⚪ Sin mapa</span>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <style jsx>{`
+        .extra-small { font-size: 0.65rem; padding: 2px 8px; }
+      `}</style>
     </div>
   );
 }

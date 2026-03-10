@@ -41,54 +41,106 @@ export default function CartPage() {
   );
 
   return (
-    <div className="page container">
-      <div className="page-header">
-        <h1 className="page-title">Carrito de compras</h1>
-        <p className="page-subtitle">{itemCount} {itemCount === 1 ? 'producto' : 'productos'}</p>
+    <div className="container py-5">
+      <div className="row mb-4">
+        <div className="col">
+          <h1 className="h2 fw-bold text-light mb-1">Carrito de compras</h1>
+          <p className="text-muted small mb-0">{itemCount} {itemCount === 1 ? 'producto' : 'productos'}</p>
+        </div>
       </div>
-      <div className="cart-layout">
+      
+      <div className="row g-4">
         {/* Items */}
-        <div className="card" style={{ padding: 0 }}>
-          {items.map(item => (
-            <div key={item.id} className="cart-item">
-              <div className="cart-item-img">{item.imagen ? <img src={item.imagen} alt={item.nombre} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} /> : '🧴'}</div>
-              <div className="cart-item-info">
-                <div className="cart-item-name">{item.nombre}</div>
-                <div className="cart-item-price">Bs. {item.precio_minorista.toFixed(2)} c/u</div>
-              </div>
-              <div className="qty-controls">
-                <button className="qty-btn" onClick={() => updateQuantity(item.id, item.cantidad - 1)}>−</button>
-                <span className="qty-num">{item.cantidad}</span>
-                <button className="qty-btn" onClick={() => updateQuantity(item.id, item.cantidad + 1)}>+</button>
-              </div>
-              <div style={{ fontWeight: 700, minWidth: '80px', textAlign: 'right' }}>Bs. {(item.precio_minorista * item.cantidad).toFixed(2)}</div>
-              <button className="btn btn-danger btn-sm" onClick={() => removeItem(item.id)}>✕</button>
+        <div className="col-lg-8">
+          <div className="card bg-dark border-secondary border-opacity-25 shadow-sm overflow-hidden" style={{ borderRadius: '1rem' }}>
+            <div className="list-group list-group-flush bg-transparent">
+              {items.map(item => (
+                <div key={item.id} className="list-group-item bg-transparent border-secondary border-opacity-10 p-3">
+                  <div className="row align-items-center g-3">
+                    <div className="col-auto">
+                      <div className="bg-secondary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center overflow-hidden" style={{ width: '80px', height: '80px' }}>
+                        {item.imagen ? <img src={item.imagen} alt={item.nombre} className="img-fluid h-100 w-100 object-fit-cover" /> : <span className="fs-3">🧴</span>}
+                      </div>
+                    </div>
+                    <div className="col flex-grow-1">
+                      <h6 className="text-light fw-bold mb-1">{item.nombre}</h6>
+                      <p className="text-accent small fw-bold mb-0">Bs. {item.precio_minorista.toFixed(2)} c/u</p>
+                    </div>
+                    <div className="col-12 col-sm-auto">
+                      <div className="d-flex align-items-center justify-content-between gap-3">
+                        <div className="input-group input-group-sm" style={{ width: '110px' }}>
+                          <button className="btn btn-outline-secondary border-secondary border-opacity-25 text-light" type="button" onClick={() => updateQuantity(item.id, item.cantidad - 1)}>−</button>
+                          <span className="form-control bg-transparent border-secondary border-opacity-25 text-center text-light px-0">{item.cantidad}</span>
+                          <button className="btn btn-outline-secondary border-secondary border-opacity-25 text-light" type="button" onClick={() => updateQuantity(item.id, item.cantidad + 1)}>+</button>
+                        </div>
+                        <div className="text-light fw-bold ms-sm-3" style={{ minWidth: '90px', textAlign: 'right' }}>
+                          Bs. {(item.precio_minorista * item.cantidad).toFixed(2)}
+                        </div>
+                        <button className="btn btn-outline-danger btn-sm border-0 rounded-circle p-2 ms-2" onClick={() => removeItem(item.id)} title="Eliminar">
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+          <div className="mt-4 d-none d-lg-block">
+             <Link href="/" className="btn btn-link text-primary text-decoration-none p-0 fw-semibold">
+               ← Seguir comprando
+             </Link>
+          </div>
         </div>
 
         {/* Resumen */}
-        <div className="order-summary">
-          <div className="summary-title">Resumen del pedido</div>
-          {items.map(item => (
-            <div key={item.id} className="summary-row">
-              <span>{item.nombre} ×{item.cantidad}</span>
-              <span>Bs. {(item.precio_minorista * item.cantidad).toFixed(2)}</span>
+        <div className="col-lg-4">
+          <div className="card bg-dark border-secondary border-opacity-25 shadow-sm sticky-top" style={{ top: '90px', borderRadius: '1rem' }}>
+            <div className="card-body p-4">
+              <h5 className="card-title text-light fw-bold mb-4">Resumen del pedido</h5>
+              <div className="mb-4">
+                {items.map(item => (
+                  <div key={item.id} className="d-flex justify-content-between mb-2 small text-muted">
+                    <span className="text-truncate me-3">{item.nombre} <span className="opacity-50">×{item.cantidad}</span></span>
+                    <span className="flex-shrink-0">Bs. {(item.precio_minorista * item.cantidad).toFixed(2)}</span>
+                  </div>
+                ))}
+              </div>
+              
+              <hr className="border-secondary border-opacity-25 my-4" />
+              
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <span className="text-light fw-bold h5 mb-0">Total</span>
+                <span className="text-accent fw-bold h4 mb-0">Bs. {total.toFixed(2)}</span>
+              </div>
+
+              {error && <div className="alert alert-danger border-0 small py-2 mb-3">{error}</div>}
+
+              {user ? (
+                <button className="btn btn-primary w-100 py-3 fw-bold rounded-pill shadow-sm" onClick={handleOrder} disabled={loading}>
+                  {loading ? (
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  ) : '🚀 '}
+                  {loading ? 'Confirmando...' : 'Confirmar pedido'}
+                </button>
+              ) : (
+                <Link href="/login" className="btn btn-primary w-100 py-3 fw-bold rounded-pill shadow-sm">
+                  Inicia sesión para pedir
+                </Link>
+              )}
+              
+              <div className="mt-3">
+                <button className="btn btn-outline-secondary w-100 btn-sm rounded-pill border-secondary border-opacity-25" onClick={clearCart}>
+                  Vaciar carrito
+                </button>
+              </div>
             </div>
-          ))}
-          <div className="summary-row total">
-            <span>Total</span>
-            <span className="summary-total-amount">Bs. {total.toFixed(2)}</span>
           </div>
-          {error && <div className="alert alert-error mt-2">{error}</div>}
-          {user ? (
-            <button className="btn btn-accent btn-lg w-full mt-2" onClick={handleOrder} disabled={loading}>
-              {loading ? 'Confirmando...' : 'Confirmar pedido'}
-            </button>
-          ) : (
-            <Link href="/login" className="btn btn-primary btn-lg w-full mt-2">Inicia sesión para pedir</Link>
-          )}
-          <button className="btn btn-secondary w-full mt-1 btn-sm" onClick={clearCart}>Vaciar carrito</button>
+          <div className="mt-4 d-lg-none text-center">
+             <Link href="/" className="btn btn-link text-primary text-decoration-none fw-semibold">
+               ← Seguir comprando
+             </Link>
+          </div>
         </div>
       </div>
     </div>

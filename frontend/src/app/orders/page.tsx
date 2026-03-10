@@ -32,67 +32,110 @@ export default function OrdersPage() {
   if (loading || isLoading) return <div className="page container"><div className="skeleton" style={{ height: '300px', borderRadius: '12px' }} /></div>;
 
   return (
-    <div className="page container">
-      {success && <div className="alert alert-success" style={{ marginBottom: '1.5rem' }}>✓ ¡Pedido realizado exitosamente! Te avisaremos cuando sea aprobado.</div>}
-      <div className="page-header">
-        <h1 className="page-title">Mis Pedidos</h1>
-        <p className="page-subtitle">{orders.length} pedido{orders.length !== 1 ? 's' : ''} registrado{orders.length !== 1 ? 's' : ''}</p>
+    <div className="container py-5">
+      {success && (
+        <div className="alert alert-success border-0 shadow-sm rounded-pill px-4 mb-4 d-flex align-items-center" role="alert">
+          <span className="fs-4 me-3">✓</span>
+          <div>¡Pedido realizado exitosamente! Te avisaremos cuando sea aprobado.</div>
+        </div>
+      )}
+      
+      <div className="row mb-4">
+        <div className="col">
+          <h1 className="h2 fw-bold text-light mb-1">Mis Pedidos</h1>
+          <p className="text-muted small mb-0">{orders.length} pedido{orders.length !== 1 ? 's' : ''} registrado{orders.length !== 1 ? 's' : ''}</p>
+        </div>
       </div>
 
       {orders.length === 0 ? (
-        <div className="empty-state">
-          <div className="empty-state-icon">📋</div>
-          <p style={{ marginBottom: '1rem' }}>Todavía no realizaste ningún pedido.</p>
-          <Link href="/" className="btn btn-primary">Ver catálogo</Link>
+        <div className="text-center py-5 border border-secondary border-opacity-10 rounded-4">
+          <div className="display-1 mb-3 opacity-25">📋</div>
+          <p className="text-muted mb-4">Todavía no realizaste ningún pedido.</p>
+          <Link href="/" className="btn btn-primary rounded-pill px-5 fw-bold">Ver catálogo</Link>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div className="row g-4">
           {orders.map(order => {
-            const estado = ESTADO_LABELS[order.estado] || { label: order.estado, cls: 'badge-pending' };
+            const estado = ESTADO_LABELS[order.estado] || { label: order.estado, cls: 'bg-secondary' };
+            const steps = ['PENDIENTE', 'APROBADO', 'EN_DESPACHO', 'ENTREGADO'];
+            const currentIdx = steps.indexOf(order.estado);
+
             return (
-              <div key={order.id} className="card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: '1rem' }}>Pedido #{order.id}</div>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                      {new Date(order.fecha).toLocaleDateString('es-BO', { day: '2-digit', month: 'long', year: 'numeric' })}
+              <div key={order.id} className="col-12 col-xl-10 mx-auto">
+                <div className="card bg-dark border-secondary border-opacity-25 shadow-sm overflow-hidden" style={{ borderRadius: '1rem' }}>
+                  <div className="card-header bg-secondary bg-opacity-10 border-0 p-3 p-md-4">
+                    <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                      <div>
+                        <div className="h5 fw-bold text-light mb-1">Pedido #{order.id}</div>
+                        <div className="text-muted small">
+                          📅 {new Date(order.fecha).toLocaleDateString('es-BO', { day: '2-digit', month: 'long', year: 'numeric' })}
+                        </div>
+                      </div>
+                      <span className={`badge rounded-pill px-3 py-2 ${estado.cls.replace('badge-', 'bg-').replace('pending', 'warning').replace('approved', 'primary').replace('dispatch', 'info').replace('delivered', 'success').replace('cancelled', 'danger')}`}>
+                        {estado.label}
+                      </span>
                     </div>
                   </div>
-                  <span className={`badge ${estado.cls}`}>{estado.label}</span>
-                </div>
 
-                {/* Timeline */}
-                <div style={{ display: 'flex', gap: '0', marginBottom: '1rem', background: 'var(--bg-card2)', borderRadius: '8px', overflow: 'hidden' }}>
-                  {['PENDIENTE', 'APROBADO', 'EN_DESPACHO', 'ENTREGADO'].map((step, i) => {
-                    const steps = ['PENDIENTE', 'APROBADO', 'EN_DESPACHO', 'ENTREGADO'];
-                    const currentIdx = steps.indexOf(order.estado);
-                    const active = i <= currentIdx;
-                    return (
-                      <div key={step} style={{ flex: 1, padding: '0.5rem', textAlign: 'center', fontSize: '0.7rem', fontWeight: 600, color: active ? '#fff' : 'var(--text-muted)', background: active ? 'var(--primary)' : 'transparent', transition: '0.2s' }}>
-                        {ESTADO_LABELS[step]?.label}
+                  <div className="card-body p-3 p-md-4">
+                    {/* Timeline */}
+                    <div className="mb-4">
+                      <div className="progress bg-secondary bg-opacity-10 rounded-pill mb-3" style={{ height: '8px' }}>
+                        <div 
+                          className="progress-bar progress-bar-striped progress-bar-animated rounded-pill bg-primary" 
+                          role="progressbar" 
+                          style={{ width: `${((currentIdx + 1) / steps.length) * 100}%` }}
+                          aria-valuenow={((currentIdx + 1) / steps.length) * 100} 
+                          aria-valuemin={0} 
+                          aria-valuemax={100}
+                        ></div>
                       </div>
-                    );
-                  })}
-                </div>
-
-                {/* Productos */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  {order.detalles?.map((det: any) => (
-                    <div key={det.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', color: 'var(--text-light)' }}>
-                      <span>{det.producto?.nombre} × {det.cantidad}</span>
-                      <span>Bs. {(Number(det.precio) * det.cantidad).toFixed(2)}</span>
+                      <div className="row g-0 text-center small-text-timeline">
+                        {steps.map((step, i) => {
+                          const active = i <= currentIdx;
+                          return (
+                            <div key={step} className={`col ${active ? 'fw-bold text-primary' : 'text-muted opacity-50'}`} style={{ fontSize: '0.65rem' }}>
+                              <div className={`d-block d-md-none`}>{i + 1}</div>
+                              <div className="d-none d-md-block">{ESTADO_LABELS[step]?.label}</div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
-                  ))}
-                </div>
-                <hr className="divider" />
-                <div style={{ display: 'flex', justifyContent: 'flex-end', fontWeight: 700 }}>
-                  Total: <span style={{ color: 'var(--accent)', marginLeft: '0.5rem' }}>Bs. {order.detalles?.reduce((s: number, d: any) => s + Number(d.precio) * d.cantidad, 0).toFixed(2)}</span>
+
+                    {/* Productos */}
+                    <div className="bg-secondary bg-opacity-10 rounded-3 p-3 mb-3">
+                      <h6 className="text-muted small fw-bold text-uppercase mb-3 px-1">Productos</h6>
+                      <div className="d-flex flex-column gap-2">
+                        {order.detalles?.map((det: any) => (
+                          <div key={det.id} className="d-flex justify-content-between align-items-center small px-1">
+                            <span className="text-light">{det.producto?.nombre} <span className="text-muted ms-2">×{det.cantidad}</span></span>
+                            <span className="text-muted">Bs. {(Number(det.precio) * det.cantidad).toFixed(2)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="d-flex justify-content-end align-items-center pt-2">
+                      <div className="h6 mb-0 text-muted me-3">Total:</div>
+                      <div className="h4 mb-0 text-accent fw-bold fs-3">Bs. {order.detalles?.reduce((s: number, d: any) => s + Number(d.precio) * d.cantidad, 0).toFixed(2)}</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             );
           })}
         </div>
       )}
+      
+      <style jsx>{`
+        .small-text-timeline {
+          margin-top: -5px;
+        }
+        @media (max-width: 576px) {
+          .fs-3 { font-size: 1.5rem !important; }
+        }
+      `}</style>
     </div>
   );
 }
