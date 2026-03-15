@@ -90,3 +90,40 @@ El esquema Prisma se encuentra en `backend/prisma/schema.prisma` e incluye:
 - ✅ **Fase 4** — Panel Admin (Dashboard, Productos, Pedidos, Categorías, Clientes)
 - ⏳ **Fase 5** — Integración final y testing
 - ⏳ **Fase 6** — Deploy a producción
+
+Pasos mínimos para subir los cambios que ya modificaste al repositorio de GitHub:
+
+Paso	Comando	Función
+1	git status	Verifica los archivos modificados
+2	git add .	Agrega los cambios al área de commit
+3	git commit -m "arreglos css"	Guarda los cambios localmente
+4	git push origin main	Sube los cambios a GitHub
+
+Secuencia completa
+git status
+git add .
+git commit -m "arreglos css"
+git push origin main
+
+Si ya tienes el proyecto en tu PC y solo quieres bajar las actualizaciones del repositorio de GitHub, el proceso es simple.
+
+Pasos
+Paso	Comando	Función
+1	cd ruta/proyecto	Entrar a la carpeta del proyecto
+2	git status	Verificar estado del repositorio
+3	git pull origin main	Descargar y actualizar cambios desde GitHub
+Secuencia completa
+cd ruta/de/tu/proyecto
+git status
+git pull origin main
+
+Si la rama del repositorio es master:
+
+git pull origin master
+Qué hace git pull
+
+git pull realiza dos operaciones:
+
+Operación	Descripción
+fetch	Descarga cambios del repositorio remoto
+merge	Los integra a tu proyecto local

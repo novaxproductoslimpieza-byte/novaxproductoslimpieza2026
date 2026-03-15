@@ -4,6 +4,7 @@ import './globals.css';
 import { AuthProvider } from '../context/AuthContext';
 import { CartProvider } from '../context/CartContext';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,15 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <main className="main-content">
                 {children}
               </main>
-              <footer className="footer">
-                <div className="footer-inner">
-                  <div className="d-flex align-items-center gap-2 mb-2">
-                    <img src="/logonovax.png" alt="Logo" height="30" className="rounded-1" />
-                    <span className="footer-logo">Novax</span>
-                  </div>
-                  <p>© 2026 Novax Productos de Limpieza. Todos los derechos reservados.</p>
-                </div>
-              </footer>
+              <Footer />
             </div>
           </CartProvider>
         </AuthProvider>
