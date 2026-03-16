@@ -100,16 +100,16 @@ export default function ProfilePage() {
     <div className="container py-5">
       <div className="row justify-content-center">
         <div className="col-lg-9 col-xl-8">
-          <div className="card bg-dark border-secondary border-opacity-25 shadow-lg overflow-hidden" style={{ borderRadius: '1.25rem' }}>
-            <div className="card-header bg-secondary bg-opacity-10 border-0 p-4">
+          <div className="window-card overflow-hidden p-0">
+            <div className="card-header bg-light border-bottom border-light p-4">
               <div className="d-flex align-items-center gap-4">
-                <div className="profile-avatar shadow-sm" style={{ width: '72px', height: '72px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary), var(--accent))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', fontWeight: 800, color: '#fff' }}>
+                <div className="profile-avatar shadow-sm" style={{ width: '72px', height: '72px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.2rem', fontWeight: 800, color: '#fff' }}>
                   {user?.nombre?.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <h1 className="h4 fw-bold text-light mb-1">Mi Perfil</h1>
+                  <h1 className="h4 fw-bold text-dark mb-1">Mi Perfil</h1>
                   <p className="text-muted small mb-0">{user?.correo}</p>
-                  <span className={`badge rounded-pill mt-2 bg-opacity-10 bg-${user?.rol === 'ADMINISTRADOR' ? 'primary' : 'success'} text-${user?.rol === 'ADMINISTRADOR' ? 'primary' : 'success'}`}>
+                  <span className={`badge rounded-pill mt-2 bg-opacity-20 bg-${user?.rol === 'ADMINISTRADOR' ? 'primary' : 'success'} text-${user?.rol === 'ADMINISTRADOR' ? 'primary-dark' : 'success'}`}>
                     {user?.rol === 'ADMINISTRADOR' ? '⚡ Administrador' : '👤 Cliente'}
                   </span>
                 </div>
@@ -134,18 +134,18 @@ export default function ProfilePage() {
                 )}
                 
                 <div className="col-md-6">
-                  <label className="form-label text-light small fw-semibold">Nombre completo</label>
+                  <label className="form-label text-dark small fw-bold">Nombre completo</label>
                   <input 
-                    className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light py-2 px-3 rounded-pill" 
+                    className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none" 
                     value={form.nombre} 
                     onChange={set('nombre')} 
                   />
                 </div>
                 
                 <div className="col-md-6">
-                  <label className="form-label text-light small fw-semibold">Correo electrónico</label>
+                  <label className="form-label text-dark small fw-bold">Correo electrónico</label>
                   <input 
-                    className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light py-2 px-3 rounded-pill" 
+                    className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none" 
                     type="email" 
                     value={form.correo} 
                     onChange={set('correo')} 
@@ -153,27 +153,27 @@ export default function ProfilePage() {
                 </div>
                 
                 <div className="col-md-6">
-                  <label className="form-label text-light small fw-semibold">Teléfono</label>
+                  <label className="form-label text-dark small fw-bold">Teléfono</label>
                   <input 
-                    className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light py-2 px-3 rounded-pill" 
+                    className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none" 
                     value={form.telefono} 
                     onChange={set('telefono')} 
                   />
                 </div>
 
                 <div className="col-md-6">
-                  <label className="form-label text-light small fw-semibold">Zona actual</label>
+                  <label className="form-label text-dark small fw-bold">Zona actual</label>
                   <input 
-                    className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-muted py-2 px-3 rounded-pill" 
+                    className="form-control bg-light border-secondary border-opacity-10 text-muted py-2 px-3 rounded-pill" 
                     value={currentZona || 'No asignada'} 
                     disabled
                   />
                 </div>
                 
                 <div className="col-12">
-                  <label className="form-label text-light small fw-semibold">Dirección de entrega</label>
+                  <label className="form-label text-dark small fw-bold">Dirección de entrega</label>
                   <input 
-                    className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light py-2 px-3 rounded-pill" 
+                    className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none" 
                     value={form.direccion} 
                     onChange={set('direccion')} 
                   />
@@ -181,9 +181,9 @@ export default function ProfilePage() {
 
                 {/* Mapa de perfil */}
                 <div className="col-12">
-                  <div className="p-3 bg-secondary bg-opacity-5 rounded-4 border border-secondary border-opacity-10">
-                    <p className="text-primary small fw-bold mb-2">Ubicación registrada</p>
-                    <div className="overflow-hidden rounded-3 mb-3 shadow-inner" style={{ height: '250px' }}>
+                  <div className="p-3 bg-light rounded-4 border border-light shadow-sm">
+                    <p className="text-primary-dark small fw-bold mb-2">Ubicación registrada</p>
+                    <div className="overflow-hidden rounded-3 mb-3 shadow-inner" style={{ height: '250px', border: '1px solid var(--border)' }}>
                       <MapPicker 
                         onLocationSelect={handleLocationSelect} 
                         initialCenter={form.latitud ? [form.latitud, form.longitud!] : undefined} 
@@ -200,9 +200,9 @@ export default function ProfilePage() {
                 </div>
                 
                 <div className="col-12">
-                  <label className="form-label text-light small fw-semibold">Nueva contraseña <span className="small opacity-50 fw-normal">(dejar vacío para no cambiar)</span></label>
+                  <label className="form-label text-dark small fw-bold">Nueva contraseña <span className="small opacity-50 fw-normal">(dejar vacío para no cambiar)</span></label>
                   <input 
-                    className="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-light py-2 px-3 rounded-pill" 
+                    className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none" 
                     type="password" 
                     value={form.password} 
                     onChange={set('password')} 
@@ -211,7 +211,7 @@ export default function ProfilePage() {
                 </div>
                 
                 <div className="col-12 d-flex flex-column flex-sm-row gap-3 mt-4 text-center">
-                  <button className="btn btn-primary px-4 py-2 fw-bold rounded-pill shadow-sm transition-scale flex-grow-1" type="submit" disabled={loading}>
+                  <button className="btn btn-primary-dark px-4 py-2 fw-bold text-white rounded-pill shadow-sm transition-scale flex-grow-1" type="submit" disabled={loading}>
                     {loading ? <span className="spinner-border spinner-border-sm me-2"></span> : null}
                     {loading ? 'Guardando...' : 'Guardar cambios'}
                   </button>

@@ -28,25 +28,25 @@ export default function AdminOrdersPage() {
     <div className="py-2">
       <div className="row mb-4">
         <div className="col">
-          <h1 className="h3 fw-bold text-light mb-0">Gestión de Pedidos</h1>
+          <h1 className="h3 fw-bold text-dark mb-0 window-title">Gestión de Pedidos</h1>
         </div>
       </div>
 
       <div className="filter-scroll-container mb-4 pb-2">
         <div className="d-flex gap-2">
-          <button className={`btn rounded-pill px-4 btn-sm ${!filterEstado ? 'btn-primary shadow-sm' : 'btn-outline-secondary border-secondary border-opacity-25 text-light'}`} onClick={() => setFilterEstado('')}>Todos</button>
+          <button className={`btn rounded-pill px-4 btn-sm fw-bold ${!filterEstado ? 'btn-primary-dark text-white shadow-sm' : 'btn-light text-muted border-light'}`} onClick={() => setFilterEstado('')}>Todos</button>
           {ESTADOS.map(e => (
-            <button key={e} className={`btn rounded-pill px-4 btn-sm ${filterEstado === e ? 'btn-primary shadow-sm' : 'btn-outline-secondary border-secondary border-opacity-25 text-light'}`} onClick={() => setFilterEstado(e)}>
+            <button key={e} className={`btn rounded-pill px-4 btn-sm fw-bold ${filterEstado === e ? 'btn-primary-dark text-white shadow-sm' : 'btn-light text-muted border-light'}`} onClick={() => setFilterEstado(e)}>
               {ESTADO_LABELS[e]}
             </button>
           ))}
         </div>
       </div>
 
-      <div className="card bg-dark border-secondary border-opacity-25 overflow-hidden shadow-sm" style={{ borderRadius: '1rem' }}>
+      <div className="window-card overflow-hidden p-0">
         <div className="table-responsive">
-          <table className="table table-dark table-hover align-middle mb-0">
-            <thead className="bg-secondary bg-opacity-10 text-muted small text-uppercase">
+          <table className="table table-hover align-middle mb-0">
+            <thead className="bg-light text-muted small text-uppercase">
               <tr>
                 <th className="px-4 py-3 border-0">#</th>
                 <th className="py-3 border-0">Cliente</th>
@@ -66,27 +66,27 @@ export default function AdminOrdersPage() {
                   <tr key={o.id}>
                     <td className="px-4 text-muted small">#{o.id}</td>
                     <td>
-                      <div className="fw-bold text-light">{o.cliente?.nombre}</div>
+                      <div className="fw-bold text-dark">{o.cliente?.nombre}</div>
                       <div className="text-muted extra-small">{o.cliente?.correo}</div>
                     </td>
                     <td className="text-center">
-                      <span className="badge bg-secondary bg-opacity-25 text-light fw-normal rounded-pill px-3">{o.detalles?.length}</span>
+                      <span className="badge bg-light text-dark border border-light fw-bold rounded-pill px-3">{o.detalles?.length}</span>
                     </td>
-                    <td className="text-accent fw-bold small">Bs. {total.toFixed(2)}</td>
+                    <td className="text-primary-dark fw-bold small">Bs. {total.toFixed(2)}</td>
                     <td>
-                      <span className={`badge rounded-pill bg-opacity-10 py-1 px-3 small bg-${o.estado === 'PENDIENTE' ? 'warning text-warning' : o.estado === 'APROBADO' ? 'primary text-primary' : o.estado === 'ENTREGADO' ? 'success text-success' : o.estado === 'CANCELADO' ? 'danger text-danger' : 'info text-info'}`}>
+                      <span className={`badge rounded-pill bg-opacity-20 py-1 px-3 small bg-${o.estado === 'PENDIENTE' ? 'warning text-warning' : o.estado === 'APROBADO' ? 'primary text-primary' : o.estado === 'ENTREGADO' ? 'success text-success' : o.estado === 'CANCELADO' ? 'danger text-danger' : 'info text-info'}`}>
                         {ESTADO_LABELS[o.estado]}
                       </span>
                     </td>
                     <td className="pe-4 text-end">
                       <div className="d-flex justify-content-end gap-2">
                         {next[o.estado] && (
-                          <button className="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" disabled={updating === o.id} onClick={() => handleStatus(o.id, next[o.estado])}>
+                          <button className="btn btn-primary-dark btn-sm rounded-pill px-3 shadow-sm text-white fw-bold" disabled={updating === o.id} onClick={() => handleStatus(o.id, next[o.estado])}>
                             {updating === o.id ? '...' : `→ ${ESTADO_LABELS[next[o.estado]]}`}
                           </button>
                         )}
                         {o.estado !== 'ENTREGADO' && o.estado !== 'CANCELADO' && (
-                          <button className="btn btn-outline-danger btn-sm rounded-circle p-2 border-secondary border-opacity-25" disabled={updating === o.id} onClick={() => handleStatus(o.id, 'CANCELADO')} title="Cancelar">
+                          <button className="btn btn-light btn-sm rounded-circle p-2 border border-light text-danger hover-scale" disabled={updating === o.id} onClick={() => handleStatus(o.id, 'CANCELADO')} title="Cancelar">
                             ✕
                           </button>
                         )}

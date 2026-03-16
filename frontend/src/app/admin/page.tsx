@@ -29,7 +29,7 @@ export default function AdminDashboard() {
     <div className="py-2">
       <div className="row mb-4">
         <div className="col">
-          <h1 className="h2 fw-bold text-light mb-1">Dashboard</h1>
+          <h1 className="h2 fw-bold text-dark mb-1 window-title">Dashboard</h1>
           <p className="text-muted small">Resumen del sistema Novax ERP</p>
         </div>
       </div>
@@ -43,13 +43,13 @@ export default function AdminDashboard() {
         )) :
           statCards.map(s => (
             <div key={s.label} className="col-6 col-md-3">
-              <Link href={s.link} className="card bg-dark border-secondary border-opacity-25 h-100 p-3 text-decoration-none transition-scale product-card-hover" style={{ borderRadius: '1rem' }}>
+              <Link href={s.link} className="window-card h-100 p-3 text-decoration-none transition-scale product-card-hover" style={{ borderRadius: '1rem' }}>
                 <div className="d-flex justify-content-between align-items-start mb-2">
                   <div className="fs-3">{s.icon}</div>
                 </div>
                 <div>
                   <div className="h2 fw-bold mb-0" style={{ color: s.color }}>{s.value}</div>
-                  <div className="text-muted small fw-medium">{s.label}</div>
+                  <div className="text-muted small fw-bold text-uppercase" style={{ fontSize: '0.65rem', letterSpacing: '0.5px' }}>{s.label}</div>
                 </div>
               </Link>
             </div>
@@ -61,14 +61,14 @@ export default function AdminDashboard() {
       <div className="row">
         <div className="col">
           <div className="d-flex justify-content-between align-items-center mb-4">
-            <h2 className="h4 fw-bold text-light mb-0">Últimos pedidos</h2>
-            <Link href="/admin/orders" className="btn btn-outline-primary btn-sm rounded-pill px-3">Ver todos</Link>
+            <h2 className="h4 fw-bold text-dark mb-0">Últimos pedidos</h2>
+            <Link href="/admin/orders" className="btn btn-outline-primary-dark btn-sm rounded-pill px-3 fw-bold">Ver todos</Link>
           </div>
           
-          <div className="card bg-dark border-secondary border-opacity-25 overflow-hidden" style={{ borderRadius: '1rem' }}>
+          <div className="window-card overflow-hidden p-0">
             <div className="table-responsive">
-              <table className="table table-dark table-hover align-middle mb-0">
-                <thead className="bg-secondary bg-opacity-10 text-muted small text-uppercase">
+              <table className="table table-hover align-middle mb-0">
+                <thead className="bg-light text-muted small text-uppercase">
                   <tr>
                     <th className="px-4 py-3 border-0">#</th>
                     <th className="py-3 border-0">Cliente</th>
@@ -83,7 +83,7 @@ export default function AdminDashboard() {
                   ) : recentOrders.map(o => (
                     <tr key={o.id}>
                       <td className="px-4 text-muted">#{o.id}</td>
-                      <td className="fw-bold text-light">{o.cliente?.nombre}</td>
+                      <td className="fw-bold text-dark">{o.cliente?.nombre}</td>
                       <td className="text-muted small">{new Date(o.fecha).toLocaleDateString('es-BO')}</td>
                       <td>
                         <span className={`badge rounded-pill bg-opacity-10 py-1 px-2 small bg-${o.estado === 'PENDIENTE' ? 'warning text-warning' : o.estado === 'APROBADO' ? 'primary text-primary' : o.estado === 'ENTREGADO' ? 'success text-success' : 'info text-info'}`}>
@@ -91,7 +91,7 @@ export default function AdminDashboard() {
                         </span>
                       </td>
                       <td className="pe-4 text-end">
-                        <Link href="/admin/orders" className="btn btn-secondary btn-sm rounded-pill px-3 border-secondary border-opacity-25">Ver</Link>
+                        <Link href="/admin/orders" className="btn btn-light btn-sm rounded-pill px-3 border border-light fw-bold text-dark">Ver detalles</Link>
                       </td>
                     </tr>
                   ))}

@@ -19,7 +19,7 @@ export default function AdminClientsPage() {
     <div className="py-2">
       <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
         <div>
-          <h1 className="h3 fw-bold text-light mb-0">Clientes</h1>
+          <h1 className="h3 fw-bold text-dark mb-0 window-title">Clientes</h1>
           <p className="text-muted small mb-0">{clients.length} clientes registrados</p>
         </div>
       </div>
@@ -27,9 +27,9 @@ export default function AdminClientsPage() {
       <div className="row mb-4">
         <div className="col-md-6 col-lg-4">
           <div className="position-relative">
-            <span className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted">🔍</span>
+            <span className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted opacity-50">🔍</span>
             <input 
-              className="form-control bg-dark border-secondary border-opacity-25 text-light ps-5 rounded-pill" 
+              className="form-control bg-light border-secondary border-opacity-10 text-dark ps-5 rounded-pill shadow-none" 
               placeholder="Buscar por nombre, CI o correo..." 
               value={search} 
               onChange={e => setSearch(e.target.value)} 
@@ -38,10 +38,10 @@ export default function AdminClientsPage() {
         </div>
       </div>
 
-      <div className="card bg-dark border-secondary border-opacity-25 overflow-hidden shadow-sm" style={{ borderRadius: '1rem' }}>
+      <div className="window-card overflow-hidden p-0">
         <div className="table-responsive">
-          <table className="table table-dark table-hover align-middle mb-0">
-            <thead className="bg-secondary bg-opacity-10 text-muted small text-uppercase">
+          <table className="table table-hover align-middle mb-0">
+            <thead className="bg-light text-muted small text-uppercase">
               <tr>
                 <th className="px-4 py-3 border-0">Nombre</th>
                 <th className="py-3 border-0">CI</th>
@@ -59,24 +59,24 @@ export default function AdminClientsPage() {
                 <tr key={c.id}>
                   <td className="px-4">
                     <div className="d-flex align-items-center gap-3">
-                      <div className="client-avatar" style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary), var(--accent))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
+                      <div className="client-avatar shadow-sm" style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
                         {c.nombre.charAt(0).toUpperCase()}
                       </div>
-                      <span className="fw-bold text-light">{c.nombre}</span>
+                      <span className="fw-bold text-dark">{c.nombre}</span>
                     </div>
                   </td>
                   <td className="text-muted small">{c.ci}</td>
-                  <td className="small">{c.correo}</td>
-                  <td className="small">{c.telefono || <span className="opacity-25">—</span>}</td>
+                  <td className="small text-dark">{c.correo}</td>
+                  <td className="small text-dark">{c.telefono || <span className="opacity-25">—</span>}</td>
                   <td className="pe-4">
                     <div className="d-flex align-items-center gap-2">
                       <div className="text-muted small text-truncate" style={{ maxWidth: '150px' }} title={c.direccion || ''}>
                         {c.direccion || <span className="opacity-25">—</span>}
                       </div>
                       {c.latitud && c.longitud ? (
-                        <span className="badge rounded-pill bg-primary bg-opacity-10 text-primary extra-small border border-primary border-opacity-10" title={`${c.latitud}, ${c.longitud}`}>📍 Ubicado</span>
+                        <span className="badge rounded-pill bg-primary bg-opacity-20 text-primary-dark extra-small border border-primary border-opacity-10" title={`${c.latitud}, ${c.longitud}`}>📍 Ubicado</span>
                       ) : (
-                        <span className="badge rounded-pill bg-secondary bg-opacity-10 text-muted extra-small border border-secondary border-opacity-10">⚪ Sin mapa</span>
+                        <span className="badge rounded-pill bg-light text-muted extra-small border border-light">⚪ Sin mapa</span>
                       )}
                     </div>
                   </td>

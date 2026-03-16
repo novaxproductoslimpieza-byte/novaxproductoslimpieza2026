@@ -16,7 +16,7 @@ const HeroCarousel: React.FC = () => {
       id: 1,
       title: 'Limpieza <span class="text-primary">Automotriz</span>',
       description: 'Línea especializada para el cuidado y brillo de tu vehículo. Máxima protección y acabado profesional.',
-      image: '/images/catalogo novax plux/1.png',
+      image: '/images/CATALOGO NOVAX PLUS/1.png',
       btnText: 'Ver Productos',
       btnLink: '#productos'
     },
@@ -24,7 +24,7 @@ const HeroCarousel: React.FC = () => {
       id: 2,
       title: 'Higiene <span class="text-accent">Personal</span>',
       description: 'Jabones y desinfectantes diseñados para tu bienestar. Suavidad y limpieza profunda garantizada.',
-      image: '/images/catalogo novax plux/3.png',
+      image: '/images/CATALOGO NOVAX PLUS/3.png',
       btnText: 'Explorar Línea',
       btnLink: '#productos'
     },
@@ -32,7 +32,7 @@ const HeroCarousel: React.FC = () => {
       id: 3,
       title: 'Limpieza del <span class="text-primary">Hogar</span>',
       description: 'Todo lo que necesitas para un hogar impecable. Eficiencia contra la grasa y suciedad más difícil.',
-      image: '/images/catalogo novax plux/5.png',
+      image: '/images/CATALOGO NOVAX PLUS/5.png',
       btnText: 'Comprar Ahora',
       btnLink: '#productos'
     }

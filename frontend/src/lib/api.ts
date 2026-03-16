@@ -53,9 +53,10 @@ export const geoApi = {
 // ── Catálogo ──
 export const catalogApi = {
   getCategories: () => request<any[]>('/categories'),
-  getProducts: (params?: { category_id?: number; search?: string }) => {
+  getProducts: (params?: { category_id?: number; subcategory_id?: number; search?: string }) => {
     const q = new URLSearchParams();
     if (params?.category_id) q.set('category_id', String(params.category_id));
+    if (params?.subcategory_id) q.set('subcategory_id', String(params.subcategory_id));
     if (params?.search) q.set('search', params.search);
     return request<any[]>(`/products${q.toString() ? '?' + q : ''}`);
   },

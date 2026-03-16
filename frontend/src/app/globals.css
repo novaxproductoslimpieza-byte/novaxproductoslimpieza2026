@@ -10,30 +10,50 @@
 }
 
 :root {
-  --bg: #ffffff
-    /* Deep Slate/Navy */
-    --bg-card: #1e293b;
-  /* Slightly lighter Slate */
-  --bg-card2: #334155;
-  /* Medium Slate */
-  --border: rgba(148, 163, 184, 0.1);
-  --primary: #3b82f6;
-  --primary-dark: #2563eb;
-  --primary-glow: rgba(59, 130, 246, 0.15);
+  /* Backgrounds */
+  --bg: #ffffff;
+  /* Fondo general unificado a blanco */
+  --bg-navbar: #124ed9;
+  /* Azul Pastel oficial */
+  --bg-card: #ffffff;
+  /* Blanco para carruseles y tarjetas */
+  --bg-card2: #f8fafc;
+  /* Gris muy claro para inputs y secundarios */
+
+  /* Borders */
+  --border: rgba(0, 0, 0, 0.08);
+
+  /* Primary (azul pastel para énfasis) */
+  --primary: #e7ebf0;
+  --primary-dark: #60a5fa;
+  --primary-glow: rgba(147, 197, 253, 0.4);
+
+  /* Accent (verde positivo) */
   --accent: #10b981;
-  /* Refined Emerald */
-  --accent-glow: rgba(16, 185, 129, 0.1);
+  --accent-glow: rgba(16, 185, 129, 0.2);
+
+  /* Estados */
   --danger: #ef4444;
   --warning: #f59e0b;
-  --text: #f8fafc;
-  /* Near white for high contrast */
-  --text-muted: #94a3b8;
-  --text-light: #cbd5e1;
+  --info: #3b82f6;
+
+  /* Texto */
+  --text: #0f172a;
+  /* Texto oscuro para fondos claros */
+  --text-light: #dbe0e7;
+  --text-muted: #64748b;
+
+  /* Extras de consistencia */
   --radius: 16px;
   --radius-sm: 10px;
-  --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --premium-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
-  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --premium-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Navbar */
+  --navbar-text: #e2e8f0;
+  --navbar-text-hover: #ffffff;
+  --navbar-hover-bg: rgba(255, 255, 255, 0.08);
 }
 
 html {
@@ -42,7 +62,10 @@ html {
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
-  background: radial-gradient(circle at top right, #ffffff, #ffffff);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(147, 197, 253, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 100% 100%, rgba(52, 211, 153, 0.05) 0%, transparent 50%);
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
@@ -57,7 +80,7 @@ body {
 
 .main-content {
   flex: 1;
-  padding-top: 72px;
+  padding-top: 180px;
 }
 
 .container {
@@ -77,7 +100,8 @@ body {
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(2, 6, 23, 0.85);
+  background: var(--bg-navbar);
+  /* Se mantiene por ahora ya que --bg-navbar es #020617 */
   backdrop-filter: blur(12px) saturate(180%);
   -webkit-backdrop-filter: blur(12px) saturate(180%);
   border-bottom: 1px solid var(--border);
@@ -115,7 +139,7 @@ body {
 }
 
 .nav-link {
-  color: var(--text-light);
+  color: var(--navbar-text);
   text-decoration: none;
   padding: 0.4rem 0.9rem;
   border-radius: var(--radius-sm);
@@ -226,12 +250,12 @@ body {
 
 .btn-primary {
   background: var(--primary);
-  color: #fff;
+  color: #0f172a;
+  /* Texto oscuro sobre azul pastel para contraste */
 }
 
 .btn-primary:hover {
   background: var(--primary-dark);
-  transform: translateY(-1px);
   box-shadow: 0 4px 16px var(--primary-glow);
 }
 
@@ -257,12 +281,13 @@ body {
 
 .btn-accent {
   background: var(--accent);
-  color: #0a0c10;
+  color: #0f172a;
 }
 
 .btn-accent:hover {
   opacity: 0.85;
   transform: translateY(-1px);
+  box-shadow: 0 4px 16px var(--accent-glow);
 }
 
 .btn-sm {
@@ -285,16 +310,32 @@ body {
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 16px;
   padding: 1.5rem;
   transition: all var(--transition);
   box-shadow: var(--shadow);
 }
 
 .card:hover {
-  border-color: rgba(59, 130, 246, 0.2);
+  transform: translateY(-4px);
+  border-color: rgba(147, 197, 253, 0.2);
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Clases de utilidad para "ventanas" de procesos */
+.window-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   box-shadow: var(--premium-shadow);
-  transform: translateY(-2px);
+  padding: 2.5rem;
+  transition: all var(--transition);
+}
+
+.window-title {
+  color: var(--text);
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
 /* ── Product Grid ── */
@@ -899,24 +940,48 @@ tr:hover td {
   font-weight: 500;
 }
 
+.alert-success {
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  color: var(--accent);
+}
+
 .alert-error {
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);
   color: #fca5a5;
 }
 
-.alert-success {
-  background: rgba(6, 214, 160, 0.1);
-  border: 1px solid rgba(6, 214, 160, 0.3);
-  color: var(--accent);
+.alert-warning {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: var(--warning);
+}
+
+.alert-info {
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: var(--info);
 }
 
 .text-accent {
   color: var(--accent) !important;
 }
 
-.bg-accent {
-  background-color: var(--accent) !important;
+.text-primary-dark {
+  color: var(--primary-dark) !important;
+}
+
+.bg-navbar {
+  background-color: var(--bg-navbar) !important;
+}
+
+.bg-card {
+  background-color: var(--bg-card) !important;
+}
+
+.bg-card2 {
+  background-color: var(--bg-card2) !important;
 }
 
 .transition-scale {
@@ -939,9 +1004,10 @@ tr:hover td {
 /* ── Glassmorphism Utility ── */
 .glass {
   background: rgba(15, 23, 42, 0.65);
+  /* Corresponde a --bg #0f172a */
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(148, 163, 184, 0.1);
+  border: 1px solid var(--border);
 }
 
 /* ── Additional Button Variants ── */
@@ -967,7 +1033,8 @@ h3,
 h4,
 h5,
 h6 {
-  color: #fff;
+  color: var(--text);
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 

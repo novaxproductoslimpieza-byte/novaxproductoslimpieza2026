@@ -43,7 +43,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, userLog
           <p className="card-text text-muted small mb-2">{product.subcategoria?.nombre}</p>
           <div className="mt-auto">
             {product.precio_minorista !== undefined ? (
-              <div className="h5 text-primary fw-bold mb-1">Bs. {Number(product.precio_minorista).toFixed(2)}</div>
+              <div className="h5 text-primary-dark fw-bold mb-1">Bs. {Number(product.precio_minorista).toFixed(2)}</div>
             ) : (
               <div className="small text-muted fst-italic mb-1">🔒 Inicia sesión para ver precio</div>
             )}

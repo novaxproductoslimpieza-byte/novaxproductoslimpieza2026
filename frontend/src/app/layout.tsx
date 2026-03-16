@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '../context/AuthContext';
 import { CartProvider } from '../context/CartContext';
-import Navbar from '../components/Navbar';
+import Header from '../components/header/Header';
 import Footer from '../components/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AuthProvider>
           <CartProvider>
             <div className="app-wrapper">
-              <Navbar />
+              <Header />
               <main className="main-content">
                 {children}
               </main>
