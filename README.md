@@ -127,3 +127,14 @@ git pull realiza dos operaciones:
 Operación	Descripción
 fetch	Descarga cambios del repositorio remoto
 merge	Los integra a tu proyecto local
+
+# Base de datos que se necesita 
+CREATE DATABASE novax;
+
+# Configura tu proyecto para usar esta contraseña en .env o config.js:
+
+DB_USER=postgres
+DB_PASSWORD=Novax123
+DB_NAME=novaxdb
+DB_HOST=localhost
+DB_PORT=5432

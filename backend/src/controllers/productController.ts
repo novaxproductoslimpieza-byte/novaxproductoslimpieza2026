@@ -5,20 +5,26 @@ import { AuthRequest } from '../middlewares/authMiddleware';
 // GET /api/products
 export const getProducts = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { category_id, search } = req.query;
+    const { category_id, subcategory_id, search } = req.query;
 
     const whereClause: any = {};
-    if (category_id) {
+    if (subcategory_id) {
+      whereClause.subcategoria_id = Number(subcategory_id);
+    } else if (category_id) {
       whereClause.subcategoria = { categoria_id: Number(category_id) };
     }
     if (search) {
-      whereClause.nombre = { contains: String(search), mode: 'insensitive' };
+      whereClause.nombre = { contains: String(search).trim(), mode: 'insensitive' };
     }
 
     const productos = await prisma.producto.findMany({
       where: whereClause,
       include: {
-        subcategoria: true
+        subcategoria: {
+          include: {
+            categoria: true
+          }
+        }
       }
     });
 
@@ -47,7 +53,13 @@ export const getProductById = async (req: AuthRequest, res: Response): Promise<v
     const { id } = req.params;
     const producto = await prisma.producto.findUnique({
       where: { id: Number(id) },
-      include: { subcategoria: true }
+      include: { 
+        subcategoria: {
+          include: {
+            categoria: true
+          }
+        } 
+      }
     });
 
     if (!producto) {

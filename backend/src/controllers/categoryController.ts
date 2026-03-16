@@ -6,7 +6,11 @@ import { AuthRequest } from '../middlewares/authMiddleware';
 export const getCategories = async (_req: Request, res: Response): Promise<void> => {
   try {
     const categories = await prisma.categoria.findMany({
-      include: { subcategorias: true },
+      include: { 
+        subcategorias: {
+          include: { productos: true }
+        } 
+      },
       orderBy: { nombre: 'asc' }
     });
     res.json(categories);
