@@ -14,10 +14,10 @@ export default function Navbar() {
     <nav className="navbar glass navbar-expand-lg navbar-dark fixed-top border-bottom border-secondary border-opacity-10 py-2">
       <div className="container">
         <Link href="/" className="navbar-brand d-flex align-items-center gap-2 py-1">
-          <img 
-            src="/logonovax.png" 
-            alt="Novax Logo" 
-            height="42" 
+          <img
+            src="images/config_web/logonovax.png"
+            alt="Novax Logo"
+            height="46"
             className="d-inline-block align-top rounded-2"
           />
           <span className="fw-bold fs-4 d-none d-sm-inline">Nova<span className="text-primary">x</span></span>
@@ -62,7 +62,7 @@ export default function Navbar() {
                 <Link href="/admin" className={`nav-link px-3 ${path.startsWith('/admin') ? 'active text-primary fw-bold' : ''}`}>Admin</Link>
               </li>
             )}
-            
+
             <li className="nav-item ms-lg-2">
               <Link href="/cart" className="nav-link p-0">
                 <Button variant="secondary" pill={true} className="position-relative">

@@ -14,7 +14,7 @@ subir al repositorio
 pasos:
 
 git add .
-git commit -m "modulo geolocalizacion y mejoras frontend"
+git commit -m "actualiza menu principal pedidos y geoubicacion clientes"
 git push origin main
 
 bajar del repositorio

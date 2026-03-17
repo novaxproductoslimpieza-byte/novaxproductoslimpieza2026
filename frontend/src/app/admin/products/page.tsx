@@ -56,14 +56,14 @@ export default function AdminProductsPage() {
           <div className="card-body p-0">
             <h5 className="card-title text-dark fw-bold mb-4">{editing ? 'Editar producto' : 'Nuevo producto'}</h5>
             {error && <div className="alert alert-danger border-0 small py-2 mb-4">⚠️ {error}</div>}
-            
+
             <form onSubmit={handleSubmit}>
               <div className="row g-3">
                 <div className="col-md-6">
                   <label className="form-label text-dark small fw-bold">Nombre *</label>
                   <input className="form-control bg-light border-secondary border-opacity-10 text-dark" value={form.nombre} onChange={set('nombre')} required />
                 </div>
-                
+
                 <div className="col-md-6">
                   <label className="form-label text-dark small fw-bold">Subcategoría *</label>
                   <select className="form-select bg-light border-secondary border-opacity-10 text-dark" value={form.subcategoria_id} onChange={set('subcategoria_id')} required>
@@ -71,50 +71,50 @@ export default function AdminProductsPage() {
                     {subcats.map(s => <option key={s.id} value={s.id}>{s.catNombre} — {s.nombre}</option>)}
                   </select>
                 </div>
-                
+
                 <div className="col-md-3 col-6">
                   <label className="form-label text-dark small fw-bold">Precio Minorista (Bs.)*</label>
                   <input className="form-control bg-light border-secondary border-opacity-10 text-dark" type="number" step="0.01" value={form.precio_minorista} onChange={set('precio_minorista')} required />
                 </div>
-                
+
                 <div className="col-md-3 col-6">
                   <label className="form-label text-dark small fw-bold">Precio Mayorista (Bs.)*</label>
                   <input className="form-control bg-light border-secondary border-opacity-10 text-dark" type="number" step="0.01" value={form.precio_mayorista} onChange={set('precio_mayorista')} required />
                 </div>
-                
+
                 <div className="col-md-3 col-6">
                   <label className="form-label text-dark small fw-bold">Stock inicial</label>
                   <input className="form-control bg-light border-secondary border-opacity-10 text-dark" type="number" value={form.stock} onChange={set('stock')} />
                 </div>
-                
+
                 <div className="col-md-3 col-6">
                   <label className="form-label text-dark small fw-bold">Presentación</label>
                   <input className="form-control bg-light border-secondary border-opacity-10 text-dark" value={form.presentacion} onChange={set('presentacion')} placeholder="Ej: Botella 1L" />
                 </div>
-                
+
                 <div className="col-md-4">
                   <label className="form-label text-dark small fw-bold">Olor / Aroma</label>
                   <input className="form-control bg-light border-secondary border-opacity-10 text-dark" value={form.olor} onChange={set('olor')} />
                 </div>
-                
+
                 <div className="col-md-4">
                   <label className="form-label text-dark small fw-bold">Color</label>
                   <input className="form-control bg-light border-secondary border-opacity-10 text-dark" value={form.color} onChange={set('color')} />
                 </div>
-                
+
                 <div className="col-md-4">
                   <label className="form-label text-dark small fw-bold">Imagen (URL)</label>
                   <input className="form-control bg-light border-secondary border-opacity-10 text-dark" value={form.imagen} onChange={set('imagen')} />
                 </div>
-                
+
                 <div className="col-12">
                   <label className="form-label text-dark small fw-bold">Descripción</label>
                   <textarea className="form-control bg-light border-secondary border-opacity-10 text-dark" value={form.descripcion} onChange={set('descripcion')} rows={2} style={{ resize: 'vertical' }} />
                 </div>
               </div>
-              
+
               <div className="mt-4 d-flex gap-2">
-                <button className="btn btn-primary-dark px-4 fw-bold text-white rounded-pill shadow-sm" type="submit" disabled={saving}>
+                <button className="btn btn-primary-dark px-4 fw-bold text-dark rounded-pill shadow-sm" type="submit" disabled={saving}>
                   {saving ? (
                     <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                   ) : null}
@@ -165,10 +165,10 @@ export default function AdminProductsPage() {
                     <td className="pe-4 text-end">
                       <div className="d-flex justify-content-end gap-2">
                         <button className="btn btn-light btn-sm border border-light rounded-circle p-2 hover-scale" onClick={() => handleEdit(p)} title="Editar">
-                           ✏️
+                          ✏️
                         </button>
                         <button className="btn btn-light btn-sm border border-light rounded-circle p-2 hover-scale text-danger" onClick={() => handleDelete(p.id)} title="Eliminar">
-                           🗑
+                          🗑
                         </button>
                       </div>
                     </td>
@@ -179,7 +179,7 @@ export default function AdminProductsPage() {
           </table>
         </div>
       </div>
-      
+
       <style jsx>{`
         .extra-small { font-size: 0.7rem; }
       `}</style>

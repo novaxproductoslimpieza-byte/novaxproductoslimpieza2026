@@ -33,10 +33,10 @@ export default function ProductDetailPage() {
 
   return (
     <div className="container py-5">
-      <Link href="/" className="btn btn-outline-secondary btn-sm rounded-pill px-4 mb-4 border-secondary border-opacity-25 text-light transition-scale">
+      <Link href="/" className="btn btn-outline-secondary btn-sm rounded-pill px-4 mb-4 border-secondary border-opacity-25 text-dark transition-scale">
         <span className="me-2">←</span> Volver
       </Link>
-      
+
       <div className="row g-5">
         {/* Imagen */}
         <div className="col-lg-6">
@@ -60,8 +60,8 @@ export default function ProductDetailPage() {
                 <li className="breadcrumb-item active text-primary" aria-current="page">{product.subcategoria?.nombre}</li>
               </ol>
             </nav>
-            
-            <h1 className="display-5 fw-bold text-light mb-3">{product.nombre}</h1>
+
+            <h1 className="display-5 fw-bold text-dark mb-3">{product.nombre}</h1>
             <p className="lead text-muted mb-4" style={{ lineHeight: '1.8' }}>{product.descripcion || 'Sin descripción disponible.'}</p>
 
             {/* Atributos */}
@@ -70,7 +70,7 @@ export default function ProductDetailPage() {
                 <div className="col-6 col-md-4">
                   <div className="card bg-secondary bg-opacity-10 border-secondary border-opacity-10 p-2 text-center" style={{ borderRadius: '1rem' }}>
                     <div className="extra-small text-muted text-uppercase fw-bold mb-1">Presentación</div>
-                    <div className="small fw-semibold text-light">{product.presentacion}</div>
+                    <div className="small fw-semibold text-dark">{product.presentacion}</div>
                   </div>
                 </div>
               )}
@@ -78,7 +78,7 @@ export default function ProductDetailPage() {
                 <div className="col-6 col-md-4">
                   <div className="card bg-secondary bg-opacity-10 border-secondary border-opacity-10 p-2 text-center" style={{ borderRadius: '1rem' }}>
                     <div className="extra-small text-muted text-uppercase fw-bold mb-1">Aroma</div>
-                    <div className="small fw-semibold text-light">{product.olor}</div>
+                    <div className="small fw-semibold text-dark">{product.olor}</div>
                   </div>
                 </div>
               )}
@@ -86,7 +86,7 @@ export default function ProductDetailPage() {
                 <div className="col-6 col-md-4">
                   <div className="card bg-secondary bg-opacity-10 border-secondary border-opacity-10 p-2 text-center" style={{ borderRadius: '1rem' }}>
                     <div className="extra-small text-muted text-uppercase fw-bold mb-1">Color</div>
-                    <div className="small fw-semibold text-light">{product.color}</div>
+                    <div className="small fw-semibold text-dark">{product.color}</div>
                   </div>
                 </div>
               )}
@@ -107,12 +107,12 @@ export default function ProductDetailPage() {
                   <div className="row g-4">
                     <div className="col-6">
                       <div className="extra-small text-primary text-uppercase fw-bold mb-1">Minorista</div>
-                      <div className="h2 fw-bold text-light mb-0">Bs. <span className="text-accent">{Number(product.precio_minorista).toFixed(2)}</span></div>
+                      <div className="h2 fw-bold text-dark mb-0">Bs. <span className="text-accent">{Number(product.precio_minorista).toFixed(2)}</span></div>
                     </div>
                     {product.precio_mayorista && (
                       <div className="col-6">
                         <div className="extra-small text-primary text-uppercase fw-bold mb-1">Mayorista</div>
-                        <div className="h2 fw-bold text-light mb-0">Bs. {Number(product.precio_mayorista).toFixed(2)}</div>
+                        <div className="h2 fw-bold text-dark mb-0">Bs. {Number(product.precio_mayorista).toFixed(2)}</div>
                       </div>
                     )}
                   </div>
@@ -143,7 +143,7 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
-      
+
       <style jsx>{`
         .extra-small { font-size: 0.65rem; }
         .min-w-40 { min-width: 40px; }

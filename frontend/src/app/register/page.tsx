@@ -7,7 +7,7 @@ import { useAuth } from '../../context/AuthContext';
 import { geoApi } from '../../lib/api';
 
 // Cargar Mapa de forma dinámica para evitar errores de SSR con Leaflet
-const MapPicker = dynamic(() => import('../../components/MapPicker'), { 
+const MapPicker = dynamic(() => import('../../components/MapPicker'), {
   ssr: false,
   loading: () => <div className="bg-secondary bg-opacity-10 rounded-4 d-flex align-items-center justify-content-center" style={{ height: '300px' }}>
     <div className="spinner-border text-primary" role="status"></div>
@@ -15,21 +15,21 @@ const MapPicker = dynamic(() => import('../../components/MapPicker'), {
 });
 
 export default function RegisterPage() {
-  const [form, setForm] = useState({ 
+  const [form, setForm] = useState({
     nombre: '', ci: '', telefono: '', direccion: '', correo: '', password: '',
     latitud: null as number | null,
     longitud: null as number | null,
     zona_id: null as number | null
   });
-  
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   // Geolocation states
   const [departamentos, setDepartamentos] = useState<any[]>([]);
   const [provincias, setProvincias] = useState<any[]>([]);
   const [zonas, setZonas] = useState<any[]>([]);
-  
+
   const [selDep, setSelDep] = useState('');
   const [selProv, setSelProv] = useState('');
 
@@ -64,12 +64,12 @@ export default function RegisterPage() {
     }
   };
 
-  const set = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => 
+  const set = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm(f => ({ ...f, [key]: e.target.value }));
 
   const handleLocationSelect = async (lat: number, lng: number) => {
     setForm(f => ({ ...f, latitud: lat, longitud: lng }));
-    
+
     // Reverse Geocoding con Nominatim
     try {
       const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
@@ -83,7 +83,7 @@ export default function RegisterPage() {
           address.suburb || address.neighbourhood,
           address.city || address.town
         ].filter(Boolean).join(', ');
-        
+
         setForm(f => ({ ...f, direccion: shortAddress || data.display_name }));
       }
     } catch (err) {
@@ -124,62 +124,62 @@ export default function RegisterPage() {
               <div className="col-md-6 p-4 p-lg-5">
                 <h1 className="h3 fw-bold text-dark mb-1 window-title">Crear cuenta</h1>
                 <p className="text-muted small mb-4">Registrate para realizar tus pedidos</p>
-                
+
                 <form onSubmit={handleSubmit}>
                   {error && (
                     <div className="alert alert-danger d-flex align-items-center border-0 small py-2 mb-4" role="alert">
                       <span className="me-2">⚠️</span> {error}
                     </div>
                   )}
-                  
+
                   <div className="row g-3">
                     <div className="col-12">
-                      <input 
-                        className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none" 
-                        value={form.nombre} 
-                        onChange={set('nombre')} 
-                        placeholder="Nombre completo" 
-                        required 
+                      <input
+                        className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none"
+                        value={form.nombre}
+                        onChange={set('nombre')}
+                        placeholder="Nombre completo"
+                        required
                       />
                     </div>
                     <div className="col-md-6">
-                      <input 
-                        className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none" 
-                        value={form.ci} 
-                        onChange={set('ci')} 
-                        placeholder="CI" 
-                        required 
+                      <input
+                        className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none"
+                        value={form.ci}
+                        onChange={set('ci')}
+                        placeholder="CI"
+                        required
                       />
                     </div>
                     <div className="col-md-6">
-                      <input 
-                        className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none" 
-                        value={form.telefono} 
-                        onChange={set('telefono')} 
-                        placeholder="Teléfono" 
-                      />
-                    </div>
-                    
-                    <div className="col-12">
-                      <input 
-                        className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none" 
-                        type="email" 
-                        value={form.correo} 
-                        onChange={set('correo')} 
-                        placeholder="tu@correo.com" 
-                        required 
+                      <input
+                        className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none"
+                        value={form.telefono}
+                        onChange={set('telefono')}
+                        placeholder="Teléfono"
                       />
                     </div>
 
                     <div className="col-12">
-                      <input 
-                        className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none" 
-                        type="password" 
-                        value={form.password} 
-                        onChange={set('password')} 
-                        placeholder="Contraseña (mín. 6)" 
-                        required 
-                        minLength={6} 
+                      <input
+                        className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none"
+                        type="email"
+                        value={form.correo}
+                        onChange={set('correo')}
+                        placeholder="tu@correo.com"
+                        required
+                      />
+                    </div>
+
+                    <div className="col-12">
+                      <input
+                        className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none"
+                        type="password"
+                        value={form.password}
+                        onChange={set('password')}
+                        placeholder="Contraseña (mín. 6)"
+                        required
+                        minLength={6}
                       />
                     </div>
 
@@ -208,22 +208,22 @@ export default function RegisterPage() {
                     </div>
 
                     <div className="col-12">
-                      <input 
-                        className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none" 
-                        value={form.direccion} 
-                        onChange={set('direccion')} 
-                        placeholder="Dirección exacta" 
+                      <input
+                        className="form-control bg-light border-secondary border-opacity-10 text-dark py-2 px-3 rounded-pill shadow-none"
+                        value={form.direccion}
+                        onChange={set('direccion')}
+                        placeholder="Dirección exacta"
                         required
                       />
                     </div>
                   </div>
-                  
-                  <button className="btn btn-primary-dark w-100 py-2 fw-bold text-white rounded-pill mt-4 shadow-sm transition-scale" type="submit" disabled={loading}>
+
+                  <button className="btn btn-primary-dark w-100 py-2 fw-bold text-dark rounded-pill mt-4 shadow-sm transition-scale" type="submit" disabled={loading}>
                     {loading ? <span className="spinner-border spinner-border-sm me-2"></span> : null}
                     {loading ? 'Registrando...' : 'Finalizar Registro'}
                   </button>
                 </form>
-                
+
                 <div className="mt-4 text-center small text-muted">
                   ¿Ya tenés cuenta? <Link href="/login" className="text-primary-dark text-decoration-none fw-bold">Iniciar sesión</Link>
                 </div>
