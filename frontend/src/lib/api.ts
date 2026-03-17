@@ -25,12 +25,12 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 
 // ── Auth ──
 export const authApi = {
-  register: (data: { 
-    nombre: string; 
-    ci: string; 
-    telefono: string; 
-    direccion: string; 
-    correo: string; 
+  register: (data: {
+    nombre: string;
+    ci: string;
+    telefono: string;
+    direccion: string;
+    correo: string;
     password: string;
     latitud?: number;
     longitud?: number;
@@ -68,8 +68,10 @@ export const ordersApi = {
   createOrder: (productos: { producto_id: number; cantidad: number; precio: number }[]) =>
     request<{ message: string; pedido_id: number }>('/orders', { method: 'POST', body: JSON.stringify({ productos }) }),
   getOrders: () => request<any[]>('/orders'),
+  getOrderById: (id: number) => request<any>(`/admin/orders/${id}`),
   updateStatus: (id: number, estado: string) =>
     request<any>(`/admin/orders/${id}/status`, { method: 'PUT', body: JSON.stringify({ estado }) }),
+  deleteOrder: (id: number) => request<any>(`/orders/${id}`, { method: 'DELETE' }),
 };
 
 // ── Productos Admin ──

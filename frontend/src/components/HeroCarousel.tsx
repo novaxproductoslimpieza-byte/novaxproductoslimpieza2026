@@ -1,42 +1,48 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import Link from 'next/link';
 import Button from './ui/Button';
+import { catalogApi } from '../lib/api';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
+// Imágenes de muestra que se rotan por índice (se actualizarán con imágenes reales de cada categoría)
+const sampleImages = [
+  '/images/CATALOGO NOVAX PLUS/1.png',
+  '/images/CATALOGO NOVAX PLUS/3.png',
+  '/images/CATALOGO NOVAX PLUS/5.png',
+  '/images/CATALOGO NOVAX PLUS/1.png',
+  '/images/CATALOGO NOVAX PLUS/3.png',
+];
+
+const sampleBtnTexts = ['Ver Productos', 'Explorar Línea', 'Comprar Ahora', 'Ver Catálogo', 'Ver Más'];
+
 const HeroCarousel: React.FC = () => {
-  const slides = [
-    {
-      id: 1,
-      title: 'Limpieza <span class="text-primary">Automotriz</span>',
-      description: 'Línea especializada para el cuidado y brillo de tu vehículo. Máxima protección y acabado profesional.',
-      image: '/images/CATALOGO NOVAX PLUS/1.png',
-      btnText: 'Ver Productos',
-      btnLink: '#productos'
-    },
-    {
-      id: 2,
-      title: 'Higiene <span class="text-accent">Personal</span>',
-      description: 'Jabones y desinfectantes diseñados para tu bienestar. Suavidad y limpieza profunda garantizada.',
-      image: '/images/CATALOGO NOVAX PLUS/3.png',
-      btnText: 'Explorar Línea',
-      btnLink: '#productos'
-    },
-    {
-      id: 3,
-      title: 'Limpieza del <span class="text-primary">Hogar</span>',
-      description: 'Todo lo que necesitas para un hogar impecable. Eficiencia contra la grasa y suciedad más difícil.',
-      image: '/images/CATALOGO NOVAX PLUS/5.png',
-      btnText: 'Comprar Ahora',
-      btnLink: '#productos'
-    }
-  ];
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    catalogApi.getCategories()
+      .then(setCategories)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  // Mostrar esqueleto mientras carga
+  if (loading) {
+    return (
+      <div className="mb-5 rounded-4 overflow-hidden border border-primary border-opacity-10 shadow-lg" style={{ background: 'var(--bg-card)', height: '400px' }}>
+        <div className="h-100 d-flex align-items-center justify-content-center">
+          <div className="spinner-border text-primary" role="status" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mb-5 rounded-4 overflow-hidden border border-primary border-opacity-10 shadow-lg" style={{ background: 'var(--bg-card)' }}>
@@ -56,57 +62,62 @@ const HeroCarousel: React.FC = () => {
         className="mySwiper"
         style={{ height: '400px' }}
       >
-        {slides.map((slide) => (
-          <SwiperSlide key={slide.id}>
-            <div className="h-100 p-5 position-relative d-flex align-items-center" style={{ 
-              background: 'linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card2) 100%)'
-            }}>
-              {/* Abstract Background Element */}
-              <div 
-                style={{ 
-                  position: 'absolute', 
-                  top: '-10%', 
-                  right: '-10%', 
-                  width: '500px', 
-                  height: '500px', 
-                  background: 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%)', 
-                  pointerEvents: 'none',
-                  zIndex: 0
-                }} 
-              />
-              
-              <div className="container position-relative" style={{ zIndex: 1 }}>
-                <div className="row align-items-center">
-                  <div className="col-lg-6">
-                    <h1 className="display-4 fw-bold mb-3" dangerouslySetInnerHTML={{ __html: slide.title }} />
-                    <p className="lead text-muted mb-4" style={{ maxWidth: '600px' }}>
-                      {slide.description}
-                    </p>
-                    <div className="d-flex gap-3">
-                      <Link href={slide.btnLink}>
-                        <Button size="lg" className="px-5">{slide.btnText}</Button>
-                      </Link>
-                      <Button variant="outline" size="lg" className="px-4">Más Info</Button>
+        {categories.map((cat: any, idx: number) => {
+          const image = sampleImages[idx % sampleImages.length];
+          const btnText = sampleBtnTexts[idx % sampleBtnTexts.length];
+          return (
+            <SwiperSlide key={cat.id}>
+              <div className="h-100 p-5 position-relative d-flex align-items-center" style={{ 
+                background: 'linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card2) 100%)'
+              }}>
+                {/* Abstract Background Element */}
+                <div 
+                  style={{ 
+                    position: 'absolute', 
+                    top: '-10%', 
+                    right: '-10%', 
+                    width: '500px', 
+                    height: '500px', 
+                    background: 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%)', 
+                    pointerEvents: 'none',
+                    zIndex: 0
+                  }} 
+                />
+                
+                <div className="container position-relative" style={{ zIndex: 1 }}>
+                  <div className="row align-items-center">
+                    <div className="col-lg-6">
+                      <h1 className="display-4 fw-bold mb-3">{cat.nombre}</h1>
+                      <p className="lead text-muted mb-4" style={{ maxWidth: '600px' }}>
+                        {cat.descripcion || `Descubrí nuestra línea completa de ${cat.nombre}. Calidad y efectividad garantizada.`}
+                      </p>
+                      <div className="d-flex gap-3">
+                        <Link href={`/?category_id=${cat.id}`}>
+                          <Button size="lg" className="px-5">{btnText}</Button>
+                        </Link>
+                        <Button variant="outline" size="lg" className="px-4">Más Info</Button>
+                      </div>
                     </div>
-                  </div>
-                  <div className="col-lg-6 d-none d-lg-flex justify-content-center">
-                    <img 
-                      src={slide.image} 
-                      alt={slide.title} 
-                      style={{ 
-                        maxHeight: '320px', 
-                        filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.3))',
-                        transform: 'perspective(1000px) rotateY(-10deg)'
-                      }} 
-                      className="img-fluid floating-img"
-                    />
+                    <div className="col-lg-6 d-none d-lg-flex justify-content-center">
+                      <img 
+                        src={image} 
+                        alt={cat.nombre} 
+                        style={{ 
+                          maxHeight: '320px', 
+                          filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.3))',
+                          transform: 'perspective(1000px) rotateY(-10deg)'
+                        }} 
+                        className="img-fluid floating-img"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </SwiperSlide>
-        ))}
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
+
 
       <style jsx global>{`
         @keyframes float {

@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { catalogApi } from '../../lib/api';
-import { LogIn, User, ShoppingBag, LogOut, ChevronDown, Search } from 'lucide-react';
+import { LogIn, User, ShoppingBag, LogOut, ChevronDown, Search, Home } from 'lucide-react';
 
 export default function TopBar() {
   const { user, logout } = useAuth();
@@ -53,15 +53,15 @@ export default function TopBar() {
       <div className="container d-flex justify-content-between align-items-center gap-3">
         {/* Logo */}
         <Link href="/" className="d-flex align-items-center gap-2 text-decoration-none hover-scale flex-shrink-0">
-          <img src="/images/config_web/logonovax.png" alt="Novax" height="40" className="rounded-1 shadow-sm" />
-          <span className="fw-bold text-white fs-5 font-outfit d-none d-lg-inline">Nova<span className="text-primary-dark">x</span></span>
+          <img src="/images/config_web/logonovax.png" alt="Novax" height="50" className="rounded-1 shadow-sm" />
+          <span className="fw-bold text-white fs-5 font-outfit d-none d-lg-inline">Novax</span>
         </Link>
 
         {/* Search Bar MOVED FROM MAIN HEADER */}
         <form onSubmit={handleSearch} className="d-flex align-items-center bg-white rounded-pill overflow-hidden shadow-sm flex-grow-1 mx-lg-4" style={{ maxWidth: '600px', height: '42px' }}>
           {/* Selector de Categoría con Hover CSS */}
           <div className="dropdown-hover h-100 position-relative border-end border-light d-none d-md-block">
-            <button 
+            <button
               type="button"
               className="btn-category-selector h-100 px-3 d-flex align-items-center gap-2"
               style={{ minWidth: '130px' }}
@@ -70,12 +70,12 @@ export default function TopBar() {
               <ChevronDown size={14} className="text-primary-dark chevron-icon" />
             </button>
             <div className="dropdown-menu-custom position-absolute top-100 start-0 mt-0 p-2 bg-white rounded shadow-lg border border-light z-3" style={{ minWidth: '200px' }}>
-              <button 
+              <button
                 type="button"
                 className="btn btn-link text-dark text-decoration-none w-100 text-start small py-2 px-3 hover-bg-light rounded fw-bold"
-                onClick={() => { 
-                  setSelectedCat('Todas'); 
-                  setSelectedCatId(null); 
+                onClick={() => {
+                  setSelectedCat('Todas');
+                  setSelectedCatId(null);
                   const params = new URLSearchParams();
                   if (searchTerm) params.set('search', searchTerm);
                   router.push(`/?${params.toString()}`);
@@ -84,13 +84,13 @@ export default function TopBar() {
                 Todas las categorías
               </button>
               {categories.map((cat: any) => (
-                <button 
+                <button
                   key={cat.id}
                   type="button"
                   className="btn btn-link text-dark text-decoration-none w-100 text-start small py-2 px-3 hover-bg-light rounded fw-bold"
-                  onClick={() => { 
-                    setSelectedCat(cat.nombre); 
-                    setSelectedCatId(cat.id); 
+                  onClick={() => {
+                    setSelectedCat(cat.nombre);
+                    setSelectedCatId(cat.id);
                     const params = new URLSearchParams();
                     if (searchTerm) params.set('search', searchTerm);
                     params.set('category_id', String(cat.id));
@@ -103,9 +103,9 @@ export default function TopBar() {
             </div>
           </div>
 
-          <input 
-            type="text" 
-            className="form-control bg-transparent border-0 text-dark shadow-none px-3 h-100 fw-bold small" 
+          <input
+            type="text"
+            className="form-control bg-transparent border-0 text-dark shadow-none px-3 h-100 fw-bold small"
             placeholder="Buscar productos..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -117,6 +117,15 @@ export default function TopBar() {
         </form>
 
         <div className="d-flex align-items-center gap-3 flex-shrink-0">
+          {/* Inicio */}
+          <Link
+            href="/"
+            title="Inicio"
+            className="text-white text-decoration-none d-flex align-items-center gap-1 small fw-bold font-inter hover-scale home-icon-btn"
+          >
+            <Home size={20} className="text-primary-dark bg-white rounded-circle p-1 shadow-sm" />
+            <span className="d-none d-lg-inline">Inicio</span>
+          </Link>
           {/* Idioma */}
           <div className="dropdown-hover position-relative d-none d-md-block">
             <button
@@ -144,7 +153,7 @@ export default function TopBar() {
                   className="btn btn-link text-white text-decoration-none p-0 d-flex align-items-center gap-1 small fw-bold font-inter"
                 >
                   <User size={18} className="text-primary-dark opacity-100 bg-white rounded-circle p-1" />
-                  <span className="d-none d-md-inline text-truncate text-white" style={{maxWidth: '100px'}}>{user.nombre.split(' ')[0]}</span>
+                  <span className="d-none d-md-inline text-truncate text-white" style={{ maxWidth: '100px' }}>{user.nombre.split(' ')[0]}</span>
                   <ChevronDown size={14} className="chevron-icon d-none d-md-inline text-white" />
                 </button>
                 <div className="dropdown-menu-custom position-absolute top-100 end-0 mt-0 p-3 bg-white rounded shadow-lg border border-secondary border-opacity-10 z-3" style={{ minWidth: '200px' }}>
@@ -168,7 +177,7 @@ export default function TopBar() {
               </>
             ) : (
               <Link href="/login" className="text-white text-decoration-none d-flex align-items-center gap-1 small fw-bold font-inter hover-text-primary">
-                <LogIn size={20} className="text-primary-dark bg-white rounded-circle p-1 shadow-sm" /> 
+                <LogIn size={20} className="text-primary-dark bg-white rounded-circle p-1 shadow-sm" />
                 <span className="d-none d-md-inline">Cuenta</span>
               </Link>
             )}
