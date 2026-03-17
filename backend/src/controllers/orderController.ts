@@ -35,6 +35,33 @@ export const createOrder = async (req: AuthRequest, res: Response): Promise<void
   }
 };
 
+// GET /api/admin/orders/:id (Admin Only)
+export const getOrderById = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const pedido = await prisma.pedido.findUnique({
+      where: { id: Number(id) },
+      include: {
+        detalles: {
+          include: { producto: { select: { nombre: true, imagen: true, presentacion: true } } }
+        },
+        cliente: {
+          select: { nombre: true, correo: true, ci: true, telefono: true, direccion: true }
+        }
+      }
+    });
+    if (!pedido) {
+      res.status(404).json({ error: 'Pedido no encontrado' });
+      return;
+    }
+    res.json(pedido);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener el pedido.' });
+  }
+};
+
+
+
 // GET /api/orders
 export const getOrders = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
