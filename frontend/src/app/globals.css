@@ -25,7 +25,7 @@
 
   /* Primary (azul pastel para énfasis) */
   --primary: #e7ebf0;
-  --primary-dark: #60a5fa;
+  --primary-dark: #124ed9;
   --primary-glow: rgba(147, 197, 253, 0.4);
 
   /* Accent (verde positivo) */
@@ -35,7 +35,7 @@
   /* Estados */
   --danger: #ef4444;
   --warning: #f59e0b;
-  --info: #3b82f6;
+  --info: #124ed9;
 
   /* Texto */
   --text: #0f172a;
@@ -231,79 +231,158 @@ body {
   font-size: 0.85rem;
 }
 
-/* ── Buttons ── */
+/* ── Base para todos los botones ── */
 .btn {
   display: inline-flex;
+  /* Permite alinear íconos y texto en línea */
   align-items: center;
+  /* Centra verticalmente contenido */
   justify-content: center;
+  /* Centra horizontalmente contenido */
   gap: 0.4rem;
+  /* Espacio entre íconos y texto */
   padding: 0.6rem 1.2rem;
+  /* Espaciado interno del botón */
   border-radius: var(--radius-sm);
+  /* Bordes redondeados usando variable global */
   font-size: 0.9rem;
+  /* Tamaño de fuente base */
   font-weight: 600;
+  /* Peso de fuente seminegrita */
   cursor: pointer;
+  /* Cambia el cursor al pasar sobre botón */
   transition: all var(--transition);
+  /* Transición suave para hover y transformaciones */
   border: none;
+  /* Sin borde por defecto */
   text-decoration: none;
+  /* Elimina subrayado de links */
   font-family: inherit;
+  /* Hereda fuente de la app */
+  transform: translateY(0);
+  /* Posición inicial, se usará para hover */
+  box-shadow: var(--shadow);
+  /* Sombra básica de todos los botones */
 }
 
+/* ── Botón Primario ── */
 .btn-primary {
   background: var(--primary);
-  color: #0f172a;
-  /* Texto oscuro sobre azul pastel para contraste */
+  /* Fondo azul pastel */
+  color: var(--text);
+  /* Texto oscuro sobre fondo claro */
 }
 
 .btn-primary:hover {
   background: var(--primary-dark);
+  /* Fondo azul más oscuro al pasar mouse */
+  color: #fff;
+  /* Texto blanco para contraste */
   box-shadow: 0 4px 16px var(--primary-glow);
+  /* Sombra glow azul pastel */
+  transform: translateY(-1px);
+  /* Levanta ligeramente el botón */
 }
 
+/* ── Botón Secundario ── */
 .btn-secondary {
   background: var(--bg-card2);
+  /* Fondo gris muy claro */
   color: var(--text);
+  /* Texto oscuro */
   border: 1px solid var(--border);
+  /* Borde gris suave */
 }
 
 .btn-secondary:hover {
   border-color: var(--primary);
+  /* Cambia borde a azul pastel */
   color: var(--primary);
+  /* Texto azul pastel */
+  box-shadow: 0 4px 16px var(--primary-glow);
+  /* Sombra glow */
+  transform: translateY(-1px);
+  /* Elevación suave */
 }
 
+/* ── Botón Peligro / Eliminar ── */
 .btn-danger {
   background: var(--danger);
+  /* Fondo rojo intenso */
   color: #fff;
+  /* Texto blanco */
 }
 
 .btn-danger:hover {
-  opacity: 0.85;
+  background: #dc2626;
+  /* Fondo rojo más oscuro */
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.25);
+  /* Glow rojo */
+  transform: translateY(-1px);
+  /* Elevación suave */
 }
 
+/* ── Botón de Acción Positiva / Acento ── */
 .btn-accent {
   background: var(--accent);
-  color: #0f172a;
+  /* Fondo verde positivo */
+  color: var(--text);
+  /* Texto oscuro */
 }
 
 .btn-accent:hover {
-  opacity: 0.85;
+  opacity: 1;
+  /* Mantiene opacidad completa */
   transform: translateY(-1px);
+  /* Elevación suave */
   box-shadow: 0 4px 16px var(--accent-glow);
+  /* Glow verde */
 }
 
+/* ── Botón Fantasía / Ghost ── */
+.btn-ghost {
+  background: transparent;
+  /* Sin fondo */
+  color: var(--text-light);
+  /* Texto claro */
+  border: 1px solid transparent;
+  /* Borde invisible por defecto */
+}
+
+.btn-ghost:hover {
+  background: rgba(148, 163, 184, 0.1);
+  /* Fondo semi-transparente al pasar mouse */
+  color: var(--text);
+  /* Texto oscuro */
+  transform: translateY(-1px);
+  /* Elevación suave */
+}
+
+/* ── Tamaños de Botón ── */
 .btn-sm {
   padding: 0.35rem 0.8rem;
+  /* Padding reducido para botones pequeños */
   font-size: 0.8rem;
+  /* Fuente más pequeña */
 }
 
 .btn-lg {
   padding: 0.8rem 1.8rem;
+  /* Padding más amplio para botones grandes */
   font-size: 1rem;
+  /* Fuente más grande */
 }
 
+/* ── Estado Deshabilitado ── */
 .btn:disabled {
   opacity: 0.5;
+  /* Opacidad reducida */
   cursor: not-allowed;
+  /* Cursor de no permitido */
   transform: none;
+  /* Sin elevación */
+  box-shadow: none;
+  /* Sin sombra */
 }
 
 /* ── Cards ── */

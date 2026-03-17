@@ -14,7 +14,7 @@ subir al repositorio
 pasos:
 
 git add .
-git commit -m "actualiza menu principal pedidos y geoubicacion clientes"
+git commit -m "ajuste de impresora"
 git push origin main
 
 bajar del repositorio

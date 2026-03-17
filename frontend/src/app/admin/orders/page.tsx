@@ -69,35 +69,35 @@ function OrderDetailModal({
         {/* Info general */}
         <div className="info-grid mb-4">
           <div className="info-item">
-            <span className="info-label">N° Pedido</span>
+            <span className="info-label fw-bold">N° Pedido: </span>
             <span className="info-value fw-bold text-primary-dark">#{order.id}</span>
           </div>
           <div className="info-item">
-            <span className="info-label">Fecha</span>
+            <span className="info-label fw-bold">Fecha: </span>
             <span className="info-value">{fmtDate(order.fecha)}</span>
           </div>
           <div className="info-item">
-            <span className="info-label">Estado</span>
+            <span className="info-label fw-bold">Estado: </span>
             <StatusBadge estado={order.estado} />
           </div>
           <div className="info-item">
-            <span className="info-label">Cliente</span>
+            <span className="info-label fw-bold">Cliente: </span>
             <span className="info-value fw-bold">{order.cliente?.nombre}</span>
           </div>
           <div className="info-item">
-            <span className="info-label">CI</span>
+            <span className="info-label fw-bold">CI: </span>
             <span className="info-value">{order.cliente?.ci}</span>
           </div>
           <div className="info-item">
-            <span className="info-label">Teléfono</span>
+            <span className="info-label fw-bold">Teléfono: </span>
             <span className="info-value">{order.cliente?.telefono || '—'}</span>
           </div>
           <div className="info-item" style={{ gridColumn: '1 / -1' }}>
-            <span className="info-label">Dirección</span>
+            <span className="info-label fw-bold">Dirección: </span>
             <span className="info-value">{order.cliente?.direccion || '—'}</span>
           </div>
           <div className="info-item" style={{ gridColumn: '1 / -1' }}>
-            <span className="info-label">Correo</span>
+            <span className="info-label fw-bold">Correo: </span>
             <span className="info-value">{order.cliente?.correo}</span>
           </div>
         </div>
@@ -108,18 +108,18 @@ function OrderDetailModal({
           <table className="detail-table">
             <thead>
               <tr>
-                <th>#</th>
-                <th>Producto</th>
-                <th className="text-center">Presentación</th>
-                <th className="text-center">Cant.</th>
-                <th className="text-end">Precio Unit.</th>
-                <th className="text-end">Subtotal</th>
+                <th className="text-center fw-bold">#</th>
+                <th className="text-center fw-bold">Producto</th>
+                <th className="text-center fw-bold">Presentación</th>
+                <th className="text-center fw-bold">Cant.</th>
+                <th className="text-end fw-bold">Precio Unit.</th>
+                <th className="text-end fw-bold">Subtotal</th>
               </tr>
             </thead>
             <tbody>
               {order.detalles?.map((d: any, i: number) => (
                 <tr key={d.id}>
-                  <td className="text-muted small">{i + 1}</td>
+                  <td className="text-muted small fw-bold">{i + 1}</td>
                   <td className="fw-bold">{d.producto?.nombre}</td>
                   <td className="text-center text-muted small">{d.producto?.presentacion || '—'}</td>
                   <td className="text-center fw-bold">{d.cantidad}</td>
@@ -141,7 +141,7 @@ function OrderDetailModal({
         <div className="d-flex flex-wrap gap-2 no-print">
           {nextState && (
             <button
-              className="btn btn-primary-dark btn-sm rounded-pill px-4 fw-bold shadow-sm text-white"
+              className="btn btn-primary-dark btn-sm rounded-pill px-4 fw-bold shadow-sm text-dark"
               disabled={updating}
               onClick={() => onChangeStatus(order.id, nextState)}
             >
@@ -281,14 +281,16 @@ export default function AdminOrdersPage() {
       </div>
 
       {/* ── Panel de Búsqueda y Filtros (SearchBar) ── */}
-      <div className="window-card p-3 mb-4">
+      <div className="window-card p-3 mb-4 border-gray-700 shadow-lg">
         <div className="row g-2 align-items-end">
           <div className="col-12 col-md-4">
-            <label className="form-label small fw-bold text-muted text-uppercase mb-1" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>Búsqueda</label>
+            <label className="form-label small fw-bold text-muted text-uppercase mb-1" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>
+              Búsqueda
+            </label>
             <div className="position-relative">
               <span className="position-absolute top-50 translate-middle-y ms-3 text-muted" style={{ pointerEvents: 'none' }}>🔍</span>
               <input
-                className="form-control form-control-sm ps-5 rounded-pill border border-light bg-light text-dark shadow-none"
+                className="form-control form-control-sm ps-5 rounded border border-gray-400 bg-white text-dark shadow-sm focus:border-blue-500 focus:shadow-md transition"
                 placeholder="N° pedido, cliente, CI..."
                 value={search}
                 onChange={e => { setSearch(e.target.value); setPage(1); }}
@@ -296,9 +298,9 @@ export default function AdminOrdersPage() {
             </div>
           </div>
           <div className="col-6 col-md-2">
-            <label className="form-label small fw-bold text-muted text-uppercase mb-1" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>Estado</label>
+            <label className="form-label small fw-bold text-muted text-uppercase mb-1 fw-bold" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>Estado</label>
             <select
-              className="form-select form-select-sm rounded-pill border border-light bg-light text-dark shadow-none"
+              className="form-control form-control-sm ps-5 rounded border border-gray-400 bg-white text-dark shadow-sm focus:border-blue-500 focus:shadow-md transition"
               value={filterEstado}
               onChange={e => { setFilterEstado(e.target.value); setPage(1); }}
             >
@@ -307,23 +309,27 @@ export default function AdminOrdersPage() {
             </select>
           </div>
           <div className="col-6 col-md-2">
-            <label className="form-label small fw-bold text-muted text-uppercase mb-1" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>Desde</label>
+            <label className="form-label small fw-bold text-muted text-uppercase mb-1 fw-bold" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>Desde</label>
             <input
-              type="date" className="form-control form-control-sm rounded-pill border border-light bg-light text-dark shadow-none"
+              type="date" className="form-control form-control-sm ps-5 rounded border border-gray-400 bg-white text-dark shadow-sm focus:border-blue-500 focus:shadow-md transition"
               value={filterDesde}
               onChange={e => { setFilterDesde(e.target.value); setPage(1); }}
             />
           </div>
           <div className="col-6 col-md-2">
-            <label className="form-label small fw-bold text-muted text-uppercase mb-1" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>Hasta</label>
+            <label className="form-label small fw-bold text-muted text-uppercase mb-1 fw-bold" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>Hasta</label>
             <input
-              type="date" className="form-control form-control-sm rounded-pill border border-light bg-light text-dark shadow-none"
+              type="date" className="form-control form-control-sm ps-5 rounded border border-gray-400 bg-white text-dark shadow-sm focus:border-blue-500 focus:shadow-md transition"
               value={filterHasta}
               onChange={e => { setFilterHasta(e.target.value); setPage(1); }}
             />
           </div>
           <div className="col-6 col-md-2 d-flex align-items-end">
-            <button className="btn btn-light btn-sm rounded-pill px-3 fw-bold border border-light w-100" onClick={clearFilters}>
+            <button
+              className="btn btn-outline-danger btn-sm rounded-pill w-100 fw-bold shadow-sm transition"
+              onClick={clearFilters}
+              style={{ padding: '6px 12px' }}
+            >
               ✕ Limpiar
             </button>
           </div>
@@ -332,7 +338,7 @@ export default function AdminOrdersPage() {
         {/* Chips de estado rápido */}
         <div className="d-flex gap-2 mt-3 flex-wrap">
           <button
-            className={`btn rounded-pill px-3 btn-xs fw-bold ${!filterEstado ? 'btn-primary-dark text-white shadow-sm' : 'btn-light text-muted border-light'}`}
+            className={`btn rounded-pill px-3 btn-xs fw-bold ${!filterEstado ? 'btn-primary-dark text-dark shadow-sm' : 'btn-light text-muted border-light'}`}
             onClick={() => { setFilterEstado(''); setPage(1); }}
           >
             Todos ({orders.length})
@@ -342,7 +348,7 @@ export default function AdminOrdersPage() {
             return (
               <button
                 key={e}
-                className={`btn rounded-pill px-3 btn-xs fw-bold ${filterEstado === e ? 'btn-primary-dark text-white shadow-sm' : 'btn-light text-muted border-light'}`}
+                className={`btn rounded-pill px-3 btn-xs fw-bold ${filterEstado === e ? 'btn-primary-dark text-dark shadow-sm' : 'btn-light text-muted border-light'}`}
                 onClick={() => { setFilterEstado(e); setPage(1); }}
               >
                 <span className={`dot-${e.toLowerCase().replace('_', '')}`} /> {ESTADO_LABELS[e]} ({count})
@@ -353,7 +359,7 @@ export default function AdminOrdersPage() {
       </div>
 
       {/* ── Tabla de Resultados (DataTable) ── */}
-      <div className="window-card overflow-hidden p-0">
+      <div className="window-card overflow-hidden p-0 border-gray-700 shadow-lg">
         <div className="table-responsive">
           <table className="table table-hover align-middle mb-0">
             <thead className="bg-light text-muted small text-uppercase">
@@ -415,7 +421,7 @@ export default function AdminOrdersPage() {
                           </button>
                           {next && (
                             <button
-                              className="btn btn-primary-dark btn-sm rounded-pill px-2 text-white fw-bold shadow-sm"
+                              className="btn btn-primary-dark btn-sm rounded-pill px-2 text-dark fw-bold shadow-sm"
                               style={{ fontSize: '0.7rem' }}
                               disabled={updating}
                               onClick={() => handleChangeStatus(o.id, next)}
