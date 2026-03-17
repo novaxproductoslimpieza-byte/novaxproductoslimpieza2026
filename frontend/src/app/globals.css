@@ -24,16 +24,16 @@
   --border: rgba(0, 0, 0, 0.08);
 
   /* Primary (azul pastel para énfasis) */
-  --primary: #e7ebf0;
+  --primary: #124ed9;
   --primary-dark: #124ed9;
   --primary-glow: rgba(147, 197, 253, 0.4);
 
   /* Accent (verde positivo) */
-  --accent: #10b981;
-  --accent-glow: rgba(16, 185, 129, 0.2);
+  --accent: #f5dd06;
+  --accent-glow: rgba(236, 10, 10, 0.2);
 
   /* Estados */
-  --danger: #ef4444;
+  --danger: #e90e0e;
   --warning: #f59e0b;
   --info: #124ed9;
 
@@ -41,7 +41,7 @@
   --text: #0f172a;
   /* Texto oscuro para fondos claros */
   --text-light: #dbe0e7;
-  --text-muted: #64748b;
+  --text-muted: #252b33;
 
   /* Extras de consistencia */
   --radius: 16px;
@@ -233,6 +233,7 @@ body {
 
 /* ── Base para todos los botones ── */
 .btn {
+  background-color: var(--primary);
   display: inline-flex;
   /* Permite alinear íconos y texto en línea */
   align-items: center;
@@ -314,7 +315,7 @@ body {
 }
 
 .btn-danger:hover {
-  background: #dc2626;
+  background: #e90e0e;
   /* Fondo rojo más oscuro */
   box-shadow: 0 4px 16px rgba(239, 68, 68, 0.25);
   /* Glow rojo */
@@ -322,21 +323,52 @@ body {
   /* Elevación suave */
 }
 
-/* ── Botón de Acción Positiva / Acento ── */
+/* ── Botón de Acción Positiva / Acento (Ver detalle) ── */
+/* ── Botón de Acción / btn-accent ── */
 .btn-accent {
   background: var(--accent);
-  /* Fondo verde positivo */
-  color: var(--text);
+  /* Fondo verde/acento del proyecto */
+  color: var(--text-dark);
   /* Texto oscuro */
+  border: 1px solid var(--border);
+  /* Borde base igual que inputs */
+  border-radius: var(--radius-sm);
+  /* Bordes consistentes con inputs */
+  padding: 0.6rem 1rem;
+  /* Padding base */
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  outline: none;
 }
 
+/* Hover normal */
 .btn-accent:hover {
-  opacity: 1;
-  /* Mantiene opacidad completa */
-  transform: translateY(-1px);
-  /* Elevación suave */
   box-shadow: 0 4px 16px var(--accent-glow);
-  /* Glow verde */
+  transform: translateY(-1px);
+}
+
+/* Focus y Active: mismo estilo que inputs */
+.btn-accent:focus,
+.btn-accent:active {
+  border-color: var(--primary);
+  /* Mismo borde azul que inputs */
+  box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+  /* Glow celeste */
+  outline: none;
+  transform: translateY(0);
+}
+
+/* Disabled */
+.btn-accent:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* ── Botón Fantasía / Ghost ── */
@@ -384,6 +416,46 @@ body {
   box-shadow: none;
   /* Sin sombra */
 }
+
+/* ── Focus general para todos los botones ── */
+.btn:focus {
+  outline: none;
+  /* Eliminamos el outline por defecto */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+  /* Glow celeste suave, igual que inputs */
+  transform: translateY(-1px);
+  /* Elevación suave */
+}
+
+/* ── Focus específico por tipo ── */
+.btn-primary:focus {
+  box-shadow: 0 0 0 3px rgba(24, 24, 24, 0.5);
+}
+
+.btn-secondary:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+.btn-danger:focus,
+.btn-danger:active {
+  box-shadow: 0 0 0 3px rgba(22, 22, 22, 0.5);
+  /* Glow rojo como hover */
+  transform: translateY(-1px);
+  /* Elevación suave */
+  outline: none;
+}
+
+.btn-accent:focus {
+  box-shadow: 0 0 0 3px rgba(4, 240, 15, 0.719);
+  /* Glow verde */
+}
+
+.btn-ghost:focus {
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.5);
+  /* Glow gris/azulado */
+}
+
+
 
 /* ── Cards ── */
 .card {
@@ -512,19 +584,197 @@ body {
 }
 
 /* ── Forms ── */
+
+/* ──────────────────────────────────────────────── */
+/* BLOQUE INPUTS Y SELECTS - GLOBAL.CSS NOVAX       */
+/* Propósito: estandarizar el estilo de formularios */
+/* y mejorar UX, accesibilidad y estados visuales. */
+/* ──────────────────────────────────────────────── */
+
+/* ── Contenedor de grupo de formulario ── */
+/* .form-group agrupa label + input/select + ayuda/error */
 .form-group {
   display: flex;
+  /* Flex vertical para label/input */
   flex-direction: column;
+  /* Coloca label arriba del input */
   gap: 0.4rem;
+  /* Espaciado entre elementos */
 }
 
+/* ── Labels de formulario mejorados ── */
 .form-label {
   font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-light);
+  /* Tamaño legible */
+  font-weight: 600;
+  /* Semi-negrita consistente con inputs */
+  color: var(--text-muted);
+  /* Gris uniforme */
+  display: inline-block;
+  /* Para permitir padding/margin controlados */
+  margin-bottom: 0.3rem;
+  /* Espaciado vertical estándar */
+  letter-spacing: 0.5px;
+  /* Espaciado de letras ligero para claridad */
+  transition: color var(--transition), font-weight var(--transition);
+  /* Transición suave si quieres cambiar color dinámicamente */
+  cursor: default;
+  /* Indica que no es clickeable */
+  user-select: none;
+  /* Evita selección accidental */
 }
 
+/* Opcional: cambio de color al hover sobre el grupo de input */
+.form-group:hover .form-label {
+  color: var(--text);
+  /* Más destacado al acercar mouse al input */
+  font-weight: 700;
+}
+
+/* ── Inputs estandarizados ── */
 .form-input {
+  background: var(--bg-card2);
+  /* Fondo gris muy claro uniforme */
+  border: 1px solid var(--border);
+  /* Borde suave */
+  border-radius: var(--radius-sm);
+  /* Bordes redondeados consistentes */
+  padding: 0.65rem 0.9rem;
+  /* Espaciado interno cómodo */
+  color: var(--text);
+  /* Texto oscuro legible */
+  font-size: 0.9rem;
+  /* Tamaño de fuente base */
+  font-family: inherit;
+  /* Hereda fuente del proyecto */
+  transition: border-color var(--transition), box-shadow var(--transition);
+  outline: none;
+  /* Quita outline por defecto */
+}
+
+
+
+/* ── Placeholder ── */
+.form-input::placeholder {
+  color: var(--text-muted);
+  /* Texto más claro */
+}
+
+/* ── Estado deshabilitado ── */
+.form-input:disabled {
+  background: #f2f4f7;
+  /* Fondo gris tenue */
+  color: var(--text-muted);
+  /* Texto apagado */
+  cursor: not-allowed;
+  /* Cursor prohibido */
+  opacity: 0.6;
+  /* Menor visibilidad */
+}
+
+/* ── Estado solo lectura ── */
+.form-input[readonly] {
+  background: #f8fafc;
+  /* Mantiene visible pero inactivo */
+  color: var(--text-muted);
+  cursor: default;
+}
+
+/* ── Estado error ── */
+.form-input.error {
+  border-color: var(--danger);
+  /* Borde rojo intenso */
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25);
+  /* Glow rojo */
+}
+
+/* ── Estado success ── */
+.form-input.success {
+  border-color: var(--accent);
+  /* Borde verde */
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  /* Glow verde */
+}
+
+/* ── Tamaños de input ── */
+.form-input-sm {
+  padding: 0.4rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+/* ── Input destacado para search u otros ── */
+.form-input-lg {
+  padding: 0.65rem 1.25rem;
+  /* Mayor padding horizontal */
+  height: 42px;
+  /* Altura consistente con tu input anterior */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  /* Sombra ligera */
+  border-radius: var(--radius);
+  /* Bordes redondeados más grandes */
+  width: 100%;
+  /* Ocupa todo el contenedor */
+  transition: all var(--transition);
+}
+
+/* ── Selects estandarizados ── */
+.form-select {
+  appearance: none;
+  /* Quita estilo nativo */
+  background: var(--bg-card2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") no-repeat right 0.75rem center;
+  background-size: 1rem;
+  /* Flecha SVG */
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.9rem;
+  padding-right: 2.5rem;
+  /* Espacio para la flecha */
+  color: var(--text);
+  font-size: 0.85rem;
+  font-family: inherit;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+/* ── Estado focus para selects ── */
+/* Focus unificado para todos los inputs y selects */
+.form-input:focus,
+.form-label:focus,
+.form-select:focus {
+  border-color: var(--primary);
+  /* Borde azul pastel */
+  box-shadow: 0 0 0 3px var(--primary-glow);
+  /* Glow celeste */
+}
+
+/* ── Select destacado para search y filtros ── */
+.form-select-lg {
+  padding: 0.65rem 1rem;
+  /* Padding consistente con input */
+  height: 40px;
+  /* Altura igual que input */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  /* Sombra ligera inicial */
+  border-radius: var(--radius-sm);
+  width: 100%;
+  transition: all var(--transition);
+  appearance: none;
+  background-color: var(--bg-card2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.form-select-lg:focus {
+  border-color: var(--primary);
+  /* Igual que input focus */
+  box-shadow: 0 0 0 3px var(--primary-glow);
+  /* Glow azul pastel igual que input */
+  outline: none;
+}
+
+/* ── Inputs tipo date ── */
+input[type="date"].form-input {
   background: var(--bg-card2);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -532,28 +782,38 @@ body {
   color: var(--text);
   font-size: 0.9rem;
   font-family: inherit;
-  transition: border-color var(--transition);
+  transition: border-color var(--transition), box-shadow var(--transition);
   outline: none;
 }
 
-.form-input:focus {
+/* Focus unificado */
+input[type="date"].form-input:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 3px var(--primary-glow);
 }
 
-.form-input::placeholder {
+/* ── Inputs con icono ── */
+.input-icon {
+  position: relative;
+  /* Contenedor relativo */
+}
+
+.input-icon input {
+  padding-left: 2.5rem;
+  /* Deja espacio para icono */
+}
+
+.input-icon .icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
   color: var(--text-muted);
+  pointer-events: none;
+  /* No interfiere con clics */
 }
 
-.form-select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1rem;
-  padding-right: 2.5rem;
-}
-
+/* ── Mensajes de error y ayuda ── */
 .form-error {
   color: var(--danger);
   font-size: 0.82rem;
@@ -563,6 +823,19 @@ body {
   color: var(--text-muted);
   font-size: 0.8rem;
 }
+
+/* ── Select tamaños adicionales ── */
+.form-select-sm {
+  padding: 0.4rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+.form-select-lg {
+  padding: 0.9rem 1.2rem;
+  font-size: 1rem;
+}
+
+
 
 /* ── Auth Pages ── */
 .auth-page {

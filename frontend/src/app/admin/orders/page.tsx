@@ -63,7 +63,7 @@ function OrderDetailModal({
             </nav>
             <h2 className="h4 fw-bold text-dark mb-0">Detalle del Pedido</h2>
           </div>
-          <button className="btn btn-light btn-sm rounded-circle p-2 border-0 no-print" onClick={onClose} title="Cerrar">✕</button>
+          <button className="btn btn-primary btn-sm rounded-circle p-2 border-0 no-print" onClick={onClose} title="Cerrar">✕</button>
         </div>
 
         {/* Info general */}
@@ -141,6 +141,7 @@ function OrderDetailModal({
         <div className="d-flex flex-wrap gap-2 no-print">
           {nextState && (
             <button
+              title='Procesar pedido'
               className="btn btn-primary-dark btn-sm rounded-pill px-4 fw-bold shadow-sm text-dark"
               disabled={updating}
               onClick={() => onChangeStatus(order.id, nextState)}
@@ -150,6 +151,7 @@ function OrderDetailModal({
           )}
           {order.estado !== 'ENTREGADO' && order.estado !== 'CANCELADO' && (
             <button
+              title='Cancelar pedido'
               className="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold"
               disabled={updating}
               onClick={() => onChangeStatus(order.id, 'CANCELADO')}
@@ -157,17 +159,22 @@ function OrderDetailModal({
               ✕ Cancelar pedido
             </button>
           )}
-          <button className="btn btn-light btn-sm rounded-pill px-3 fw-bold border border-light ms-auto" onClick={handlePrint}>
+          <button
+            title='Imprimir pedido'
+            className="btn btn-accent btn-sm rounded-pill px-3 fw-bold border border-light ms-auto" onClick={handlePrint}>
             🖨 Imprimir
           </button>
           <button
+            title='Eliminar pedido'
             className="btn btn-danger btn-sm rounded-pill px-3 fw-bold"
             onClick={() => onDelete(order.id)}
             disabled={updating}
           >
             🗑 Eliminar
           </button>
-          <button className="btn btn-secondary btn-sm rounded-pill px-3 fw-bold" onClick={onClose}>
+          <button
+            title='Cerrar'
+            className="btn btn-secondary btn-sm rounded-pill px-3 fw-bold" onClick={onClose}>
             Cerrar
           </button>
         </div>
@@ -275,7 +282,11 @@ export default function AdminOrdersPage() {
             {filtered.length} pedido{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}
           </p>
         </div>
-        <button className="btn btn-light btn-sm rounded-pill px-4 fw-bold border border-light shadow-sm" onClick={load}>
+        <button
+          title="Actualizar lista de pedidos"
+          className="btn btn-secondary btn-sm rounded-pill fw-bold"
+          onClick={load}
+        >
           ↺ Actualizar
         </button>
       </div>
@@ -288,47 +299,56 @@ export default function AdminOrdersPage() {
               Búsqueda
             </label>
             <div className="position-relative">
-              <span className="position-absolute top-50 translate-middle-y ms-3 text-muted" style={{ pointerEvents: 'none' }}>🔍</span>
+              <span className="position-absolute top-50 translate-middle-y ms-3 text-muted" style={{ pointerEvents: 'none' }}>
+                🔍
+              </span>
               <input
-                className="form-control form-control-sm ps-5 rounded border border-gray-400 bg-white text-dark shadow-sm focus:border-blue-500 focus:shadow-md transition"
+                className="form-input form-input-lg ps-4"
                 placeholder="N° pedido, cliente, CI..."
                 value={search}
                 onChange={e => { setSearch(e.target.value); setPage(1); }}
-              />
-            </div>
+              />            </div>
           </div>
           <div className="col-6 col-md-2">
-            <label className="form-label small fw-bold text-muted text-uppercase mb-1 fw-bold" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>Estado</label>
+            <label className="form-label text-uppercase">Estado</label>
             <select
-              className="form-control form-control-sm ps-5 rounded border border-gray-400 bg-white text-dark shadow-sm focus:border-blue-500 focus:shadow-md transition"
+              className="form-select form-sm w-full"
               value={filterEstado}
               onChange={e => { setFilterEstado(e.target.value); setPage(1); }}
             >
               <option value="">Todos</option>
-              {ESTADOS.map(e => <option key={e} value={e}>{ESTADO_LABELS[e]}</option>)}
+              {ESTADOS.map(e => (
+                <option key={e} value={e}>{ESTADO_LABELS[e]}</option>
+              ))}
             </select>
           </div>
+
           <div className="col-6 col-md-2">
-            <label className="form-label small fw-bold text-muted text-uppercase mb-1 fw-bold" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>Desde</label>
+            <label className="form-label text-uppercase">Desde</label>
             <input
-              type="date" className="form-control form-control-sm ps-5 rounded border border-gray-400 bg-white text-dark shadow-sm focus:border-blue-500 focus:shadow-md transition"
+              type="date"
+              className="form-input form-sm w-full"
               value={filterDesde}
               onChange={e => { setFilterDesde(e.target.value); setPage(1); }}
             />
           </div>
+
           <div className="col-6 col-md-2">
-            <label className="form-label small fw-bold text-muted text-uppercase mb-1 fw-bold" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>Hasta</label>
+            <label className="form-label text-uppercase">Hasta</label>
             <input
-              type="date" className="form-control form-control-sm ps-5 rounded border border-gray-400 bg-white text-dark shadow-sm focus:border-blue-500 focus:shadow-md transition"
+              type="date"
+              className="form-input form-sm w-full"
               value={filterHasta}
               onChange={e => { setFilterHasta(e.target.value); setPage(1); }}
             />
           </div>
-          <div className="col-6 col-md-2 d-flex align-items-end">
+
+          <div className="col-6 col-md-2 d-flex justify-content-start align-items-end">
             <button
-              className="btn btn-outline-danger btn-sm rounded-pill w-100 fw-bold shadow-sm transition"
+              title="Limpiar filtros"
+              className="btn btn-danger btn-sm rounded-pill fw-bold"
               onClick={clearFilters}
-              style={{ padding: '6px 12px' }}
+              style={{ minWidth: '100px', padding: '0.35rem 0.8rem' }}
             >
               ✕ Limpiar
             </button>
@@ -338,7 +358,8 @@ export default function AdminOrdersPage() {
         {/* Chips de estado rápido */}
         <div className="d-flex gap-2 mt-3 flex-wrap">
           <button
-            className={`btn rounded-pill px-3 btn-xs fw-bold ${!filterEstado ? 'btn-primary-dark text-dark shadow-sm' : 'btn-light text-muted border-light'}`}
+            title="Todos los pedidos"
+            className={`btn  rounded-pill px-3 btn-xs fw-bold ${!filterEstado ? 'btn-primary-dark text-dark shadow-sm' : 'btn-light text-muted border-light'}`}
             onClick={() => { setFilterEstado(''); setPage(1); }}
           >
             Todos ({orders.length})
@@ -348,7 +369,7 @@ export default function AdminOrdersPage() {
             return (
               <button
                 key={e}
-                className={`btn rounded-pill px-3 btn-xs fw-bold ${filterEstado === e ? 'btn-primary-dark text-dark shadow-sm' : 'btn-light text-muted border-light'}`}
+                className={`btn-accent rounded-pill px-3 btn-xs fw-bold ${filterEstado === e ? 'btn-primary-dark text-dark shadow-sm' : 'btn-light text-muted border-light'}`}
                 onClick={() => { setFilterEstado(e); setPage(1); }}
               >
                 <span className={`dot-${e.toLowerCase().replace('_', '')}`} /> {ESTADO_LABELS[e]} ({count})
@@ -412,8 +433,11 @@ export default function AdminOrdersPage() {
                       <td className="pe-4 text-end">
                         <div className="d-flex justify-content-end gap-1">
                           <button
-                            className="btn btn-light btn-sm rounded-circle p-2 border border-light hover-scale"
-                            onClick={() => handleViewDetail(o.id)}
+                            className="btn btn-accent btn-sm rounded-pill p-2 border border-light hover-scale text-dark"
+                            onClick={(e) => {
+                              handleViewDetail(o.id);
+                              e.currentTarget.blur();
+                            }}
                             title="Ver detalle"
                             disabled={loadingDetail}
                           >
@@ -421,7 +445,7 @@ export default function AdminOrdersPage() {
                           </button>
                           {next && (
                             <button
-                              className="btn btn-primary-dark btn-sm rounded-pill px-2 text-dark fw-bold shadow-sm"
+                              className="btn btn-primary btn-sm rounded-pill px-2 text-white fw-bold shadow-sm"
                               style={{ fontSize: '0.7rem' }}
                               disabled={updating}
                               onClick={() => handleChangeStatus(o.id, next)}
@@ -432,18 +456,23 @@ export default function AdminOrdersPage() {
                           )}
                           {o.estado !== 'ENTREGADO' && o.estado !== 'CANCELADO' && (
                             <button
-                              className="btn btn-light btn-sm rounded-circle p-2 border border-light text-danger hover-scale"
+                              className="btn btn-secondary btn-sm rounded-circle p-2 border border-light text-white hover-scale"
                               disabled={updating}
                               onClick={() => handleChangeStatus(o.id, 'CANCELADO')}
                               title="Cancelar"
                             >✕</button>
                           )}
                           <button
-                            className="btn btn-light btn-sm rounded-circle p-2 border border-light text-danger hover-scale"
+                            className="btn btn-danger btn-sm rounded-circle p-2 border border-light text-white hover-scale"
                             disabled={updating}
-                            onClick={() => handleDelete(o.id)}
+                            onClick={(e) => {
+                              handleDelete(o.id);   // tu función existente
+                              e.currentTarget.blur(); // quita el foco del botón para que no se quede presionado
+                            }}
                             title="Eliminar"
-                          >🗑</button>
+                          >
+                            🗑
+                          </button>
                         </div>
                       </td>
                     </tr>
