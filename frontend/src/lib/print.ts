@@ -356,3 +356,86 @@ export function printOrderDetail(
 
   openPrintWindow(`${header}${clienteHtml}${table}${observations}${footer}`);
 }
+
+export function printClientsList(
+  clients: Array<any>,
+  opts: { logoUrl?: string; contact?: ContactInfo; title?: string; subtitle?: string } = {}
+) {
+  const title = opts.title ?? 'Lista de Clientes';
+  const subtitle = opts.subtitle ?? 'Clientes filtrados';
+
+  const header = buildHeaderHTML(title, subtitle, opts.logoUrl, opts.contact);
+
+  const rows = clients
+    .map((c) => `
+      <tr>
+        <td>${c.nombre ?? '—'}</td>
+        <td>${c.provincia?.nombre ?? '—'}</td>
+        <td>${c.zona?.nombre ?? '—'}</td>
+        <td>${c.telefono ?? '—'}</td>
+        <td>${c.correo ?? '—'}</td>
+      </tr>
+    `)
+    .join('');
+
+  const table = `
+    <table class="print-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Provincia</th>
+          <th>Zona</th>
+          <th>Teléfono</th>
+          <th>Correo</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows}
+      </tbody>
+    </table>
+  `;
+
+  const footer = buildFooterHTML(opts.contact);
+
+  openPrintWindow(`${header}${table}${footer}`);
+}
+
+export function printClientDetail(
+  client: any,
+  opts: { logoUrl?: string; contact?: ContactInfo; title?: string; subtitle?: string } = {}
+) {
+  const title = opts.title ?? 'Detalle de Cliente';
+  const subtitle = opts.subtitle ?? `Cliente: ${client.nombre ?? '—'}`;
+
+  const header = buildHeaderHTML(title, subtitle, opts.logoUrl, opts.contact);
+
+  const clienteHtml = `
+    <div style="margin-top:12px; display:flex; flex-wrap:wrap; gap:8px;">
+      <div style="flex:1; min-width:240px;">
+        <div style="font-weight:700; margin-bottom:4px;">Información Personal</div>
+        <div>Nombre: ${client.nombre ?? '—'}</div>
+        <div>CI: ${client.ci ?? '—'}</div>
+        <div>Correo: ${client.correo ?? '—'}</div>
+        <div>Teléfono: ${client.telefono ?? '—'}</div>
+      </div>
+      <div style="flex:1; min-width:240px;">
+        <div style="font-weight:700; margin-bottom:4px;">Ubicación</div>
+        <div>Dirección: ${client.direccion ?? '—'}</div>
+        <div>Provincia: ${client.provincia?.nombre ?? '—'}</div>
+        <div>Zona: ${client.zona?.nombre ?? '—'}</div>
+        ${client.latitud && client.longitud ? `<div>Coordenadas: ${client.latitud}, ${client.longitud}</div>` : ''}
+      </div>
+    </div>
+  `;
+
+  const observations = client.observaciones ? `
+    <div style="margin-top:12px;">
+      <div style="font-weight:700; margin-bottom:4px;">Observaciones</div>
+      <div>${client.observaciones}</div>
+    </div>
+  ` : '';
+
+  const footer = buildFooterHTML(opts.contact);
+
+  openPrintWindow(`${header}${clienteHtml}${observations}${footer}`);
+}

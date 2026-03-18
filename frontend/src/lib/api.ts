@@ -100,4 +100,5 @@ export const userApi = {
   getProfile: () => request<any>('/users/profile'),
   updateProfile: (data: any) => request<any>('/users/profile', { method: 'PUT', body: JSON.stringify(data) }),
   getClients: () => request<any[]>('/admin/clients'),
+  deleteClient: (id: number) => request<any>(`/admin/clients/${id}`, { method: 'DELETE' }),
 };

@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../../context/AuthContext';
 import { catalogApi } from '../../lib/api';
 import {
@@ -9,9 +9,12 @@ import {
   MapPin, CreditCard, Info, Tag, LayoutDashboard
 } from 'lucide-react';
 
+
 export default function MainHeader() {
   const router = useRouter();
   const { user, logout, isAdmin } = useAuth();
+  const pathname = usePathname();
+  const isHomePage = pathname === '/';
 
   // Sidebar state
   const [categories, setCategories] = useState<any[]>([]);
@@ -54,6 +57,7 @@ export default function MainHeader() {
         <ul className="nav d-flex align-items-center gap-4 m-0 p-0" style={{ listStyle: 'none' }}>
 
           {/* Sidebar Trigger (Menu) */}
+          {isHomePage && (
           <li
             className="nav-item position-relative"
             onMouseEnter={() => setIsSidebarOpen(true)}
@@ -207,7 +211,7 @@ export default function MainHeader() {
               )}
             </div>
           </li>
-
+        )}
           {/* Enlace Administrador con Popup Multinivel */}
           {isAdmin && (
             <li

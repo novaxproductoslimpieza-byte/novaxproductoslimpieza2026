@@ -30,6 +30,8 @@ const CONTACT_INFO = {
 
 const PAGE_SIZE = 10;
 
+
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 const fmtDate = (d: string) => new Date(d).toLocaleDateString('es-BO', { year: 'numeric', month: 'short', day: 'numeric' });
 const calcTotal = (detalles: any[]) =>
@@ -186,7 +188,7 @@ function OrderDetailModal({
               disabled={updating}
               onClick={() => onChangeStatus(order.id, 'CANCELADO')}
             >
-              ✕ Cancelar pedido
+              ✕ Cancelar
             </button>
           )}
           <button
@@ -226,8 +228,10 @@ export default function AdminOrdersPage() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
 
+  
   // Modal detalle
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState(false);
 
   // Filtros
@@ -509,17 +513,19 @@ export default function AdminOrdersPage() {
                       <td><StatusBadge estado={o.estado} /></td>
                       <td className="pe-4 text-end">
                         <div className="d-flex justify-content-end gap-1">
-                          <button
-                            className="btn btn-accent btn-sm rounded-pill p-2 border border-light hover-scale text-dark"
-                            onClick={(e) => {
-                              handleViewDetail(o.id);
-                              e.currentTarget.blur();
-                            }}
-                            title="Ver detalle"
-                            disabled={loadingDetail}
-                          >
-                            👁
-                          </button>
+ 
+                        <button
+                         onClick={() => {
+                         setSelectedOrder(o);   // 'o' es el pedido
+                          setIsModalOpen(true);
+                        }}
+                        className="btn btn-sm btn-info"
+                        title="Ver detalle"
+                      >
+                        👁
+                      </button> 
+                      
+ 
                           {next && (
                             <button
                               className="btn btn-primary btn-sm rounded-pill px-2 text-white fw-bold shadow-sm"
@@ -587,15 +593,15 @@ export default function AdminOrdersPage() {
       </div>
 
       {/* ── Modal de Detalle ── */}
-      {selectedOrder && (
-        <OrderDetailModal
-          order={selectedOrder}
-          onClose={() => setSelectedOrder(null)}
-          onChangeStatus={handleChangeStatus}
-          updating={updating}
-          onDelete={handleDelete}
-        />
-      )}
+      {isModalOpen && selectedOrder && (
+  <OrderDetailModal
+    order={selectedOrder}
+    onClose={() => setIsModalOpen(false)}  // cierra modal
+    onChangeStatus={handleChangeStatus}
+    updating={updating}
+    onDelete={handleDelete}
+  />
+)}
 
       {/* ── Estilos ── */}
       <style jsx>{`

@@ -1,13 +1,17 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { catalogApi } from '../../lib/api';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+
+
 
 export default function NavigationBar() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentCatId = searchParams.get('category_id');
   const [categories, setCategories] = useState<any[]>([]);
+  const pathname = usePathname();
+  const isHomePage = pathname === '/';
 
   useEffect(() => {
     catalogApi.getCategories().then(setCategories).catch(console.error);
@@ -25,6 +29,7 @@ export default function NavigationBar() {
     <div className="bg-white border-bottom border-light py-2 shadow-sm sticky-top" style={{ zIndex: 1000 }}>
       <div className="container">
         {/* Carrusel de Categorías (Grupos) */}
+{isHomePage && (
         <div className="category-carousel-container" style={{ overflow: 'hidden' }}>
           <div className="d-flex align-items-center gap-2 overflow-auto hide-scrollbar" style={{ whiteSpace: 'nowrap' }}>
             <button
@@ -44,6 +49,8 @@ export default function NavigationBar() {
             ))}
           </div>
         </div>
+
+)}
       </div>
 
       <style jsx>{`

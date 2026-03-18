@@ -1,19 +1,157 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { userApi } from '../../../lib/api';
+import { generateClientsPdf, generateClientDetailPdf } from '../../../lib/pdf';
+import { printClientsList, printClientDetail } from '../../../lib/print';
+import ClientFilters from './ClientFilters';
+import ClientList from './ClientList';
+import ClientDetailModal from './ClientDetailModal';
+
+// ── Constantes ────────────────────────────────────────────────────────────────
+const LOGO_URL = encodeURI('/images/CATALOGO NOVAX PLUS/logonovax.png');
+const CONTACT_INFO = {
+  companyName: 'Novax Plus',
+  phone: '(000) 000-0000',
+  email: 'contacto@novax.com',
+  address: 'La Paz, Bolivia',
+};
+
+interface Client {
+  id: number;
+  nombre: string;
+  ci: string;
+  correo: string;
+  telefono?: string;
+  direccion?: string;
+  provincia?: { id: number; nombre: string } | null;
+  zona?: { id: number; nombre: string } | null;
+  latitud?: number;
+  longitud?: number;
+  observaciones?: string;
+}
 
 export default function AdminClientsPage() {
-  const [clients, setClients] = useState<any[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [filteredClients, setFilteredClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [selectedProvincia, setSelectedProvincia] = useState('');
+  const [selectedZona, setSelectedZona] = useState('');
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => { userApi.getClients().then(setClients).finally(() => setLoading(false)); }, []);
+  useEffect(() => {
+    loadClients();
+  }, []);
 
-  const filtered = clients.filter(c =>
-    c.nombre.toLowerCase().includes(search.toLowerCase()) ||
-    c.correo.toLowerCase().includes(search.toLowerCase()) ||
-    c.ci.includes(search)
-  );
+  useEffect(() => {
+    filterClients();
+  }, [clients, search, selectedProvincia, selectedZona]);
+
+  const loadClients = async () => {
+    try {
+      const data = await userApi.getClients();
+      setClients(data);
+    } catch (error) {
+      console.error('Error loading clients:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterClients = () => {
+    let filtered = clients;
+
+    if (search) {
+      filtered = filtered.filter(c =>
+        c.nombre.toLowerCase().includes(search.toLowerCase()) ||
+        c.ci.includes(search) ||
+        c.correo.toLowerCase().includes(search.toLowerCase()) ||
+        (c.telefono && c.telefono.includes(search))
+      );
+    }
+
+    if (selectedProvincia) {
+      filtered = filtered.filter(c => c.provincia?.nombre === selectedProvincia);
+    }
+
+    if (selectedZona) {
+      filtered = filtered.filter(c => c.zona?.nombre === selectedZona);
+    }
+
+    setFilteredClients(filtered);
+  };
+
+  const handleViewDetail = (client: Client) => {
+    setSelectedClient(client);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedClient(null);
+  };
+
+  const handleDeleteClient = async (id: number) => {
+    try {
+      await userApi.deleteClient(id);
+      setClients(clients.filter(c => c.id !== id));
+    } catch (error) {
+      console.error('Error deleting client:', error);
+      alert('Error al eliminar el cliente');
+    }
+  };
+
+  const handlePdfList = () => {
+    generateClientsPdf(filteredClients, {
+      logoUrl: LOGO_URL,
+      contact: CONTACT_INFO,
+      title: 'Lista de Clientes',
+      subtitle: 'Clientes filtrados',
+    });
+  };
+
+  const handlePrintList = () => {
+    printClientsList(filteredClients, {
+      logoUrl: LOGO_URL,
+      contact: CONTACT_INFO,
+      title: 'Lista de Clientes',
+      subtitle: 'Clientes filtrados',
+    });
+  };
+
+  const handlePdfDetail = () => {
+    if (selectedClient) {
+      generateClientDetailPdf(selectedClient, {
+        logoUrl: LOGO_URL,
+        contact: CONTACT_INFO,
+        title: 'Detalle de Cliente',
+        subtitle: `Cliente: ${selectedClient.nombre}`,
+      });
+    }
+  };
+
+  const handlePrintDetail = () => {
+    if (selectedClient) {
+      printClientDetail(selectedClient, {
+        logoUrl: LOGO_URL,
+        contact: CONTACT_INFO,
+        title: 'Detalle de Cliente',
+        subtitle: `Cliente: ${selectedClient.nombre}`,
+      });
+    }
+  };
+
+  const handleUpdate = () => {
+    setLoading(true);
+    loadClients();
+  };
+
+  const handleClear = () => {
+    setSearch('');
+    setSelectedProvincia('');
+    setSelectedZona('');
+  };
 
   return (
     <div className="py-2">
@@ -24,71 +162,44 @@ export default function AdminClientsPage() {
         </div>
       </div>
 
-      <div className="row mb-4">
-        <div className="col-md-6 col-lg-4">
-          <div className="position-relative">
-            <span className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted opacity-50">🔍</span>
-            <input 
-              className="form-control bg-light border-secondary border-opacity-10 text-dark ps-5 rounded-pill shadow-none" 
-              placeholder="Buscar por nombre, CI o correo..." 
-              value={search} 
-              onChange={e => setSearch(e.target.value)} 
-            />
-          </div>
-        </div>
-      </div>
+      <ClientFilters
+        search={search}
+        onSearchChange={setSearch}
+        selectedProvincia={selectedProvincia}
+        onProvinciaChange={setSelectedProvincia}
+        selectedZona={selectedZona}
+        onZonaChange={setSelectedZona}
+        onPdf={handlePdfList}
+        onPrint={handlePrintList}
+        onUpdate={handleUpdate}
+        onClear={handleClear}
+      />
 
-      <div className="window-card overflow-hidden p-0">
-        <div className="table-responsive">
-          <table className="table table-hover align-middle mb-0">
-            <thead className="bg-light text-muted small text-uppercase">
-              <tr>
-                <th className="px-4 py-3 border-0">Nombre</th>
-                <th className="py-3 border-0">CI</th>
-                <th className="py-3 border-0">Correo</th>
-                <th className="py-3 border-0">Teléfono</th>
-                <th className="pe-4 py-3 border-0">Dirección</th>
-              </tr>
-            </thead>
-            <tbody className="border-0">
-              {loading ? (
-                Array(5).fill(0).map((_, i) => <tr key={i}><td colSpan={5} className="p-3"><div className="skeleton" style={{ height: '36px' }} /></td></tr>)
-              ) : filtered.length === 0 ? (
-                <tr><td colSpan={5} className="p-5 text-center text-muted">No se encontraron clientes.</td></tr>
-              ) : filtered.map(c => (
-                <tr key={c.id}>
-                  <td className="px-4">
-                    <div className="d-flex align-items-center gap-3">
-                      <div className="client-avatar shadow-sm" style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
-                        {c.nombre.charAt(0).toUpperCase()}
-                      </div>
-                      <span className="fw-bold text-dark">{c.nombre}</span>
-                    </div>
-                  </td>
-                  <td className="text-muted small">{c.ci}</td>
-                  <td className="small text-dark">{c.correo}</td>
-                  <td className="small text-dark">{c.telefono || <span className="opacity-25">—</span>}</td>
-                  <td className="pe-4">
-                    <div className="d-flex align-items-center gap-2">
-                      <div className="text-muted small text-truncate" style={{ maxWidth: '150px' }} title={c.direccion || ''}>
-                        {c.direccion || <span className="opacity-25">—</span>}
-                      </div>
-                      {c.latitud && c.longitud ? (
-                        <span className="badge rounded-pill bg-primary bg-opacity-20 text-primary-dark extra-small border border-primary border-opacity-10" title={`${c.latitud}, ${c.longitud}`}>📍 Ubicado</span>
-                      ) : (
-                        <span className="badge rounded-pill bg-light text-muted extra-small border border-light">⚪ Sin mapa</span>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <style jsx>{`
-        .extra-small { font-size: 0.65rem; padding: 2px 8px; }
-      `}</style>
+      <ClientList
+        clients={filteredClients}
+        loading={loading}
+        onViewDetail={handleViewDetail}
+        onDelete={handleDeleteClient}
+        onLocation={(client) => {
+          if (client.latitud && client.longitud) {
+            window.open(`https://www.google.com/maps?q=${client.latitud},${client.longitud}`, '_blank');
+          }
+        }}
+      />
+
+      <ClientDetailModal
+        client={selectedClient}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onPdf={handlePdfDetail}
+        onPrint={handlePrintDetail}
+        onDelete={() => {
+          if (selectedClient) {
+            handleDeleteClient(selectedClient.id);
+            handleCloseModal();
+          }
+        }}
+      />
     </div>
   );
 }

@@ -264,3 +264,112 @@ export async function generateOrderDetailPdf(order: any, opts: PdfOptions = {}) 
 
   doc.save(options.fileName ?? `novax_detalle_${order.id}.pdf`);
 }
+
+/**
+ * Genera un PDF con la lista de clientes.
+ */
+export async function generateClientsPdf(
+  clients: Array<any>,
+  opts: PdfOptions = {}
+) {
+  const options = { ...DEFAULT_OPTIONS, ...opts };
+  const title = options.title ?? 'Lista de Clientes';
+  const subtitle = options.subtitle ?? 'Listado de clientes filtrados';
+
+  const { doc, margin, header, footer } = createDocument(title, options);
+
+  const body = clients.map((c) => [
+    c.nombre ?? '—',
+    c.provincia?.nombre ?? '—',
+    c.zona?.nombre ?? '—',
+    c.telefono ?? '—',
+    c.correo ?? '—',
+  ]);
+
+  autoTable(doc, {
+    startY: 32,
+    margin: { left: margin, right: margin, top: margin, bottom: margin },
+    head: [['Nombre', 'Provincia', 'Zona', 'Teléfono', 'Correo']],
+    body,
+    styles: {
+      font: 'helvetica',
+      fontSize: 10,
+      textColor: '#000000',
+      cellPadding: 4,
+      overflow: 'linebreak',
+    },
+    headStyles: {
+      fillColor: '#f0f4ff',
+      textColor: '#0c2461',
+      fontStyle: 'bold',
+      halign: 'center',
+    },
+    alternateRowStyles: { fillColor: '#f8f9ff' },
+    didDrawPage: (data) => {
+      header();
+      const pageNumber = doc.getCurrentPageInfo().pageNumber;
+      const totalPages = doc.getNumberOfPages();
+      footer(pageNumber, totalPages);
+    },
+  });
+
+  doc.save(options.fileName ?? 'novax_clientes.pdf');
+}
+
+/**
+ * Genera un PDF con el detalle de un cliente específico.
+ */
+export async function generateClientDetailPdf(client: any, opts: PdfOptions = {}) {
+  const options = { ...DEFAULT_OPTIONS, ...opts };
+  const title = options.title ?? 'Detalle de Cliente';
+
+  const { doc, margin, header, footer } = createDocument(title, options);
+
+  // Llamar header al inicio
+  await header();
+
+  const clientInfoY = 32;
+  const leftX = margin;
+  const rightX = doc.internal.pageSize.getWidth() / 2 + 10;
+
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`Nombre: ${client.nombre ?? '—'}`, leftX, clientInfoY + 8);
+  doc.text(`CI: ${client.ci ?? '—'}`, leftX, clientInfoY + 15);
+  doc.text(`Correo: ${client.correo ?? '—'}`, leftX, clientInfoY + 22);
+
+  doc.text('Teléfono:', rightX, clientInfoY + 8);
+  doc.setFont('helvetica', 'normal');
+  doc.text(client.telefono ?? '—', rightX, clientInfoY + 15);
+  doc.text('Dirección:', rightX, clientInfoY + 22);
+  doc.text(client.direccion ?? '—', rightX, clientInfoY + 29);
+  doc.text('Provincia:', rightX, clientInfoY + 36);
+  doc.text(client.provincia?.nombre ?? '—', rightX, clientInfoY + 43);
+  doc.text('Zona:', rightX, clientInfoY + 50);
+  doc.text(client.zona?.nombre ?? '—', rightX, clientInfoY + 57);
+
+  if (client.latitud && client.longitud) {
+    doc.setFont('helvetica', 'bold');
+    doc.text('Coordenadas:', leftX, clientInfoY + 36);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Lat: ${client.latitud}, Lng: ${client.longitud}`, leftX, clientInfoY + 43);
+  }
+
+  // Observaciones si existen
+  if (client.observaciones) {
+    const y = clientInfoY + 70;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Observaciones:', margin, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text(client.observaciones, margin, y + 5, { maxWidth: doc.internal.pageSize.getWidth() - margin * 2 });
+  }
+
+  // Llamar footer al final
+  const pageNumber = doc.getCurrentPageInfo().pageNumber;
+  const totalPages = doc.getNumberOfPages();
+  footer(pageNumber, totalPages);
+
+  doc.save(options.fileName ?? `novax_detalle_cliente_${client.id}.pdf`);
+}
