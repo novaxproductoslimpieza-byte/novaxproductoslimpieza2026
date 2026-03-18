@@ -1,6 +1,8 @@
 'use client';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ordersApi } from '../../../lib/api';
+import { generateOrdersPdf, generateOrderDetailPdf } from '../../../lib/pdf';
+import { printOrderDetail, printOrdersList } from '../../../lib/print';
 
 // ── Tipos y Constantes ────────────────────────────────────────────────────────
 const ESTADOS = ['PENDIENTE', 'APROBADO', 'EN_DESPACHO', 'ENTREGADO', 'CANCELADO'] as const;
@@ -16,6 +18,14 @@ const ESTADO_NEXT: Partial<Record<EstadoPedido, EstadoPedido>> = {
 const BADGE_CLS: Record<EstadoPedido, string> = {
   PENDIENTE: 'badge-pending', APROBADO: 'badge-approved', EN_DESPACHO: 'badge-dispatch',
   ENTREGADO: 'badge-delivered', CANCELADO: 'badge-cancelled',
+};
+
+const LOGO_URL = encodeURI('/images/CATALOGO NOVAX PLUS/logonovax.png');
+const CONTACT_INFO = {
+  companyName: 'Novax Plus',
+  phone: '(000) 000-0000',
+  email: 'contacto@novax.com',
+  address: 'Calle Falsa 123, Ciudad',
 };
 
 const PAGE_SIZE = 10;
@@ -40,9 +50,29 @@ function OrderDetailModal({
 }) {
   const total = calcTotal(order.detalles);
   const nextState = ESTADO_NEXT[order.estado as EstadoPedido];
-  const printRef = useRef<HTMLDivElement>(null);
 
-  const handlePrint = () => window.print();
+  const handlePrint = () => {
+    printOrderDetail(order, {
+      logoUrl: LOGO_URL,
+      contact: CONTACT_INFO,
+      title: 'Detalle de Pedido',
+      subtitle: `Pedido #${order.id}`,
+    });
+  };
+
+  const handleGeneratePdf = async () => {
+    try {
+      await generateOrderDetailPdf(order, {
+        logoUrl: LOGO_URL,
+        contact: CONTACT_INFO,
+        title: `Detalle de Pedido #${order.id}`,
+        fileName: `novax_detalle_${order.id}.pdf`,
+      });
+    } catch (error) {
+      console.error(error);
+      alert('No se pudo generar el PDF del pedido.');
+    }
+  };
 
   return (
     <>
@@ -50,7 +80,7 @@ function OrderDetailModal({
       <div className="modal-overlay" onClick={onClose} />
 
       {/* Panel de detalle */}
-      <div className="detail-panel" id="print-area" ref={printRef}>
+      <div className="detail-panel" id="print-area">
         {/* Header del modal */}
         <div className="detail-header d-flex justify-content-between align-items-start mb-4 no-print-close">
           <div>
@@ -160,6 +190,13 @@ function OrderDetailModal({
             </button>
           )}
           <button
+            title='Generar PDF del pedido'
+            className="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold border border-light"
+            onClick={handleGeneratePdf}
+          >
+            📄 PDF
+          </button>
+          <button
             title='Imprimir pedido'
             className="btn btn-accent btn-sm rounded-pill px-3 fw-bold border border-light ms-auto" onClick={handlePrint}>
             🖨 Imprimir
@@ -232,6 +269,29 @@ export default function AdminOrdersPage() {
 
   const clearFilters = () => { setSearch(''); setFilterEstado(''); setFilterDesde(''); setFilterHasta(''); setPage(1); };
 
+  const handlePrintList = () => {
+    printOrdersList(filtered, {
+      logoUrl: LOGO_URL,
+      contact: CONTACT_INFO,
+      title: 'Lista de Pedidos',
+      subtitle: 'Pedidos filtrados',
+    });
+  };
+
+  const handleGeneratePdfList = async () => {
+    try {
+      await generateOrdersPdf(filtered, {
+        logoUrl: LOGO_URL,
+        contact: CONTACT_INFO,
+        title: 'Listado de Pedidos',
+        fileName: 'novax_pedidos.pdf',
+      });
+    } catch (error) {
+      console.error(error);
+      alert('No se pudo generar el PDF de la lista de pedidos.');
+    }
+  };
+
   const handleViewDetail = async (id: number) => {
     setLoadingDetail(true);
     try {
@@ -282,14 +342,31 @@ export default function AdminOrdersPage() {
             {filtered.length} pedido{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}
           </p>
         </div>
-        <button
-          title="Actualizar lista de pedidos"
-          className="btn btn-secondary btn-sm rounded-pill fw-bold"
-          onClick={load}
-        >
-          ↺ Actualizar
-        </button>
+        <div className="d-flex gap-2">
+          <button
+            title="Imprimir lista de pedidos"
+            className="btn btn-accent btn-sm rounded-pill fw-bold no-print"
+            onClick={handlePrintList}
+          >
+            🖨 Imprimir
+          </button>
+          <button
+            title="Generar PDF lista de pedidos"
+            className="btn btn-outline-primary btn-sm rounded-pill fw-bold no-print"
+            onClick={handleGeneratePdfList}
+          >
+            📄 PDF
+          </button>
+          <button
+            title="Actualizar lista de pedidos"
+            className="btn btn-secondary btn-sm rounded-pill fw-bold"
+            onClick={load}
+          >
+            ↺ Actualizar
+          </button>
+        </div>
       </div>
+
 
       {/* ── Panel de Búsqueda y Filtros (SearchBar) ── */}
       <div className="window-card p-3 mb-4 border-gray-700 shadow-lg">
@@ -607,21 +684,6 @@ export default function AdminOrdersPage() {
         .detail-table tbody tr:last-child td { border-bottom: none; }
         .detail-table tfoot td { background: #fafafa; }
 
-        /* Impresión */
-        @media print {
-          .no-print, .no-print-close button { display: none !important; }
-          .modal-overlay { display: none !important; }
-          .detail-panel {
-            position: static !important;
-            transform: none !important;
-            box-shadow: none !important;
-            width: 100% !important;
-            max-height: none !important;
-            border-radius: 0 !important;
-            padding: 1rem !important;
-          }
-          body > *:not(#print-area):not(:has(#print-area)) { display: none !important; }
-        }
       `}</style>
     </div>
   );
