@@ -58,160 +58,160 @@ export default function MainHeader() {
 
           {/* Sidebar Trigger (Menu) */}
           {isHomePage && (
-          <li
-            className="nav-item position-relative"
-            onMouseEnter={() => setIsSidebarOpen(true)}
-            onMouseLeave={() => {
-              setIsSidebarOpen(false);
-              setActiveCatId(null);
-              setActiveSubId(null);
-            }}
-          >
-            <button
-              className="btn btn-primary-dark text-white text-decoration-none d-flex align-items-center gap-2 py-2 px-3 fw-bold small rounded border-0 shadow-sm transition-all hover-bright"
+            <li
+              className="nav-item position-relative"
+              onMouseEnter={() => setIsSidebarOpen(true)}
+              onMouseLeave={() => {
+                setIsSidebarOpen(false);
+                setActiveCatId(null);
+                setActiveSubId(null);
+              }}
             >
-              <Menu size={18} /> <span className="d-none d-sm-inline">Todas</span>
-            </button>
+              <button
+                className="btn btn-primary-dark text-white text-decoration-none d-flex align-items-center gap-2 py-2 px-3 fw-bold small rounded border-0 shadow-sm transition-all hover-bright"
+              >
+                <Menu size={18} /> <span className="d-none d-sm-inline">Todas</span>
+              </button>
 
-            {/* Overlay oscuro para fondo (clic para cerrar) */}
-            <div
-              className={`sidebar-overlay ${isSidebarOpen ? 'open' : ''}`}
-              onClick={() => setIsSidebarOpen(false)}
-            ></div>
+              {/* Overlay oscuro para fondo (clic para cerrar) */}
+              <div
+                className={`sidebar-overlay ${isSidebarOpen ? 'open' : ''}`}
+                onClick={() => setIsSidebarOpen(false)}
+              ></div>
 
-            {/* Sidebar / Menú Lateral Offcanvas */}
-            <div className={`sidebar-container border-end border-light ${isSidebarOpen ? 'open' : ''}`}>
-              <div ref={sidebarContentRef} className="sidebar-content hide-scrollbar overflow-auto h-100">
-                {/* 1. Identidad de Usuario */}
-                <div
-                  className="user-section p-3 bg-light border-bottom border-light"
-                  onMouseEnter={() => { setActiveCatId(null); setActiveSubId(null); }}
-                >
-                  <div className="d-flex align-items-center gap-3">
-                    <div className="avatar bg-primary-dark text-white rounded-circle d-flex align-items-center justify-content-center" style={{ width: 40, height: 40 }}>
-                      <User size={20} />
-                    </div>
-                    <div className="user-info overflow-hidden">
-                      <div className="fw-bold text-dark text-truncate small">
-                        {user ? user.nombre : 'Bienvenido'}
+              {/* Sidebar / Menú Lateral Offcanvas */}
+              <div className={`sidebar-container border-end border-light ${isSidebarOpen ? 'open' : ''}`}>
+                <div ref={sidebarContentRef} className="sidebar-content hide-scrollbar overflow-auto h-100">
+                  {/* 1. Identidad de Usuario */}
+                  <div
+                    className="user-section p-3 bg-light border-bottom border-light"
+                    onMouseEnter={() => { setActiveCatId(null); setActiveSubId(null); }}
+                  >
+                    <div className="d-flex align-items-center gap-3">
+                      <div className="avatar bg-primary-dark text-white rounded-circle d-flex align-items-center justify-content-center" style={{ width: 40, height: 40 }}>
+                        <User size={20} />
                       </div>
-                      <div className="text-muted small text-truncate" style={{ fontSize: '11px' }}>
-                        {user ? user.correo : 'Inicia sesión'}
+                      <div className="user-info overflow-hidden">
+                        <div className="fw-bold text-dark text-truncate small">
+                          {user ? user.nombre : 'Bienvenido'}
+                        </div>
+                        <div className="text-muted small text-truncate" style={{ fontSize: '11px' }}>
+                          {user ? user.correo : 'Inicia sesión'}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                {/* 2. Buscar por Departamento */}
-                <div
-                  className="section-title px-3 pt-3 pb-2 text-primary-dark fw-bold"
-                  style={{ fontSize: '12px', letterSpacing: '0.5px' }}
-                  onMouseEnter={() => { setActiveCatId(null); setActiveSubId(null); }}
-                >
-                  BUSCAR POR DEPARTAMENTO
-                </div>
-                <div className="dept-list px-2 pb-2">
-                  {categories.map((cat: any) => (
-                    <div
-                      key={cat.id}
-                      className="dept-item-wrapper"
-                      onMouseEnter={(e) => {
-                        setActiveCatId(cat.id);
-                        setActiveSubId(null);
-                        const scrollTop = sidebarContentRef.current?.scrollTop || 0;
-                        setActiveCatTop(e.currentTarget.offsetTop - scrollTop);
-                      }}
-                    >
-                      <button
-                        onClick={() => handleCategoryClick(cat.id)}
-                        className={`btn btn-link text-dark text-decoration-none w-100 text-start d-flex align-items-center justify-content-between py-2 px-3 fw-bold small rounded border-0 mb-1 transition-all ${activeCatId === cat.id ? 'bg-light text-primary-dark' : 'hover-bg-light'
-                          }`}
+                  {/* 2. Buscar por Departamento */}
+                  <div
+                    className="section-title px-3 pt-3 pb-2 text-primary-dark fw-bold"
+                    style={{ fontSize: '12px', letterSpacing: '0.5px' }}
+                    onMouseEnter={() => { setActiveCatId(null); setActiveSubId(null); }}
+                  >
+                    BUSCAR POR DEPARTAMENTO
+                  </div>
+                  <div className="dept-list px-2 pb-2">
+                    {categories.map((cat: any) => (
+                      <div
+                        key={cat.id}
+                        className="dept-item-wrapper"
+                        onMouseEnter={(e) => {
+                          setActiveCatId(cat.id);
+                          setActiveSubId(null);
+                          const scrollTop = sidebarContentRef.current?.scrollTop || 0;
+                          setActiveCatTop(e.currentTarget.offsetTop - scrollTop);
+                        }}
                       >
-                        <span className="d-flex align-items-center gap-2">
-                          <Package size={16} className={activeCatId === cat.id ? 'text-primary' : 'text-muted'} />
-                          {cat.nombre}
-                        </span>
-                        {cat.subcategorias?.length > 0 && <ChevronRight size={14} className="text-muted" />}
-                      </button>
+                        <button
+                          onClick={() => handleCategoryClick(cat.id)}
+                          className={`btn btn-link text-dark text-decoration-none w-100 text-start d-flex align-items-center justify-content-between py-2 px-3 fw-bold small rounded border-0 mb-1 transition-all ${activeCatId === cat.id ? 'bg-light text-primary-dark' : 'hover-bg-light'
+                            }`}
+                        >
+                          <span className="d-flex align-items-center gap-2">
+                            <Package size={16} className={activeCatId === cat.id ? 'text-primary' : 'text-muted'} />
+                            {cat.nombre}
+                          </span>
+                          {cat.subcategorias?.length > 0 && <ChevronRight size={14} className="text-muted" />}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <hr className="mx-3 my-2 text-muted opacity-25" onMouseEnter={() => { setActiveCatId(null); setActiveSubId(null); }} />
+
+                  {/* 3. Ayuda / Soporte */}
+                  <div
+                    className="section-title px-3 py-2 text-primary-dark fw-bold"
+                    style={{ fontSize: '12px', letterSpacing: '0.5px' }}
+                    onMouseEnter={() => { setActiveCatId(null); setActiveSubId(null); }}
+                  >
+                    AYUDA Y SOPORTE
+                  </div>
+                  <div className="px-2 pb-2" onMouseEnter={() => { setActiveCatId(null); setActiveSubId(null); }}>
+                    <Link href="/promociones" onClick={() => setIsSidebarOpen(false)} className="d-flex align-items-center gap-3 text-dark text-decoration-none small py-2 px-3 hover-bg-light rounded fw-bold">
+                      <Tag size={16} className="text-muted" /> Ofertas
+                    </Link>
+                    <Link href="/sucursales" onClick={() => setIsSidebarOpen(false)} className="d-flex align-items-center gap-3 text-dark text-decoration-none small py-2 px-3 hover-bg-light rounded fw-bold">
+                      <MapPin size={16} className="text-muted" /> Sucursales
+                    </Link>
+                    <Link href="/pagos" onClick={() => setIsSidebarOpen(false)} className="d-flex align-items-center gap-3 text-dark text-decoration-none small py-2 px-3 hover-bg-light rounded fw-bold">
+                      <CreditCard size={16} className="text-muted" /> Formas de pago
+                    </Link>
+                    <Link href="/nosotros" onClick={() => setIsSidebarOpen(false)} className="d-flex align-items-center gap-3 text-dark text-decoration-none small py-2 px-3 hover-bg-light rounded fw-bold">
+                      <Info size={16} className="text-muted" /> Nosotros
+                    </Link>
+                  </div>
+
+                  {/* 4. Configuración */}
+                  {user && (
+                    <>
+                      <hr className="mx-3 my-2 text-muted opacity-25" />
+                      <div className="section-title px-3 py-2 text-primary-dark fw-bold" style={{ fontSize: '12px' }}>CONFIGURACIÓN</div>
+                      <div className="px-2 pb-3">
+                        <Link href="/profile" onClick={() => setIsSidebarOpen(false)} className="d-flex align-items-center gap-3 text-dark text-decoration-none small py-2 px-3 hover-bg-light rounded fw-bold">
+                          <User size={16} className="text-muted" /> Tu cuenta
+                        </Link>
+                        <button onClick={() => { logout(); setIsSidebarOpen(false); }} className="btn btn-link w-100 d-flex align-items-center gap-3 text-danger text-decoration-none small py-2 px-3 hover-bg-light rounded fw-bold border-0 shadow-none">
+                          <LogOut size={16} /> Cerrar sesión
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* Flyout Layer 2: Subcategorías */}
+                {isSidebarOpen && currentActiveCat && currentActiveCat.subcategorias?.length > 0 && (
+                  <div
+                    className="flyout-submenu bg-white shadow-lg border border-light p-2 rounded show"
+                    style={{ top: activeCatTop }}
+                    onMouseLeave={() => setActiveSubId(null)}
+                  >
+                    <div className="px-3 py-1 border-bottom border-light mb-1 fw-bold text-primary-dark text-uppercase" style={{ fontSize: '11px', letterSpacing: '0.5px' }}>
+                      {currentActiveCat.nombre}
                     </div>
-                  ))}
-                </div>
-
-                <hr className="mx-3 my-2 text-muted opacity-25" onMouseEnter={() => { setActiveCatId(null); setActiveSubId(null); }} />
-
-                {/* 3. Ayuda / Soporte */}
-                <div
-                  className="section-title px-3 py-2 text-primary-dark fw-bold"
-                  style={{ fontSize: '12px', letterSpacing: '0.5px' }}
-                  onMouseEnter={() => { setActiveCatId(null); setActiveSubId(null); }}
-                >
-                  AYUDA Y SOPORTE
-                </div>
-                <div className="px-2 pb-2" onMouseEnter={() => { setActiveCatId(null); setActiveSubId(null); }}>
-                  <Link href="/promociones" onClick={() => setIsSidebarOpen(false)} className="d-flex align-items-center gap-3 text-dark text-decoration-none small py-2 px-3 hover-bg-light rounded fw-bold">
-                    <Tag size={16} className="text-muted" /> Ofertas
-                  </Link>
-                  <Link href="/sucursales" onClick={() => setIsSidebarOpen(false)} className="d-flex align-items-center gap-3 text-dark text-decoration-none small py-2 px-3 hover-bg-light rounded fw-bold">
-                    <MapPin size={16} className="text-muted" /> Sucursales
-                  </Link>
-                  <Link href="/pagos" onClick={() => setIsSidebarOpen(false)} className="d-flex align-items-center gap-3 text-dark text-decoration-none small py-2 px-3 hover-bg-light rounded fw-bold">
-                    <CreditCard size={16} className="text-muted" /> Formas de pago
-                  </Link>
-                  <Link href="/nosotros" onClick={() => setIsSidebarOpen(false)} className="d-flex align-items-center gap-3 text-dark text-decoration-none small py-2 px-3 hover-bg-light rounded fw-bold">
-                    <Info size={16} className="text-muted" /> Nosotros
-                  </Link>
-                </div>
-
-                {/* 4. Configuración */}
-                {user && (
-                  <>
-                    <hr className="mx-3 my-2 text-muted opacity-25" />
-                    <div className="section-title px-3 py-2 text-primary-dark fw-bold" style={{ fontSize: '12px' }}>CONFIGURACIÓN</div>
-                    <div className="px-2 pb-3">
-                      <Link href="/profile" onClick={() => setIsSidebarOpen(false)} className="d-flex align-items-center gap-3 text-dark text-decoration-none small py-2 px-3 hover-bg-light rounded fw-bold">
-                        <User size={16} className="text-muted" /> Tu cuenta
-                      </Link>
-                      <button onClick={() => { logout(); setIsSidebarOpen(false); }} className="btn btn-link w-100 d-flex align-items-center gap-3 text-danger text-decoration-none small py-2 px-3 hover-bg-light rounded fw-bold border-0 shadow-none">
-                        <LogOut size={16} /> Cerrar sesión
-                      </button>
-                    </div>
-                  </>
+                    {currentActiveCat.subcategorias.map((sub: any) => (
+                      <div
+                        key={sub.id}
+                        className="sub-item-wrapper"
+                        onMouseEnter={(e) => {
+                          setActiveSubId(sub.id);
+                          setActiveSubTop(e.currentTarget.offsetTop);
+                        }}
+                      >
+                        <button
+                          onClick={() => handleCategoryClick(currentActiveCat.id, sub.id)}
+                          className={`btn btn-link text-dark text-decoration-none w-100 text-start py-2 px-3 small rounded border-0 fw-bold transition-all ${activeSubId === sub.id ? 'bg-light text-primary-dark' : 'hover-bg-light'
+                            }`}
+                        >
+                          {sub.nombre}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
-
-              {/* Flyout Layer 2: Subcategorías */}
-              {isSidebarOpen && currentActiveCat && currentActiveCat.subcategorias?.length > 0 && (
-                <div
-                  className="flyout-submenu bg-white shadow-lg border border-light p-2 rounded show"
-                  style={{ top: activeCatTop }}
-                  onMouseLeave={() => setActiveSubId(null)}
-                >
-                  <div className="px-3 py-1 border-bottom border-light mb-1 fw-bold text-primary-dark text-uppercase" style={{ fontSize: '11px', letterSpacing: '0.5px' }}>
-                    {currentActiveCat.nombre}
-                  </div>
-                  {currentActiveCat.subcategorias.map((sub: any) => (
-                    <div
-                      key={sub.id}
-                      className="sub-item-wrapper"
-                      onMouseEnter={(e) => {
-                        setActiveSubId(sub.id);
-                        setActiveSubTop(e.currentTarget.offsetTop);
-                      }}
-                    >
-                      <button
-                        onClick={() => handleCategoryClick(currentActiveCat.id, sub.id)}
-                        className={`btn btn-link text-dark text-decoration-none w-100 text-start py-2 px-3 small rounded border-0 fw-bold transition-all ${activeSubId === sub.id ? 'bg-light text-primary-dark' : 'hover-bg-light'
-                          }`}
-                      >
-                        {sub.nombre}
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </li>
-        )}
+            </li>
+          )}
           {/* Enlace Administrador con Popup Multinivel */}
           {isAdmin && (
             <li
@@ -318,13 +318,33 @@ export default function MainHeader() {
               </div>
             </li>
           )}
-          {/* Nuevos enlaces (Ofertas Mes, Vender, Nosotros) */}
+          {/* Nuevos enlaces (Acerca de, Productos, vender, Como Funciona ,  Sobre empresa) */}
+          {/*Acerca del sitio web Novax */}
           <li>
-            <Link href="/ofertas" className="nav-main-link text-dark fw-bold text-decoration-none small px-2 d-flex align-items-center">
-              Ofertas
+            <Link href="/acercade" className="nav-main-link text-dark fw-bold text-decoration-none small px-2 d-flex align-items-center">
+              Acerca de
+            </Link>
+          </li>
+          {/*Productos que se venden en Novax */}
+          <li>
+            <Link href="/productosinfo" className="nav-main-link text-dark fw-bold text-decoration-none small px-2 d-flex align-items-center">
+              Productos Info
+            </Link>
+          </li>
+          {/*Sobre empresa Novax */}
+          <li>
+            <Link href="/sobreempresa" className="nav-main-link text-dark fw-bold text-decoration-none small px-2 d-flex align-items-center">
+              SobreEmpresa
+            </Link>
+          </li>
+          {/*Noticias de Novax */}
+          <li>
+            <Link href="/noticias" className="nav-main-link text-dark fw-bold text-decoration-none small px-2 d-flex align-items-center">
+              Noticias
             </Link>
           </li>
 
+          {/* isAdmin controla que solo los administradores puedan ver el enlace de vender */}
           {(isAdmin || user) && (
             <li>
               <Link href="/vender" className="nav-main-link text-dark fw-bold text-decoration-none small px-2 d-flex align-items-center">
@@ -333,11 +353,7 @@ export default function MainHeader() {
             </li>
           )}
 
-          <li>
-            <Link href="/nosotros" className="nav-main-link text-dark fw-bold text-decoration-none small px-2 d-flex align-items-center">
-              Nosotros
-            </Link>
-          </li>
+
         </ul>
       </div>
 
