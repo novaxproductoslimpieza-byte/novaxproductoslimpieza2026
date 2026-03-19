@@ -1,4 +1,4 @@
-import { FaEye, FaTrash, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaEye, FaTrash, FaMapMarkerAlt } from "react-icons/fa";
 
 interface Client {
   id: number;
@@ -29,16 +29,19 @@ export default function ClientList({
   onLocation,
 }: ClientListProps) {
   const handleDelete = (id: number) => {
-    if (confirm('¿Está seguro de eliminar este cliente?')) {
+    if (confirm("¿Está seguro de eliminar este cliente?")) {
       onDelete(id);
     }
   };
 
   const handleLocation = (client: Client) => {
     if (client.latitud && client.longitud) {
-      window.open(`https://www.google.com/maps?q=${client.latitud},${client.longitud}`, '_blank');
+      window.open(
+        `https://www.google.com/maps?q=${client.latitud},${client.longitud}`,
+        "_blank",
+      );
     } else {
-      alert('No hay ubicación disponible para este cliente.');
+      alert("No hay ubicación disponible para este cliente.");
     }
   };
 
@@ -46,7 +49,7 @@ export default function ClientList({
     <div className="window-card overflow-hidden p-0">
       <div className="table-responsive">
         <table className="table table-hover align-middle mb-0">
-          <thead className="bg-light text-muted small text-uppercase">
+          <thead className="thead-professional">
             <tr>
               <th className="px-4 py-3 border-0">Nombre</th>
               <th className="py-3 border-0">Provincia</th>
@@ -57,13 +60,15 @@ export default function ClientList({
           </thead>
           <tbody className="border-0">
             {loading ? (
-              Array(5).fill(0).map((_, i) => (
-                <tr key={i}>
-                  <td colSpan={5} className="p-3">
-                    <div className="skeleton" style={{ height: '36px' }} />
-                  </td>
-                </tr>
-              ))
+              Array(5)
+                .fill(0)
+                .map((_, i) => (
+                  <tr key={i}>
+                    <td colSpan={5} className="p-3">
+                      <div className="skeleton" style={{ height: "36px" }} />
+                    </td>
+                  </tr>
+                ))
             ) : clients.length === 0 ? (
               <tr>
                 <td colSpan={5} className="p-5 text-center text-muted">
@@ -78,16 +83,17 @@ export default function ClientList({
                       <div
                         className="client-avatar shadow-sm"
                         style={{
-                          width: '36px',
-                          height: '36px',
-                          borderRadius: '50%',
-                          background: 'linear-gradient(135deg, var(--primary-dark), var(--primary))',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '0.85rem',
+                          width: "36px",
+                          height: "36px",
+                          borderRadius: "50%",
+                          background:
+                            "linear-gradient(135deg, var(--primary-dark), var(--primary))",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "0.85rem",
                           fontWeight: 700,
-                          color: '#fff',
+                          color: "#fff",
                           flexShrink: 0,
                         }}
                       >
@@ -96,9 +102,13 @@ export default function ClientList({
                       <span className="fw-bold text-dark">{c.nombre}</span>
                     </div>
                   </td>
-                  <td className="text-muted small">{c.provincia?.nombre ?? '—'}</td>
-                  <td className="text-muted small">{c.zona?.nombre ?? '—'}</td>
-                  <td className="small text-dark">{c.telefono ?? <span className="opacity-25">—</span>}</td>
+                  <td className="text-muted small">
+                    {c.provincia?.nombre ?? "—"}
+                  </td>
+                  <td className="text-muted small">{c.zona?.nombre ?? "—"}</td>
+                  <td className="small text-dark">
+                    {c.telefono ?? <span className="opacity-25">—</span>}
+                  </td>
                   <td className="pe-4">
                     <div className="d-flex gap-2">
                       <button

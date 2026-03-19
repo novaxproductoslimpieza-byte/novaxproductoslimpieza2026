@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { geoApi } from '../../../lib/api';
+import { useState, useEffect } from "react";
+import { geoApi } from "../../../lib/api";
 
 interface ClientFiltersProps {
   search: string;
@@ -40,7 +40,7 @@ export default function ClientFilters({
 
   useEffect(() => {
     if (selectedProvincia) {
-      const prov = provincias.find(p => p.nombre === selectedProvincia);
+      const prov = provincias.find((p) => p.nombre === selectedProvincia);
       if (prov) {
         geoApi.getZonas(prov.id).then(setZonas);
       }
@@ -54,7 +54,9 @@ export default function ClientFilters({
       <div className="col-md-6 col-lg-3 mb-3">
         <label className="form-label small fw-bold">Buscar</label>
         <div className="position-relative">
-          <span className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted opacity-50">🔍</span>
+          <span className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted opacity-50">
+            🔍
+          </span>
           <input
             className="form-control bg-light border-secondary border-opacity-10 text-dark ps-5 rounded-pill shadow-none"
             placeholder="Nombre, CI, correo..."
@@ -72,7 +74,9 @@ export default function ClientFilters({
         >
           <option value="">Todas</option>
           {provincias.map((p) => (
-            <option key={p.id} value={p.nombre}>{p.nombre}</option>
+            <option key={p.id} value={p.nombre}>
+              {p.nombre}
+            </option>
           ))}
         </select>
       </div>
@@ -86,21 +90,35 @@ export default function ClientFilters({
         >
           <option value="">Todas</option>
           {zonas.map((z) => (
-            <option key={z.id} value={z.nombre}>{z.nombre}</option>
+            <option key={z.id} value={z.nombre}>
+              {z.nombre}
+            </option>
           ))}
         </select>
       </div>
       <div className="col-md-6 col-lg-3 mb-3 d-flex align-items-end gap-2">
-        <button className="btn btn-outline-primary btn-sm rounded-pill" onClick={onPdf}>
+        <button
+          className="btn btn-outline-primary btn-sm rounded-pill"
+          onClick={onPdf}
+        >
           PDF
         </button>
-        <button className="btn btn-outline-secondary btn-sm rounded-pill" onClick={onPrint}>
+        <button
+          className="btn btn-outline-secondary btn-sm rounded-pill"
+          onClick={onPrint}
+        >
           Imprimir
         </button>
-        <button className="btn btn-primary btn-sm rounded-pill" onClick={onUpdate}>
+        <button
+          className="btn btn-primary btn-sm rounded-pill"
+          onClick={onUpdate}
+        >
           Actualizar
         </button>
-        <button className="btn btn-light btn-sm rounded-pill border" onClick={onClear}>
+        <button
+          className="btn btn-light btn-sm rounded-pill border"
+          onClick={onClear}
+        >
           Limpiar
         </button>
       </div>

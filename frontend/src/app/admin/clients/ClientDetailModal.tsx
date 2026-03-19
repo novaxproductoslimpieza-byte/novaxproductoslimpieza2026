@@ -1,4 +1,4 @@
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes } from "react-icons/fa";
 
 interface Client {
   id: number;
@@ -34,35 +34,64 @@ export default function ClientDetailModal({
   if (!isOpen || !client) return null;
 
   const handleDelete = () => {
-    if (confirm('¿Está seguro de eliminar este cliente?')) {
+    if (confirm("¿Está seguro de eliminar este cliente?")) {
       onDelete();
     }
   };
 
   return (
-    <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+    <div
+      className="modal fade show d-block"
+      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+    >
       <div className="modal-dialog modal-lg">
-        <div className="modal-content">
+        <div className="modal-content recibo-modal">
           <div className="modal-header">
+            <img
+              src="/images/CATALOGO NOVAX PLUS/logonovax.png"
+              alt="Logo Novax"
+              className="recibo-logo"
+            />
             <h5 className="modal-title">Detalle de Cliente</h5>
-            <button type="button" className="btn-close" onClick={onClose}></button>
+            <button
+              type="button"
+              className="btn-close"
+              onClick={onClose}
+            ></button>
           </div>
           <div className="modal-body">
             <div className="row">
               <div className="col-md-6">
                 <h6>Información Personal</h6>
-                <p><strong>Nombre:</strong> {client.nombre}</p>
-                <p><strong>CI:</strong> {client.ci}</p>
-                <p><strong>Correo:</strong> {client.correo}</p>
-                <p><strong>Teléfono:</strong> {client.telefono ?? '—'}</p>
-                <p><strong>Dirección:</strong> {client.direccion ?? '—'}</p>
+                <p>
+                  <strong>Nombre:</strong> {client.nombre}
+                </p>
+                <p>
+                  <strong>CI:</strong> {client.ci}
+                </p>
+                <p>
+                  <strong>Correo:</strong> {client.correo}
+                </p>
+                <p>
+                  <strong>Teléfono:</strong> {client.telefono ?? "—"}
+                </p>
+                <p>
+                  <strong>Dirección:</strong> {client.direccion ?? "—"}
+                </p>
               </div>
               <div className="col-md-6">
                 <h6>Ubicación</h6>
-                <p><strong>Provincia:</strong> {client.provincia?.nombre ?? '—'}</p>
-                <p><strong>Zona:</strong> {client.zona?.nombre ?? '—'}</p>
+                <p>
+                  <strong>Provincia:</strong> {client.provincia?.nombre ?? "—"}
+                </p>
+                <p>
+                  <strong>Zona:</strong> {client.zona?.nombre ?? "—"}
+                </p>
                 {client.latitud && client.longitud && (
-                  <p><strong>Coordenadas:</strong> {client.latitud}, {client.longitud}</p>
+                  <p>
+                    <strong>Coordenadas:</strong> {client.latitud},{" "}
+                    {client.longitud}
+                  </p>
                 )}
                 {client.observaciones && (
                   <div>

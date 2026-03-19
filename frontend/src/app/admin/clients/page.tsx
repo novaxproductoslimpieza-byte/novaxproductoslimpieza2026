@@ -1,19 +1,19 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { userApi } from '../../../lib/api';
-import { generateClientsPdf, generateClientDetailPdf } from '../../../lib/pdf';
-import { printClientsList, printClientDetail } from '../../../lib/print';
-import ClientFilters from './ClientFilters';
-import ClientList from './ClientList';
-import ClientDetailModal from './ClientDetailModal';
+"use client";
+import { useEffect, useState } from "react";
+import { userApi } from "../../../lib/api";
+import { generateClientsPdf, generateClientDetailPdf } from "../../../lib/pdf";
+import { printClientsList, printClientDetail } from "../../../lib/print";
+import ClientFilters from "./ClientFilters";
+import ClientList from "./ClientList";
+import ClientDetailModal from "./ClientDetailModal";
 
 // ── Constantes ────────────────────────────────────────────────────────────────
-const LOGO_URL = encodeURI('/images/CATALOGO NOVAX PLUS/logonovax.png');
+const LOGO_URL = encodeURI("/images/CATALOGO NOVAX PLUS/logonovax.png");
 const CONTACT_INFO = {
-  companyName: 'Novax Plus',
-  phone: '(000) 000-0000',
-  email: 'contacto@novax.com',
-  address: 'La Paz, Bolivia',
+  companyName: "Novax Plus",
+  phone: "(000) 000-0000",
+  email: "contacto@novax.com",
+  address: "La Paz, Bolivia",
 };
 
 interface Client {
@@ -34,9 +34,9 @@ export default function AdminClientsPage() {
   const [clients, setClients] = useState<Client[]>([]);
   const [filteredClients, setFilteredClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [selectedProvincia, setSelectedProvincia] = useState('');
-  const [selectedZona, setSelectedZona] = useState('');
+  const [search, setSearch] = useState("");
+  const [selectedProvincia, setSelectedProvincia] = useState("");
+  const [selectedZona, setSelectedZona] = useState("");
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -53,7 +53,7 @@ export default function AdminClientsPage() {
       const data = await userApi.getClients();
       setClients(data);
     } catch (error) {
-      console.error('Error loading clients:', error);
+      console.error("Error loading clients:", error);
     } finally {
       setLoading(false);
     }
@@ -63,20 +63,23 @@ export default function AdminClientsPage() {
     let filtered = clients;
 
     if (search) {
-      filtered = filtered.filter(c =>
-        c.nombre.toLowerCase().includes(search.toLowerCase()) ||
-        c.ci.includes(search) ||
-        c.correo.toLowerCase().includes(search.toLowerCase()) ||
-        (c.telefono && c.telefono.includes(search))
+      filtered = filtered.filter(
+        (c) =>
+          c.nombre.toLowerCase().includes(search.toLowerCase()) ||
+          c.ci.includes(search) ||
+          c.correo.toLowerCase().includes(search.toLowerCase()) ||
+          (c.telefono && c.telefono.includes(search)),
       );
     }
 
     if (selectedProvincia) {
-      filtered = filtered.filter(c => c.provincia?.nombre === selectedProvincia);
+      filtered = filtered.filter(
+        (c) => c.provincia?.nombre === selectedProvincia,
+      );
     }
 
     if (selectedZona) {
-      filtered = filtered.filter(c => c.zona?.nombre === selectedZona);
+      filtered = filtered.filter((c) => c.zona?.nombre === selectedZona);
     }
 
     setFilteredClients(filtered);
@@ -95,10 +98,10 @@ export default function AdminClientsPage() {
   const handleDeleteClient = async (id: number) => {
     try {
       await userApi.deleteClient(id);
-      setClients(clients.filter(c => c.id !== id));
+      setClients(clients.filter((c) => c.id !== id));
     } catch (error) {
-      console.error('Error deleting client:', error);
-      alert('Error al eliminar el cliente');
+      console.error("Error deleting client:", error);
+      alert("Error al eliminar el cliente");
     }
   };
 
@@ -106,8 +109,8 @@ export default function AdminClientsPage() {
     generateClientsPdf(filteredClients, {
       logoUrl: LOGO_URL,
       contact: CONTACT_INFO,
-      title: 'Lista de Clientes',
-      subtitle: 'Clientes filtrados',
+      title: "Lista de Clientes",
+      subtitle: "Clientes filtrados",
     });
   };
 
@@ -115,8 +118,8 @@ export default function AdminClientsPage() {
     printClientsList(filteredClients, {
       logoUrl: LOGO_URL,
       contact: CONTACT_INFO,
-      title: 'Lista de Clientes',
-      subtitle: 'Clientes filtrados',
+      title: "Lista de Clientes",
+      subtitle: "Clientes filtrados",
     });
   };
 
@@ -125,7 +128,7 @@ export default function AdminClientsPage() {
       generateClientDetailPdf(selectedClient, {
         logoUrl: LOGO_URL,
         contact: CONTACT_INFO,
-        title: 'Detalle de Cliente',
+        title: "Detalle de Cliente",
         subtitle: `Cliente: ${selectedClient.nombre}`,
       });
     }
@@ -136,7 +139,7 @@ export default function AdminClientsPage() {
       printClientDetail(selectedClient, {
         logoUrl: LOGO_URL,
         contact: CONTACT_INFO,
-        title: 'Detalle de Cliente',
+        title: "Detalle de Cliente",
         subtitle: `Cliente: ${selectedClient.nombre}`,
       });
     }
@@ -148,17 +151,28 @@ export default function AdminClientsPage() {
   };
 
   const handleClear = () => {
-    setSearch('');
-    setSelectedProvincia('');
-    setSelectedZona('');
+    setSearch("");
+    setSelectedProvincia("");
+    setSelectedZona("");
   };
 
   return (
-    <div className="py-2">
-      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div className=" orders-module py-2">
+      <div className="module-header d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
         <div>
-          <h1 className="h3 fw-bold text-dark mb-0 window-title">Clientes</h1>
-          <p className="text-muted small mb-0">{clients.length} clientes registrados</p>
+          <nav className="breadcrumb-nav mb-1">
+            <span className="breadcrumb-text">Administración</span>
+            <span className="text-muted mx-1">›</span>
+            <span className="breadcrumb-text active">Clientes</span>
+          </nav>
+          <h1 className="h3 fw-bold text-dark mb-0 window-title">
+            {" "}
+            GESTION DE CLIENTES
+          </h1>
+          <p className="text-muted small mb-0 mt-1">
+            {clients.length} cliente{clients.length !== 1 ? "s" : ""} encontrado
+            {clients.length !== 1 ? "s" : ""}
+          </p>
         </div>
       </div>
 
@@ -182,7 +196,10 @@ export default function AdminClientsPage() {
         onDelete={handleDeleteClient}
         onLocation={(client) => {
           if (client.latitud && client.longitud) {
-            window.open(`https://www.google.com/maps?q=${client.latitud},${client.longitud}`, '_blank');
+            window.open(
+              `https://www.google.com/maps?q=${client.latitud},${client.longitud}`,
+              "_blank",
+            );
           }
         }}
       />

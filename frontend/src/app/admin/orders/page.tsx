@@ -1,54 +1,85 @@
-'use client';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ordersApi } from '../../../lib/api';
-import { generateOrdersPdf, generateOrderDetailPdf } from '../../../lib/pdf';
-import { printOrderDetail, printOrdersList } from '../../../lib/print';
+"use client";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ordersApi } from "../../../lib/api";
+import { generateOrdersPdf, generateOrderDetailPdf } from "../../../lib/pdf";
+import { printOrderDetail, printOrdersList } from "../../../lib/print";
 
 // ── Tipos y Constantes ────────────────────────────────────────────────────────
-const ESTADOS = ['PENDIENTE', 'APROBADO', 'EN_DESPACHO', 'ENTREGADO', 'CANCELADO'] as const;
-type EstadoPedido = typeof ESTADOS[number];
+const ESTADOS = [
+  "PENDIENTE",
+  "APROBADO",
+  "EN_DESPACHO",
+  "ENTREGADO",
+  "CANCELADO",
+] as const;
+type EstadoPedido = (typeof ESTADOS)[number];
 
 const ESTADO_LABELS: Record<EstadoPedido, string> = {
-  PENDIENTE: 'Pendiente', APROBADO: 'Aprobado', EN_DESPACHO: 'En Despacho',
-  ENTREGADO: 'Entregado', CANCELADO: 'Cancelado',
+  PENDIENTE: "Pendiente",
+  APROBADO: "Aprobado",
+  EN_DESPACHO: "En Despacho",
+  ENTREGADO: "Entregado",
+  CANCELADO: "Cancelado",
 };
 const ESTADO_NEXT: Partial<Record<EstadoPedido, EstadoPedido>> = {
-  PENDIENTE: 'APROBADO', APROBADO: 'EN_DESPACHO', EN_DESPACHO: 'ENTREGADO',
+  PENDIENTE: "APROBADO",
+  APROBADO: "EN_DESPACHO",
+  EN_DESPACHO: "ENTREGADO",
 };
 const BADGE_CLS: Record<EstadoPedido, string> = {
-  PENDIENTE: 'badge-pending', APROBADO: 'badge-approved', EN_DESPACHO: 'badge-dispatch',
-  ENTREGADO: 'badge-delivered', CANCELADO: 'badge-cancelled',
+  PENDIENTE: "badge-pending",
+  APROBADO: "badge-approved",
+  EN_DESPACHO: "badge-dispatch",
+  ENTREGADO: "badge-delivered",
+  CANCELADO: "badge-cancelled",
 };
 
-const LOGO_URL = encodeURI('/images/CATALOGO NOVAX PLUS/logonovax.png');
+const LOGO_URL = encodeURI("/images/CATALOGO NOVAX PLUS/logonovax.png");
 const CONTACT_INFO = {
-  companyName: 'Novax Plus',
-  phone: '(000) 000-0000',
-  email: 'contacto@novax.com',
-  address: 'Calle Falsa 123, Ciudad',
+  companyName: "Novax Plus",
+  phone: "(000) 000-0000",
+  email: "contacto@novax.com",
+  address: "Calle Falsa 123, Ciudad",
 };
 
 const PAGE_SIZE = 10;
 
-
-
 // ── Helpers ───────────────────────────────────────────────────────────────────
-const fmtDate = (d: string) => new Date(d).toLocaleDateString('es-BO', { year: 'numeric', month: 'short', day: 'numeric' });
+const fmtDate = (d: string) =>
+  new Date(d).toLocaleDateString("es-BO", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 const calcTotal = (detalles: any[]) =>
-  detalles?.reduce((s: number, d: any) => s + Number(d.precio) * d.cantidad, 0) || 0;
+  detalles?.reduce(
+    (s: number, d: any) => s + Number(d.precio) * d.cantidad,
+    0,
+  ) || 0;
 
 // ── Componente StatusBadge ────────────────────────────────────────────────────
 function StatusBadge({ estado }: { estado: string }) {
-  const cls = BADGE_CLS[estado as EstadoPedido] ?? 'badge-default';
-  return <span className={`status-badge ${cls}`}>{ESTADO_LABELS[estado as EstadoPedido] ?? estado}</span>;
+  const cls = BADGE_CLS[estado as EstadoPedido] ?? "badge-default";
+  return (
+    <span className={`status-badge ${cls}`}>
+      {ESTADO_LABELS[estado as EstadoPedido] ?? estado}
+    </span>
+  );
 }
 
 // ── Modal de Detalle ──────────────────────────────────────────────────────────
 function OrderDetailModal({
-  order, onClose, onChangeStatus, updating, onDelete,
+  order,
+  onClose,
+  onChangeStatus,
+  updating,
+  onDelete,
 }: {
-  order: any; onClose: () => void; onChangeStatus: (id: number, estado: string) => Promise<void>;
-  updating: boolean; onDelete: (id: number) => Promise<void>;
+  order: any;
+  onClose: () => void;
+  onChangeStatus: (id: number, estado: string) => Promise<void>;
+  updating: boolean;
+  onDelete: (id: number) => Promise<void>;
 }) {
   const total = calcTotal(order.detalles);
   const nextState = ESTADO_NEXT[order.estado as EstadoPedido];
@@ -57,7 +88,7 @@ function OrderDetailModal({
     printOrderDetail(order, {
       logoUrl: LOGO_URL,
       contact: CONTACT_INFO,
-      title: 'Detalle de Pedido',
+      title: "Detalle de Pedido",
       subtitle: `Pedido #${order.id}`,
     });
   };
@@ -72,14 +103,14 @@ function OrderDetailModal({
       });
     } catch (error) {
       console.error(error);
-      alert('No se pudo generar el PDF del pedido.');
+      alert("No se pudo generar el PDF del pedido.");
     }
   };
 
   return (
     <>
       {/* Overlay de bloqueo */}
-      <div className="modal-overlay" onClick={onClose} />
+      <div className="modal-overlay" />
 
       {/* Panel de detalle */}
       <div className="detail-panel" id="print-area">
@@ -93,129 +124,174 @@ function OrderDetailModal({
               <span className="text-muted mx-1">›</span>
               <span className="text-dark fw-bold">#{order.id}</span>
             </nav>
-            <h2 className="h4 fw-bold text-dark mb-0">Detalle del Pedido</h2>
+            <div className="recibo-modal-header d-flex align-items-center gap-3">
+              <img
+                src="/images/CATALOGO NOVAX PLUS/logonovax.png"
+                alt="Logo Novax"
+                className="recibo-logo"
+              />
+              <h2 className="h4 fw-bold text-dark mb-0">Detalle del Pedido</h2>
+            </div>
           </div>
-          <button className="btn btn-primary btn-sm rounded-circle p-2 border-0 no-print" onClick={onClose} title="Cerrar">✕</button>
+          <button
+            className="btn btn-primary btn-sm rounded-circle p-2 border-0 no-print"
+            onClick={onClose}
+            title="Cerrar"
+          >
+            ✕
+          </button>
         </div>
+        <div className="order-receipt p-4 border shadow-sm rounded bg-white">
+          {/* Info general */}
 
-        {/* Info general */}
-        <div className="info-grid mb-4">
-          <div className="info-item">
-            <span className="info-label fw-bold">N° Pedido: </span>
-            <span className="info-value fw-bold text-primary-dark">#{order.id}</span>
+          <div className="info-grid mb-4">
+            <div className="info-item">
+              <span className="info-label fw-bold">N° Pedido: </span>
+              <span className="info-value fw-bold text-primary-dark">
+                #{order.id}
+              </span>
+            </div>
+            <div className="info-item">
+              <span className="info-label fw-bold">Fecha: </span>
+              <span className="info-value">{fmtDate(order.fecha)}</span>
+            </div>
+            <div className="info-item">
+              <span className="info-label fw-bold">Estado: </span>
+              <StatusBadge estado={order.estado} />
+            </div>
+            <div className="info-item">
+              <span className="info-label fw-bold">Cliente: </span>
+              <span className="info-value fw-bold">
+                {order.cliente?.nombre}
+              </span>
+            </div>
+            <div className="info-item">
+              <span className="info-label fw-bold">CI: </span>
+              <span className="info-value">{order.cliente?.ci}</span>
+            </div>
+            <div className="info-item">
+              <span className="info-label fw-bold">Teléfono: </span>
+              <span className="info-value">
+                {order.cliente?.telefono || "—"}
+              </span>
+            </div>
+            <div className="info-item" style={{ gridColumn: "1 / -1" }}>
+              <span className="info-label fw-bold">Dirección: </span>
+              <span className="info-value">
+                {order.cliente?.direccion || "—"}
+              </span>
+            </div>
+            <div className="info-item" style={{ gridColumn: "1 / -1" }}>
+              <span className="info-label fw-bold">Correo: </span>
+              <span className="info-value">{order.cliente?.correo}</span>
+            </div>
           </div>
-          <div className="info-item">
-            <span className="info-label fw-bold">Fecha: </span>
-            <span className="info-value">{fmtDate(order.fecha)}</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label fw-bold">Estado: </span>
-            <StatusBadge estado={order.estado} />
-          </div>
-          <div className="info-item">
-            <span className="info-label fw-bold">Cliente: </span>
-            <span className="info-value fw-bold">{order.cliente?.nombre}</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label fw-bold">CI: </span>
-            <span className="info-value">{order.cliente?.ci}</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label fw-bold">Teléfono: </span>
-            <span className="info-value">{order.cliente?.telefono || '—'}</span>
-          </div>
-          <div className="info-item" style={{ gridColumn: '1 / -1' }}>
-            <span className="info-label fw-bold">Dirección: </span>
-            <span className="info-value">{order.cliente?.direccion || '—'}</span>
-          </div>
-          <div className="info-item" style={{ gridColumn: '1 / -1' }}>
-            <span className="info-label fw-bold">Correo: </span>
-            <span className="info-value">{order.cliente?.correo}</span>
-          </div>
-        </div>
 
-        {/* Tabla de productos */}
-        <h3 className="h6 fw-bold text-dark text-uppercase small mb-3" style={{ letterSpacing: '0.5px' }}>Productos del Pedido</h3>
-        <div className="detail-table-wrap mb-4">
-          <table className="detail-table">
-            <thead>
-              <tr>
-                <th className="text-center fw-bold">#</th>
-                <th className="text-center fw-bold">Producto</th>
-                <th className="text-center fw-bold">Presentación</th>
-                <th className="text-center fw-bold">Cant.</th>
-                <th className="text-end fw-bold">Precio Unit.</th>
-                <th className="text-end fw-bold">Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              {order.detalles?.map((d: any, i: number) => (
-                <tr key={d.id}>
-                  <td className="text-muted small fw-bold">{i + 1}</td>
-                  <td className="fw-bold">{d.producto?.nombre}</td>
-                  <td className="text-center text-muted small">{d.producto?.presentacion || '—'}</td>
-                  <td className="text-center fw-bold">{d.cantidad}</td>
-                  <td className="text-end">Bs. {Number(d.precio).toFixed(2)}</td>
-                  <td className="text-end fw-bold text-primary-dark">Bs. {(Number(d.precio) * d.cantidad).toFixed(2)}</td>
+          {/* Tabla de productos */}
+          <h3
+            className="h6 fw-bold text-dark text-uppercase small mb-3"
+            style={{ letterSpacing: "0.5px" }}
+          >
+            Productos del Pedido
+          </h3>
+          <div className="detail-table-wrap mb-4">
+            <table className="detail-table">
+              <thead>
+                <tr>
+                  <th className="text-center fw-bold">#</th>
+                  <th className="text-center fw-bold">Producto</th>
+                  <th className="text-center fw-bold">Presentación</th>
+                  <th className="text-center fw-bold">Cant.</th>
+                  <th className="text-end fw-bold">Precio Unit.</th>
+                  <th className="text-end fw-bold">Subtotal</th>
                 </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan={5} className="text-end fw-bold text-dark border-top border-light pt-2">Total:</td>
-                <td className="text-end fw-bold text-primary-dark border-top border-light pt-2 fs-5">Bs. {total.toFixed(2)}</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {order.detalles?.map((d: any, i: number) => (
+                  <tr key={d.id}>
+                    <td className="text-muted small fw-bold">{i + 1}</td>
+                    <td className="fw-bold">{d.producto?.nombre}</td>
+                    <td className="text-center text-muted small">
+                      {d.producto?.presentacion || "—"}
+                    </td>
+                    <td className="text-center fw-bold">{d.cantidad}</td>
+                    <td className="text-end">
+                      Bs. {Number(d.precio).toFixed(2)}
+                    </td>
+                    <td className="text-end fw-bold text-primary-dark">
+                      Bs. {(Number(d.precio) * d.cantidad).toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="text-end fw-bold text-dark border-top border-light pt-2"
+                  >
+                    Total:
+                  </td>
+                  <td className="text-end fw-bold text-primary-dark border-top border-light pt-2 fs-5">
+                    Bs. {total.toFixed(2)}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
 
-        {/* Botonera del formulario */}
-        <div className="d-flex flex-wrap gap-2 no-print">
-          {nextState && (
+          {/* Botonera del formulario */}
+          <div className="d-flex flex-wrap gap-2 no-print">
+            {nextState && (
+              <button
+                title="Procesar pedido"
+                className="btn btn-primary-dark btn-sm rounded-pill px-4 fw-bold shadow-sm text-dark"
+                disabled={updating}
+                onClick={() => onChangeStatus(order.id, nextState)}
+              >
+                {updating ? "..." : `→ ${ESTADO_LABELS[nextState]}`}
+              </button>
+            )}
+            {order.estado !== "ENTREGADO" && order.estado !== "CANCELADO" && (
+              <button
+                title="Cancelar pedido"
+                className="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold"
+                disabled={updating}
+                onClick={() => onChangeStatus(order.id, "CANCELADO")}
+              >
+                ✕ Cancelar
+              </button>
+            )}
             <button
-              title='Procesar pedido'
-              className="btn btn-primary-dark btn-sm rounded-pill px-4 fw-bold shadow-sm text-dark"
-              disabled={updating}
-              onClick={() => onChangeStatus(order.id, nextState)}
+              title="Generar PDF del pedido"
+              className="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold border border-light"
+              onClick={handleGeneratePdf}
             >
-              {updating ? '...' : `→ ${ESTADO_LABELS[nextState]}`}
+              📄 PDF
             </button>
-          )}
-          {order.estado !== 'ENTREGADO' && order.estado !== 'CANCELADO' && (
             <button
-              title='Cancelar pedido'
-              className="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold"
-              disabled={updating}
-              onClick={() => onChangeStatus(order.id, 'CANCELADO')}
+              title="Imprimir pedido"
+              className="btn btn-accent btn-sm rounded-pill px-3 fw-bold border border-light ms-auto"
+              onClick={handlePrint}
             >
-              ✕ Cancelar
+              🖨 Imprimir
             </button>
-          )}
-          <button
-            title='Generar PDF del pedido'
-            className="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold border border-light"
-            onClick={handleGeneratePdf}
-          >
-            📄 PDF
-          </button>
-          <button
-            title='Imprimir pedido'
-            className="btn btn-accent btn-sm rounded-pill px-3 fw-bold border border-light ms-auto" onClick={handlePrint}>
-            🖨 Imprimir
-          </button>
-          <button
-            title='Eliminar pedido'
-            className="btn btn-danger btn-sm rounded-pill px-3 fw-bold"
-            onClick={() => onDelete(order.id)}
-            disabled={updating}
-          >
-            🗑 Eliminar
-          </button>
-          <button
-            title='Cerrar'
-            className="btn btn-secondary btn-sm rounded-pill px-3 fw-bold" onClick={onClose}>
-            Cerrar
-          </button>
+            <button
+              title="Eliminar pedido"
+              className="btn btn-danger btn-sm rounded-pill px-3 fw-bold"
+              onClick={() => onDelete(order.id)}
+              disabled={updating}
+            >
+              🗑 Eliminar
+            </button>
+            <button
+              title="Cerrar"
+              className="btn btn-secondary btn-sm rounded-pill px-3 fw-bold"
+              onClick={onClose}
+            >
+              Cerrar
+            </button>
+          </div>
         </div>
       </div>
     </>
@@ -228,57 +304,73 @@ export default function AdminOrdersPage() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
 
-  
   // Modal detalle
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState(false);
 
   // Filtros
-  const [search, setSearch] = useState('');
-  const [filterEstado, setFilterEstado] = useState('');
-  const [filterDesde, setFilterDesde] = useState('');
-  const [filterHasta, setFilterHasta] = useState('');
+  const [search, setSearch] = useState("");
+  const [filterEstado, setFilterEstado] = useState("");
+  const [filterDesde, setFilterDesde] = useState("");
+  const [filterHasta, setFilterHasta] = useState("");
 
   // Paginación
   const [page, setPage] = useState(1);
 
   const load = useCallback(() => {
     setLoading(true);
-    ordersApi.getOrders().then(setOrders).catch(console.error).finally(() => setLoading(false));
+    ordersApi
+      .getOrders()
+      .then(setOrders)
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   // Filtrado en memoria
   const filtered = useMemo(() => {
     let list = orders;
     if (search.trim()) {
       const q = search.toLowerCase();
-      list = list.filter(o =>
-        String(o.id).includes(q) ||
-        o.cliente?.nombre?.toLowerCase().includes(q) ||
-        o.cliente?.ci?.toLowerCase().includes(q) ||
-        o.cliente?.correo?.toLowerCase().includes(q)
+      list = list.filter(
+        (o) =>
+          String(o.id).includes(q) ||
+          o.cliente?.nombre?.toLowerCase().includes(q) ||
+          o.cliente?.ci?.toLowerCase().includes(q) ||
+          o.cliente?.correo?.toLowerCase().includes(q),
       );
     }
-    if (filterEstado) list = list.filter(o => o.estado === filterEstado);
-    if (filterDesde) list = list.filter(o => new Date(o.fecha) >= new Date(filterDesde));
-    if (filterHasta) list = list.filter(o => new Date(o.fecha) <= new Date(filterHasta + 'T23:59:59'));
+    if (filterEstado) list = list.filter((o) => o.estado === filterEstado);
+    if (filterDesde)
+      list = list.filter((o) => new Date(o.fecha) >= new Date(filterDesde));
+    if (filterHasta)
+      list = list.filter(
+        (o) => new Date(o.fecha) <= new Date(filterHasta + "T23:59:59"),
+      );
     return list;
   }, [orders, search, filterEstado, filterDesde, filterHasta]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const clearFilters = () => { setSearch(''); setFilterEstado(''); setFilterDesde(''); setFilterHasta(''); setPage(1); };
+  const clearFilters = () => {
+    setSearch("");
+    setFilterEstado("");
+    setFilterDesde("");
+    setFilterHasta("");
+    setPage(1);
+  };
 
   const handlePrintList = () => {
     printOrdersList(filtered, {
       logoUrl: LOGO_URL,
       contact: CONTACT_INFO,
-      title: 'Lista de Pedidos',
-      subtitle: 'Pedidos filtrados',
+      title: "Lista de Pedidos",
+      subtitle: "Pedidos filtrados",
     });
   };
 
@@ -287,12 +379,12 @@ export default function AdminOrdersPage() {
       await generateOrdersPdf(filtered, {
         logoUrl: LOGO_URL,
         contact: CONTACT_INFO,
-        title: 'Listado de Pedidos',
-        fileName: 'novax_pedidos.pdf',
+        title: "Listado de Pedidos",
+        fileName: "novax_pedidos.pdf",
       });
     } catch (error) {
       console.error(error);
-      alert('No se pudo generar el PDF de la lista de pedidos.');
+      alert("No se pudo generar el PDF de la lista de pedidos.");
     }
   };
 
@@ -301,8 +393,11 @@ export default function AdminOrdersPage() {
     try {
       const detail = await ordersApi.getOrderById(id);
       setSelectedOrder(detail);
-    } catch (e: any) { alert(e.message); }
-    finally { setLoadingDetail(false); }
+    } catch (e: any) {
+      alert(e.message);
+    } finally {
+      setLoadingDetail(false);
+    }
   };
 
   const handleChangeStatus = async (id: number, estado: string) => {
@@ -315,24 +410,30 @@ export default function AdminOrdersPage() {
         const updated = await ordersApi.getOrderById(id);
         setSelectedOrder(updated);
       }
-    } catch (e: any) { alert(e.message); }
-    finally { setUpdating(false); }
+    } catch (e: any) {
+      alert(e.message);
+    } finally {
+      setUpdating(false);
+    }
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm(`¿Eliminar pedido #${id}? Esta acción no se puede deshacer.`)) return;
+    if (!confirm(`¿Eliminar pedido #${id}? Esta acción no se puede deshacer.`))
+      return;
     setUpdating(true);
     try {
       await ordersApi.deleteOrder(id);
       setSelectedOrder(null);
       await load();
-    } catch (e: any) { alert(e.message); }
-    finally { setUpdating(false); }
+    } catch (e: any) {
+      alert(e.message);
+    } finally {
+      setUpdating(false);
+    }
   };
 
   return (
     <div className="orders-module py-2">
-
       {/* ── Cabecera del Módulo (AdminHeader) ── */}
       <div className="module-header d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
         <div>
@@ -341,25 +442,29 @@ export default function AdminOrdersPage() {
             <span className="text-muted mx-1">›</span>
             <span className="breadcrumb-text active">Pedidos</span>
           </nav>
-          <h1 className="h3 fw-bold text-dark mb-0 window-title">Gestión de Pedidos</h1>
+          <h1 className="h3 fw-bold text-dark mb-0 window-title">
+            GESTION DE PEDIDOS
+          </h1>
           <p className="text-muted small mb-0 mt-1">
-            {filtered.length} pedido{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}
+            {filtered.length} pedido{filtered.length !== 1 ? "s" : ""}{" "}
+            encontrado{filtered.length !== 1 ? "s" : ""}
           </p>
         </div>
+
         <div className="d-flex gap-2">
           <button
             title="Imprimir lista de pedidos"
             className="btn btn-accent btn-sm rounded-pill fw-bold no-print"
             onClick={handlePrintList}
           >
-            🖨 Imprimir
+            🖨 Imprimir Lista
           </button>
           <button
             title="Generar PDF lista de pedidos"
             className="btn btn-outline-primary btn-sm rounded-pill fw-bold no-print"
             onClick={handleGeneratePdfList}
           >
-            📄 PDF
+            📄 PDF Lista
           </button>
           <button
             title="Actualizar lista de pedidos"
@@ -371,56 +476,100 @@ export default function AdminOrdersPage() {
         </div>
       </div>
 
-
       {/* ── Panel de Búsqueda y Filtros (SearchBar) ── */}
       <div className="window-card p-3 mb-4 border-gray-700 shadow-lg">
         <div className="row g-2 align-items-end">
           <div className="col-12 col-md-4">
-            <label className="form-label small fw-bold text-muted text-uppercase mb-1" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>
-              Búsqueda
+            <label
+              className="form-label small fw-bold  text-uppercase mb-1"
+              style={{ fontSize: "0.7rem", letterSpacing: "0.5px" }}
+            >
+              Búsqueda de pedidos
             </label>
             <div className="position-relative">
-              <span className="position-absolute top-50 translate-middle-y ms-3 text-muted" style={{ pointerEvents: 'none' }}>
-                🔍
-              </span>
               <input
-                className="form-input form-input-lg ps-4"
+                className="form-input form-input-lg pe-5 " // espacio para el ícono
                 placeholder="N° pedido, cliente, CI..."
                 value={search}
-                onChange={e => { setSearch(e.target.value); setPage(1); }}
-              />            </div>
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(1);
+                }}
+                style={{
+                  borderRadius: "0.375rem", // suave redondeado
+                  border: "1px solid #ced4da", // borde estándar
+                  backgroundColor: "#f8f9fa", // fondo del input
+                }}
+              />
+              <span
+                className="position-absolute top-50 end-0 translate-middle-y me-1 d-flex align-items-center justify-content-center"
+                style={{
+                  width: "36px",
+                  height: "36px",
+                  backgroundColor: "#e9ecef", // fondo distinto profesional
+                  borderRadius: "0 0.375rem 0.375rem 0", // bordes redondeados solo a la derecha
+                  cursor: "pointer",
+                  border: "1px solid #ced4da",
+                }}
+                onClick={() => console.log("Buscar:", search)}
+                title="Buscar pedidos"
+              >
+                🔍
+              </span>
+            </div>
           </div>
+
           <div className="col-6 col-md-2">
-            <label className="form-label text-uppercase">Estado</label>
+            <label className="form-label small fw-bold  text-uppercase mb-1">
+              Estado
+            </label>
             <select
               className="form-select form-sm w-full"
               value={filterEstado}
-              onChange={e => { setFilterEstado(e.target.value); setPage(1); }}
+              onChange={(e) => {
+                setFilterEstado(e.target.value);
+                setPage(1);
+              }}
             >
               <option value="">Todos</option>
-              {ESTADOS.map(e => (
-                <option key={e} value={e}>{ESTADO_LABELS[e]}</option>
+              {ESTADOS.map((e) => (
+                <option key={e} value={e}>
+                  {ESTADO_LABELS[e]}
+                </option>
               ))}
             </select>
           </div>
 
           <div className="col-6 col-md-2">
-            <label className="form-label text-uppercase">Desde</label>
+            <label
+              className="form-label small fw-bold  text-uppercase mb-1"
+              style={{ fontSize: "0.7rem", letterSpacing: "0.5px" }}
+            >
+              Desde
+            </label>
             <input
               type="date"
               className="form-input form-sm w-full"
               value={filterDesde}
-              onChange={e => { setFilterDesde(e.target.value); setPage(1); }}
+              onChange={(e) => {
+                setFilterDesde(e.target.value);
+                setPage(1);
+              }}
             />
           </div>
 
           <div className="col-6 col-md-2">
-            <label className="form-label text-uppercase">Hasta</label>
+            <label className="form-label small fw-bold  text-uppercase mb-1">
+              Hasta
+            </label>
             <input
               type="date"
               className="form-input form-sm w-full"
               value={filterHasta}
-              onChange={e => { setFilterHasta(e.target.value); setPage(1); }}
+              onChange={(e) => {
+                setFilterHasta(e.target.value);
+                setPage(1);
+              }}
             />
           </div>
 
@@ -429,7 +578,7 @@ export default function AdminOrdersPage() {
               title="Limpiar filtros"
               className="btn btn-danger btn-sm rounded-pill fw-bold"
               onClick={clearFilters}
-              style={{ minWidth: '100px', padding: '0.35rem 0.8rem' }}
+              style={{ minWidth: "100px", padding: "0.35rem 0.8rem" }}
             >
               ✕ Limpiar
             </button>
@@ -440,20 +589,27 @@ export default function AdminOrdersPage() {
         <div className="d-flex gap-2 mt-3 flex-wrap">
           <button
             title="Todos los pedidos"
-            className={`btn  rounded-pill px-3 btn-xs fw-bold ${!filterEstado ? 'btn-primary-dark text-dark shadow-sm' : 'btn-light text-muted border-light'}`}
-            onClick={() => { setFilterEstado(''); setPage(1); }}
+            className={`btn  rounded-pill px-3 btn-xs fw-bold ${!filterEstado ? "btn-primary-dark text-dark shadow-sm" : "btn-light text-muted border-light"}`}
+            onClick={() => {
+              setFilterEstado("");
+              setPage(1);
+            }}
           >
             Todos ({orders.length})
           </button>
-          {ESTADOS.map(e => {
-            const count = orders.filter(o => o.estado === e).length;
+          {ESTADOS.map((e) => {
+            const count = orders.filter((o) => o.estado === e).length;
             return (
               <button
                 key={e}
-                className={`btn-accent rounded-pill px-3 btn-xs fw-bold ${filterEstado === e ? 'btn-primary-dark text-dark shadow-sm' : 'btn-light text-muted border-light'}`}
-                onClick={() => { setFilterEstado(e); setPage(1); }}
+                className={`btn-accent rounded-pill px-3 btn-xs fw-bold ${filterEstado === e ? "btn-primary-dark text-dark shadow-sm" : "btn-light text-muted border-light"}`}
+                onClick={() => {
+                  setFilterEstado(e);
+                  setPage(1);
+                }}
               >
-                <span className={`dot-${e.toLowerCase().replace('_', '')}`} /> {ESTADO_LABELS[e]} ({count})
+                <span className={`dot-${e.toLowerCase().replace("_", "")}`} />{" "}
+                {ESTADO_LABELS[e]} ({count})
               </button>
             );
           })}
@@ -464,7 +620,7 @@ export default function AdminOrdersPage() {
       <div className="window-card overflow-hidden p-0 border-gray-700 shadow-lg">
         <div className="table-responsive">
           <table className="table table-hover align-middle mb-0">
-            <thead className="bg-light text-muted small text-uppercase">
+            <thead className="thead-professional">
               <tr>
                 <th className="px-4 py-3 border-0">#</th>
                 <th className="py-3 border-0">Cliente</th>
@@ -478,58 +634,73 @@ export default function AdminOrdersPage() {
             </thead>
             <tbody className="border-0">
               {loading ? (
-                Array(5).fill(0).map((_, i) => (
-                  <tr key={i}><td colSpan={8} className="p-3"><div className="skeleton" style={{ height: '40px' }} /></td></tr>
-                ))
+                Array(5)
+                  .fill(0)
+                  .map((_, i) => (
+                    <tr key={i}>
+                      <td colSpan={8} className="p-3">
+                        <div className="skeleton" style={{ height: "40px" }} />
+                      </td>
+                    </tr>
+                  ))
               ) : paginated.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="text-center py-5 text-muted">
                     <div className="display-6 mb-2 opacity-25">📦</div>
                     <div className="small">No se encontraron pedidos</div>
                     {(search || filterEstado || filterDesde || filterHasta) && (
-                      <button className="btn btn-link btn-sm text-primary-dark p-0 mt-2" onClick={clearFilters}>Limpiar filtros</button>
+                      <button
+                        className="btn btn-link btn-sm text-primary-dark p-0 mt-2"
+                        onClick={clearFilters}
+                      >
+                        Limpiar filtros
+                      </button>
                     )}
                   </td>
                 </tr>
               ) : (
-                paginated.map(o => {
+                paginated.map((o) => {
                   const total = calcTotal(o.detalles);
                   const next = ESTADO_NEXT[o.estado as EstadoPedido];
                   return (
                     <tr key={o.id} className="table-row-hover">
-                      <td className="px-4 text-muted small fw-bold"># {o.id}</td>
-                      <td>
-                        <div className="fw-bold text-dark small">{o.cliente?.nombre}</div>
-                        <div className="text-muted" style={{ fontSize: '0.7rem' }}>{o.cliente?.correo}</div>
+                      <td className="px-4 text-muted small fw-bold">
+                        # {o.id}
                       </td>
-                      <td className="text-muted small d-none d-md-table-cell">{o.cliente?.ci}</td>
-                      <td className="text-muted small d-none d-lg-table-cell">{fmtDate(o.fecha)}</td>
+                      <td>
+                        <div className="fw-bold text-dark small">
+                          {o.cliente?.nombre}
+                        </div>
+                        <div
+                          className="text-muted"
+                          style={{ fontSize: "0.7rem" }}
+                        >
+                          {o.cliente?.correo}
+                        </div>
+                      </td>
+                      <td className="text-muted small d-none d-md-table-cell">
+                        {o.cliente?.ci}
+                      </td>
+                      <td className="text-muted small d-none d-lg-table-cell">
+                        {fmtDate(o.fecha)}
+                      </td>
                       <td className="text-center">
                         <span className="badge bg-light text-dark border border-light fw-bold rounded-pill px-2">
                           {o.detalles?.length}
                         </span>
                       </td>
-                      <td className="fw-bold small text-primary-dark">Bs. {total.toFixed(2)}</td>
-                      <td><StatusBadge estado={o.estado} /></td>
+                      <td className="fw-bold small text-primary-dark">
+                        Bs. {total.toFixed(2)}
+                      </td>
+                      <td>
+                        <StatusBadge estado={o.estado} />
+                      </td>
                       <td className="pe-4 text-end">
                         <div className="d-flex justify-content-end gap-1">
- 
-                        <button
-                         onClick={() => {
-                         setSelectedOrder(o);   // 'o' es el pedido
-                          setIsModalOpen(true);
-                        }}
-                        className="btn btn-sm btn-info"
-                        title="Ver detalle"
-                      >
-                        👁
-                      </button> 
-                      
- 
                           {next && (
                             <button
                               className="btn btn-primary btn-sm rounded-pill px-2 text-white fw-bold shadow-sm"
-                              style={{ fontSize: '0.7rem' }}
+                              style={{ fontSize: "0.7rem" }}
                               disabled={updating}
                               onClick={() => handleChangeStatus(o.id, next)}
                               title={`Avanzar a ${ESTADO_LABELS[next]}`}
@@ -537,19 +708,36 @@ export default function AdminOrdersPage() {
                               → {ESTADO_LABELS[next]}
                             </button>
                           )}
-                          {o.estado !== 'ENTREGADO' && o.estado !== 'CANCELADO' && (
-                            <button
-                              className="btn btn-secondary btn-sm rounded-circle p-2 border border-light text-white hover-scale"
-                              disabled={updating}
-                              onClick={() => handleChangeStatus(o.id, 'CANCELADO')}
-                              title="Cancelar"
-                            >✕</button>
-                          )}
+                          {o.estado !== "ENTREGADO" &&
+                            o.estado !== "CANCELADO" && (
+                              <button
+                                className="btn btn-secondary btn-sm rounded-circle p-2 border border-light text-white hover-scale"
+                                disabled={updating}
+                                onClick={() =>
+                                  handleChangeStatus(o.id, "CANCELADO")
+                                }
+                                title="Cancelar"
+                              >
+                                ✕
+                              </button>
+                            )}
+
+                          <button
+                            onClick={() => {
+                              setSelectedOrder(o); // 'o' es el pedido
+                              setIsModalOpen(true);
+                            }}
+                            className="btn btn-sm btn-info"
+                            title="Ver detalle"
+                          >
+                            👁
+                          </button>
+
                           <button
                             className="btn btn-danger btn-sm rounded-circle p-2 border border-light text-white hover-scale"
                             disabled={updating}
                             onClick={(e) => {
-                              handleDelete(o.id);   // tu función existente
+                              handleDelete(o.id); // tu función existente
                               e.currentTarget.blur(); // quita el foco del botón para que no se quede presionado
                             }}
                             title="Eliminar"
@@ -573,20 +761,49 @@ export default function AdminOrdersPage() {
               Página {page} de {totalPages} · {filtered.length} registros
             </span>
             <div className="d-flex gap-1">
-              <button className="btn btn-light btn-sm rounded-pill px-3 border-light" onClick={() => setPage(1)} disabled={page === 1}>«</button>
-              <button className="btn btn-light btn-sm rounded-pill px-3 border-light" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>‹</button>
+              <button
+                className="btn btn-light btn-sm rounded-pill px-3 border-light"
+                onClick={() => setPage(1)}
+                disabled={page === 1}
+              >
+                «
+              </button>
+              <button
+                className="btn btn-light btn-sm rounded-pill px-3 border-light"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+              >
+                ‹
+              </button>
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                const p = Math.min(Math.max(page - 2, 1) + i, totalPages - Math.min(4, totalPages - 1) + i);
+                const p = Math.min(
+                  Math.max(page - 2, 1) + i,
+                  totalPages - Math.min(4, totalPages - 1) + i,
+                );
                 return (
                   <button
                     key={p}
-                    className={`btn btn-sm rounded-pill px-3 ${page === p ? 'btn-primary-dark text-white' : 'btn-light border-light'}`}
+                    className={`btn btn-sm rounded-pill px-3 ${page === p ? "btn-primary-dark text-white" : "btn-light border-light"}`}
                     onClick={() => setPage(p)}
-                  >{p}</button>
+                  >
+                    {p}
+                  </button>
                 );
               })}
-              <button className="btn btn-light btn-sm rounded-pill px-3 border-light" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>›</button>
-              <button className="btn btn-light btn-sm rounded-pill px-3 border-light" onClick={() => setPage(totalPages)} disabled={page === totalPages}>»</button>
+              <button
+                className="btn btn-light btn-sm rounded-pill px-3 border-light"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+              >
+                ›
+              </button>
+              <button
+                className="btn btn-light btn-sm rounded-pill px-3 border-light"
+                onClick={() => setPage(totalPages)}
+                disabled={page === totalPages}
+              >
+                »
+              </button>
             </div>
           </div>
         )}
@@ -594,57 +811,110 @@ export default function AdminOrdersPage() {
 
       {/* ── Modal de Detalle ── */}
       {isModalOpen && selectedOrder && (
-  <OrderDetailModal
-    order={selectedOrder}
-    onClose={() => setIsModalOpen(false)}  // cierra modal
-    onChangeStatus={handleChangeStatus}
-    updating={updating}
-    onDelete={handleDelete}
-  />
-)}
+        <OrderDetailModal
+          order={selectedOrder}
+          onClose={() => setIsModalOpen(false)} // cierra modal
+          onChangeStatus={handleChangeStatus}
+          updating={updating}
+          onDelete={handleDelete}
+        />
+      )}
 
       {/* ── Estilos ── */}
       <style jsx>{`
         /* StatusBadge */
         .status-badge {
-          display: inline-flex; align-items: center;
-          padding: 4px 12px; border-radius: 999px;
-          font-size: 0.75rem; font-weight: 700;
-          text-transform: uppercase; letter-spacing: 0.3px;
+          display: inline-flex;
+          align-items: center;
+          padding: 4px 12px;
+          border-radius: 999px;
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.3px;
         }
-        .badge-pending  { background: #fef9c3; color: #a16207; }
-        .badge-approved { background: #dbeafe; color: #1d4ed8; }
-        .badge-dispatch { background: #ede9fe; color: #7c3aed; }
-        .badge-delivered{ background: #dcfce7; color: #166534; }
-        .badge-cancelled{ background: #fee2e2; color: #dc2626; }
-        .badge-default  { background: #f1f5f9; color: #64748b; }
+        .badge-pending {
+          background: #fef9c3;
+          color: #a16207;
+        }
+        .badge-approved {
+          background: #dbeafe;
+          color: #1d4ed8;
+        }
+        .badge-dispatch {
+          background: #ede9fe;
+          color: #7c3aed;
+        }
+        .badge-delivered {
+          background: #dcfce7;
+          color: #166534;
+        }
+        .badge-cancelled {
+          background: #fee2e2;
+          color: #dc2626;
+        }
+        .badge-default {
+          background: #f1f5f9;
+          color: #64748b;
+        }
 
         /* Chips - dots de color */
-        .dot-pendiente::before, .dot-aprobado::before, .dot-en_despacho::before,
-        .dot-entregado::before, .dot-cancelado::before {
-          content: '●'; margin-right: 4px; font-size: 0.6rem;
+        .dot-pendiente::before,
+        .dot-aprobado::before,
+        .dot-en_despacho::before,
+        .dot-entregado::before,
+        .dot-cancelado::before {
+          content: "●";
+          margin-right: 4px;
+          font-size: 0.6rem;
         }
-        .dot-pendiente::before  { color: #a16207; }
-        .dot-aprobado::before   { color: #1d4ed8; }
-        .dot-en_despacho::before{ color: #7c3aed; }
-        .dot-entregado::before  { color: #166534; }
-        .dot-cancelado::before  { color: #dc2626; }
+        .dot-pendiente::before {
+          color: #a16207;
+        }
+        .dot-aprobado::before {
+          color: #1d4ed8;
+        }
+        .dot-en_despacho::before {
+          color: #7c3aed;
+        }
+        .dot-entregado::before {
+          color: #166534;
+        }
+        .dot-cancelado::before {
+          color: #dc2626;
+        }
 
         /* Breadcrumb */
-        .breadcrumb-nav { display: flex; align-items: center; gap: 2px; }
-        .breadcrumb-text { font-size: 0.8rem; font-weight: 600; color: #94a3b8; }
-        .breadcrumb-text.active { color: #1e293b; }
+        .breadcrumb-nav {
+          display: flex;
+          align-items: center;
+          gap: 2px;
+        }
+        .breadcrumb-text {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: #94a3b8;
+        }
+        .breadcrumb-text.active {
+          color: #1e293b;
+        }
 
         /* Botón xs */
-        .btn-xs { font-size: 0.75rem; padding: 4px 12px; }
+        .btn-xs {
+          font-size: 0.75rem;
+          padding: 4px 12px;
+        }
 
         /* Tabla hover */
-        .table-row-hover:hover { background-color: #f8fafc; }
+        .table-row-hover:hover {
+          background-color: #f8fafc;
+        }
 
         /* Modal overlay */
         .modal-overlay {
-          position: fixed; inset: 0;
-          background: rgba(0,0,0,0.55);
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.55);
           backdrop-filter: blur(2px);
           z-index: 2000;
           animation: fadeIn 0.2s ease;
@@ -653,21 +923,38 @@ export default function AdminOrdersPage() {
         /* Panel de detalle */
         .detail-panel {
           position: fixed;
-          top: 50%; left: 50%;
+          top: 50%;
+          left: 50%;
           transform: translate(-50%, -50%);
           width: min(90vw, 720px);
           max-height: 90vh;
           overflow-y: auto;
           background: white;
           border-radius: 1.25rem;
-          box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
           z-index: 2001;
           padding: 2rem;
-          animation: slideUp 0.25s cubic-bezier(0.4,0,0.2,1);
+          animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
-        @keyframes slideUp { from { opacity:0; transform:translate(-50%,-48%) } to { opacity:1; transform:translate(-50%,-50%) } }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translate(-50%, -48%);
+          }
+          to {
+            opacity: 1;
+            transform: translate(-50%, -50%);
+          }
+        }
 
         /* Info grid para datos del pedido */
         .info-grid {
@@ -678,18 +965,55 @@ export default function AdminOrdersPage() {
           border-radius: 1rem;
           padding: 1rem 1.25rem;
         }
-        .info-item { display: flex; flex-direction: column; gap: 2px; }
-        .info-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; }
-        .info-value { font-size: 0.875rem; color: #1e293b; }
+        .info-item {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        .info-label {
+          font-size: 0.65rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          color: #94a3b8;
+        }
+        .info-value {
+          font-size: 0.875rem;
+          color: #1e293b;
+        }
 
         /* Tabla del detalle */
-        .detail-table-wrap { overflow-x: auto; border-radius: 0.75rem; border: 1px solid #e2e8f0; }
-        .detail-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        .detail-table th { background: #f8fafc; padding: 10px 14px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.4px; color: #64748b; font-weight: 700; border-bottom: 1px solid #e2e8f0; }
-        .detail-table td { padding: 10px 14px; color: #1e293b; border-bottom: 1px solid #f1f5f9; }
-        .detail-table tbody tr:last-child td { border-bottom: none; }
-        .detail-table tfoot td { background: #fafafa; }
-
+        .detail-table-wrap {
+          overflow-x: auto;
+          border-radius: 0.75rem;
+          border: 1px solid #e2e8f0;
+        }
+        .detail-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 0.85rem;
+        }
+        .detail-table th {
+          background: #f8fafc;
+          padding: 10px 14px;
+          font-size: 0.7rem;
+          text-transform: uppercase;
+          letter-spacing: 0.4px;
+          color: #64748b;
+          font-weight: 700;
+          border-bottom: 1px solid #e2e8f0;
+        }
+        .detail-table td {
+          padding: 10px 14px;
+          color: #1e293b;
+          border-bottom: 1px solid #f1f5f9;
+        }
+        .detail-table tbody tr:last-child td {
+          border-bottom: none;
+        }
+        .detail-table tfoot td {
+          background: #fafafa;
+        }
       `}</style>
     </div>
   );

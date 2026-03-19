@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
 
 /* ── Reset & Base ── */
 *,
@@ -46,8 +46,10 @@
   /* Extras de consistencia */
   --radius: 16px;
   --radius-sm: 10px;
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --premium-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --premium-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Navbar */
@@ -61,11 +63,19 @@ html {
 }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
   background-color: var(--bg);
   background-image:
-    radial-gradient(circle at 0% 0%, rgba(147, 197, 253, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 100% 100%, rgba(52, 211, 153, 0.05) 0%, transparent 50%);
+    radial-gradient(
+      circle at 0% 0%,
+      rgba(147, 197, 253, 0.05) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(52, 211, 153, 0.05) 0%,
+      transparent 50%
+    );
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
@@ -343,7 +353,10 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
   outline: none;
 }
 
@@ -454,8 +467,6 @@ body {
   box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.5);
   /* Glow gris/azulado */
 }
-
-
 
 /* ── Cards ── */
 .card {
@@ -616,7 +627,9 @@ body {
   /* Espaciado vertical estándar */
   letter-spacing: 0.5px;
   /* Espaciado de letras ligero para claridad */
-  transition: color var(--transition), font-weight var(--transition);
+  transition:
+    color var(--transition),
+    font-weight var(--transition);
   /* Transición suave si quieres cambiar color dinámicamente */
   cursor: default;
   /* Indica que no es clickeable */
@@ -647,12 +660,12 @@ body {
   /* Tamaño de fuente base */
   font-family: inherit;
   /* Hereda fuente del proyecto */
-  transition: border-color var(--transition), box-shadow var(--transition);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
   outline: none;
   /* Quita outline por defecto */
 }
-
-
 
 /* ── Placeholder ── */
 .form-input::placeholder {
@@ -721,7 +734,9 @@ body {
 .form-select {
   appearance: none;
   /* Quita estilo nativo */
-  background: var(--bg-card2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") no-repeat right 0.75rem center;
+  background: var(--bg-card2)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")
+    no-repeat right 0.75rem center;
   background-size: 1rem;
   /* Flecha SVG */
   border: 1px solid var(--border);
@@ -732,7 +747,9 @@ body {
   color: var(--text);
   font-size: 0.85rem;
   font-family: inherit;
-  transition: border-color var(--transition), box-shadow var(--transition);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
 }
 
 /* ── Estado focus para selects ── */
@@ -782,7 +799,9 @@ input[type="date"].form-input {
   color: var(--text);
   font-size: 0.9rem;
   font-family: inherit;
-  transition: border-color var(--transition), box-shadow var(--transition);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
   outline: none;
 }
 
@@ -834,8 +853,6 @@ input[type="date"].form-input:focus {
   padding: 0.9rem 1.2rem;
   font-size: 1rem;
 }
-
-
 
 /* ── Auth Pages ── */
 .auth-page {
@@ -1200,7 +1217,12 @@ tr:hover td {
 
 /* ── Skeleton ── */
 .skeleton {
-  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card2) 50%, var(--bg-card) 75%);
+  background: linear-gradient(
+    90deg,
+    var(--bg-card) 25%,
+    var(--bg-card2) 50%,
+    var(--bg-card) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius-sm);
@@ -1345,7 +1367,9 @@ tr:hover td {
 }
 
 .product-card-hover {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .product-card-hover:hover {
@@ -1417,7 +1441,7 @@ h6 {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.55);
+  background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(2px);
   z-index: 2000;
   animation: fadeIn 0.2s ease;
@@ -1434,17 +1458,290 @@ h6 {
   overflow-y: auto;
   background: white;
   border-radius: 1.25rem;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   z-index: 2001;
   padding: 2rem;
-  animation: slideUp 0.25s cubic-bezier(0.4,0,0.2,1);
+  animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes fadeIn {
-  from { opacity: 0 }
-  to { opacity: 1 }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes slideUp {
-  from { opacity: 0; transform: translate(-50%, -48%) }
-  to { opacity: 1; transform: translate(-50%, -50%) }
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* ── Cabecera profesional para tablas ── */
+/* Cabecera profesional para detalle de pedido */
+.thead-detail-professional th {
+  background-color: #f6f5f3; /* gris claro profesional */
+  color: #1f2937; /* texto oscuro */
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #d1d5db; /* borde para separar del tbody */
+}
+
+/* Filas alternadas en el tbody del detalle */
+.detail-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* Hover sobre filas */
+.detail-table tbody tr:hover {
+  background-color: #f8f9fa;
+  transition: background-color 0.15s ease;
+}
+
+/* Tfoot destacado */
+.detail-table tfoot td {
+  background-color: #f3f4f6;
+  font-weight: 700;
+  color: #1f2937;
+  border-top: 2px solid #d1d5db;
+}
+
+/* ── Detalle de pedido tipo recibo ── */
+.order-receipt {
+  font-family: "Inter", sans-serif;
+  font-size: 0.875rem;
+  color: #1f2937;
+  background-color: #ffffff;
+}
+
+.receipt-header h5 {
+  font-size: 1rem;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.receipt-header p {
+  margin: 0;
+  color: #374151;
+}
+
+/* Tabla de productos en recibo */
+.receipt-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.receipt-table th,
+.receipt-table td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.thead-receipt th {
+  background-color: #f6f5f3;
+  color: #1f2937;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+.receipt-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.receipt-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.receipt-table tfoot td {
+  font-weight: 700;
+  border-top: 2px solid #d1d5db;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  font-weight: 700;
+  color: #374151; /* gris oscuro */
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.info-value {
+  font-weight: 600;
+  color: #1f2937; /* texto oscuro */
+  font-size: 0.875rem;
+}
+
+/* ── Modal Detalle Cliente ── */
+/* ── Recibo/Detalle general ── */
+.recibo-modal {
+  font-family: "Inter", sans-serif;
+  color: #1f2937; /* texto oscuro */
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Info general (grid) */
+.recibo-modal .info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.recibo-modal .info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.recibo-modal .info-label {
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #374151; /* gris oscuro */
+  margin-bottom: 0.25rem;
+}
+
+.recibo-modal .info-value {
+  font-weight: 600;
+  color: #111827; /* texto principal */
+}
+
+/* Tabla de productos en recibo */
+.recibo-modal .detail-table-wrap {
+  overflow-x: auto;
+}
+
+.recibo-modal .detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+.recibo-modal .detail-table th,
+.recibo-modal .detail-table td {
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid #e5e7eb; /* gris claro */
+}
+
+.recibo-modal .detail-table th {
+  background-color: #f6f5f3; /* gris claro profesional */
+  color: #1f2937;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.recibo-modal .detail-table td {
+  font-size: 0.875rem;
+}
+
+.recibo-modal .detail-table td.text-end {
+  text-align: right;
+}
+
+.recibo-modal .detail-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.recibo-modal .detail-table tbody tr:hover {
+  background-color: #f8f9fa;
+  transition: background-color 0.15s ease;
+}
+
+.recibo-modal .detail-table tfoot td {
+  font-weight: 700;
+  font-size: 1rem;
+  border-top: 2px solid #d1d5db;
+}
+
+/* Botonera dentro del recibo */
+.recibo-modal .btn {
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 0.375rem 1rem;
+  margin-right: 0.5rem;
+}
+
+.recibo-modal .btn.btn-primary-dark {
+  background-color: #1d4ed8;
+  color: #ffffff;
+}
+
+.recibo-modal .btn.btn-outline-primary {
+  background-color: transparent;
+  border: 1px solid #1d4ed8;
+  color: #1d4ed8;
+}
+
+.recibo-modal .btn.btn-outline-secondary {
+  background-color: transparent;
+  border: 1px solid #6b7280;
+  color: #6b7280;
+}
+
+.recibo-modal .btn.btn-danger {
+  background-color: #dc2626;
+  color: #ffffff;
+}
+
+.recibo-modal .btn.btn-secondary {
+  background-color: #6b7280;
+  color: #ffffff;
+}
+
+/* Ajustes responsive para móviles */
+@media (max-width: 768px) {
+  .recibo-modal .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recibo-modal .detail-table th,
+  .recibo-modal .detail-table td {
+    padding: 0.5rem 0.25rem;
+  }
+}
+
+/* logo en recibo */
+
+.recibo-logo {
+  height: 65px; /* Ajusta según necesites */
+  width: auto;
+  object-fit: contain;
+}
+
+/* Contenedor cabecera recibo */
+.recibo-modal-header {
+  display: flex; /* Flexbox para alinear horizontal */
+  align-items: center; /* Centrar verticalmente logo y título */
+  gap: 10px; /* Espacio entre logo y título */
+  margin-bottom: 1rem; /* Separación del contenido siguiente */
 }
