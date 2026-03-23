@@ -23,6 +23,7 @@ export default function CartPage() {
       clearCart();
       router.push('/orders?success=1');
     } catch (err: any) {
+      console.error("Error in createOrder:", err);
       setError(err.message || 'Error al crear el pedido.');
     } finally {
       setLoading(false);

@@ -8,7 +8,7 @@ import ClientList from "./ClientList";
 import ClientDetailModal from "./ClientDetailModal";
 
 // ── Constantes ────────────────────────────────────────────────────────────────
-const LOGO_URL = encodeURI("/images/CATALOGO NOVAX PLUS/logonovax.png");
+const LOGO_URL = encodeURI("/images/config_web/logonovax.png");
 const CONTACT_INFO = {
   companyName: "Novax Plus",
   phone: "(000) 000-0000",

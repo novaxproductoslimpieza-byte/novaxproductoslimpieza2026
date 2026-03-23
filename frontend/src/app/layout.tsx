@@ -1,4 +1,6 @@
+import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
+
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '../context/AuthContext';
@@ -24,8 +26,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AuthProvider>
           <CartProvider>
             <div className="app-wrapper">
-              <Header />
+              <Suspense fallback={<div className="h-16" />}>
+                <Header />
+              </Suspense>
+
               <main className="main-content">
+
                 {children}
               </main>
               <Footer />

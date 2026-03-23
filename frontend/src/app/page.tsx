@@ -1,6 +1,8 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
+
 import { useSearchParams, useRouter } from 'next/navigation';
+
 import { catalogApi } from '../lib/api';
 import ProductCard from '../components/ProductCard';
 import ProductCarousel from '../components/ProductCarousel';
@@ -9,7 +11,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { Search, ArrowRight, Package } from 'lucide-react';
 
-export default function HomePage() {
+function HomePageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { addItem } = useCart();
@@ -98,6 +100,24 @@ export default function HomePage() {
       {/* Browsing State: Show Carousels by Category */}
       {!searchParams.get('search') && !searchParams.get('category_id') && (
         <div className="category-sections">
+          {/* Contador de Grupos (Punto 9.2 de mejoras_home.md) */}
+          <div className="d-flex align-items-center justify-content-between mb-4 bg-white p-3 rounded-4 shadow-sm border border-light">
+            <div className="d-flex align-items-center gap-2">
+              <div className="bg-primary-dark text-white rounded-circle d-flex align-items-center justify-content-center" style={{ width: 32, height: 32 }}>
+                <Package size={18} />
+              </div>
+              <div>
+                <span className="fw-bold text-dark d-block leading-tight">Catálogo General</span>
+                <span className="text-muted small">Explora nuestras categorías principales</span>
+              </div>
+            </div>
+            <div className="text-end">
+              <span className="badge bg-primary-dark rounded-pill px-3 py-2 fw-bold">
+                {Object.keys(groupedProducts).length} Grupos de productos
+              </span>
+            </div>
+          </div>
+
           {Object.entries(groupedProducts).length > 0 ? (
             Object.entries(groupedProducts).map(([categoryName, categoryProducts]) => (
               <section key={categoryName} className="mb-5 pb-3">
@@ -334,7 +354,28 @@ export default function HomePage() {
           background-color: #1d4ed8;
           transform: translateY(-1px);
         }
+        .btn-primary-dark:active {
+          transform: scale(0.95);
+        }
       `}</style>
     </div>
   );
 }
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={
+      <div className="container py-5 mt-5">
+        <div className="text-center py-5">
+          <div className="spinner-border text-primary-dark" role="status">
+            <span className="visually-hidden">Cargando...</span>
+          </div>
+          <p className="mt-3 text-muted">Cargando catálogo NOVAX...</p>
+        </div>
+      </div>
+    }>
+      <HomePageContent />
+    </Suspense>
+  );
+}
+

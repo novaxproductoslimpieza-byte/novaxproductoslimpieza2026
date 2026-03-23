@@ -1,5 +1,6 @@
 'use client';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
 import { useSearchParams } from 'next/navigation';
 import { ordersApi } from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
@@ -14,7 +15,7 @@ const ESTADO_LABELS: Record<string, { label: string; cls: string }> = {
   CANCELADO: { label: 'Cancelado', cls: 'badge-cancelled' },
 };
 
-export default function OrdersPage() {
+function OrdersPageContent() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { user, isLoading } = useAuth();
@@ -139,3 +140,12 @@ export default function OrdersPage() {
     </div>
   );
 }
+
+export default function OrdersPage() {
+  return (
+    <React.Suspense fallback={<div className="page container"><div className="skeleton" style={{ height: '300px', borderRadius: '12px' }} /></div>}>
+      <OrdersPageContent />
+    </React.Suspense>
+  );
+}
+

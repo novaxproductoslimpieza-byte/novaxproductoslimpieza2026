@@ -13,11 +13,11 @@ import 'swiper/css/navigation';
 
 // Imágenes de muestra que se rotan por índice (se actualizarán con imágenes reales de cada categoría)
 const sampleImages = [
-  '/images/CATALOGO NOVAX PLUS/1.png',
-  '/images/CATALOGO NOVAX PLUS/3.png',
-  '/images/CATALOGO NOVAX PLUS/5.png',
-  '/images/CATALOGO NOVAX PLUS/1.png',
-  '/images/CATALOGO NOVAX PLUS/3.png',
+  '/images/catogo-novax-plus/1.png',
+  '/images/catogo-novax-plus/3.png',
+  '/images/catogo-novax-plus/5.png',
+  '/images/catogo-novax-plus/1.png',
+  '/images/catogo-novax-plus/3.png',
 ];
 
 const sampleBtnTexts = ['Ver Productos', 'Explorar Línea', 'Comprar Ahora', 'Ver Catálogo', 'Ver Más'];
@@ -67,23 +67,23 @@ const HeroCarousel: React.FC = () => {
           const btnText = sampleBtnTexts[idx % sampleBtnTexts.length];
           return (
             <SwiperSlide key={cat.id}>
-              <div className="h-100 p-5 position-relative d-flex align-items-center" style={{ 
+              <div className="h-100 p-5 position-relative d-flex align-items-center" style={{
                 background: 'linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card2) 100%)'
               }}>
                 {/* Abstract Background Element */}
-                <div 
-                  style={{ 
-                    position: 'absolute', 
-                    top: '-10%', 
-                    right: '-10%', 
-                    width: '500px', 
-                    height: '500px', 
-                    background: 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%)', 
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '-10%',
+                    right: '-10%',
+                    width: '500px',
+                    height: '500px',
+                    background: 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%)',
                     pointerEvents: 'none',
                     zIndex: 0
-                  }} 
+                  }}
                 />
-                
+
                 <div className="container position-relative" style={{ zIndex: 1 }}>
                   <div className="row align-items-center">
                     <div className="col-lg-6">
@@ -99,14 +99,14 @@ const HeroCarousel: React.FC = () => {
                       </div>
                     </div>
                     <div className="col-lg-6 d-none d-lg-flex justify-content-center">
-                      <img 
-                        src={image} 
-                        alt={cat.nombre} 
-                        style={{ 
-                          maxHeight: '320px', 
+                      <img
+                        src={image}
+                        alt={cat.nombre}
+                        style={{
+                          maxHeight: '320px',
                           filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.3))',
                           transform: 'perspective(1000px) rotateY(-10deg)'
-                        }} 
+                        }}
                         className="img-fluid floating-img"
                       />
                     </div>

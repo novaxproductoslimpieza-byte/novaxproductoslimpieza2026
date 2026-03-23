@@ -11,6 +11,9 @@ export const createOrder = async (req: AuthRequest, res: Response): Promise<void
       res.status(401).json({ error: 'Usuario no autenticado' });
       return;
     }
+    console.log('--- Order Creation Attempt ---');
+    console.log('User ID:', req.user?.id);
+    console.log('Products:', JSON.stringify(productos, null, 2));
 
     const cliente_id = req.user.id;
 
@@ -21,8 +24,8 @@ export const createOrder = async (req: AuthRequest, res: Response): Promise<void
         detalles: {
           create: productos.map((p: any) => ({
             producto_id: p.producto_id,
-            cantidad: p.cantidad,
-            precio: p.precio
+            cantidad: Number(p.cantidad),
+            precio: Number(p.precio)
           }))
         }
       }
@@ -30,8 +33,8 @@ export const createOrder = async (req: AuthRequest, res: Response): Promise<void
 
     res.status(201).json({ message: 'Pedido creado', pedido_id: newOrder.id });
   } catch (error) {
-    console.error('Error in createOrder:', error);
-    res.status(500).json({ error: 'Error al crear el pedido.' });
+    console.error('CRITICAL ERROR in createOrder:', error);
+    res.status(500).json({ error: 'Error al crear el pedido: ' + (error instanceof Error ? error.message : String(error)) });
   }
 };
 

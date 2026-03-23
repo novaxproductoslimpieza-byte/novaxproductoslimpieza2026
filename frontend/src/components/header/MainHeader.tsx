@@ -249,7 +249,7 @@ export default function MainHeader() {
                     <Link href="/admin/categories" onClick={handleAdminLinkClick} className="d-block text-dark text-decoration-none small py-2 px-3 hover-bg-light fw-bold">
                       Grupo Producto
                     </Link>
-                    <Link href="/admin/subcategorias" onClick={handleAdminLinkClick} className="d-block text-dark text-decoration-none small py-2 px-3 hover-bg-light fw-bold text-truncate">
+                    <Link href="/admin/categories" onClick={handleAdminLinkClick} className="d-block text-dark text-decoration-none small py-2 px-3 hover-bg-light fw-bold text-truncate">
                       Subgrupo Producto
                     </Link>
                   </div>
@@ -368,26 +368,28 @@ export default function MainHeader() {
         .nav-main-link {
           position: relative;
           color: #1e293b;
-          transition: color 0.2s ease;
-          padding-bottom: 2px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          padding: 6px 12px;
+          border-radius: 8px;
         }
         .nav-main-link::after {
           content: '';
           position: absolute;
-          bottom: -4px;
+          bottom: 2px;
           left: 50%;
           width: 0;
           height: 2px;
           background: var(--primary-dark, #1e40af);
           border-radius: 2px;
-          transition: width 0.25s ease, left 0.25s ease;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .nav-main-link:hover {
           color: var(--primary-dark, #1e40af) !important;
+          background: rgba(30, 64, 175, 0.05);
         }
         .nav-main-link:hover::after {
-          width: 100%;
-          left: 0;
+          width: 60%;
+          left: 20%;
         }
 
         /* Estilos del Sidebar Offcanvas */

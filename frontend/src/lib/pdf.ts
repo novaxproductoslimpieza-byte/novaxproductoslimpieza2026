@@ -1,5 +1,6 @@
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+// Removidos los imports de nivel superior para evitar errores de SSR
+// import jsPDF from 'jspdf';
+// import autoTable from 'jspdf-autotable';
 
 export type ContactInfo = {
   companyName: string;
@@ -51,7 +52,23 @@ async function loadImageAsBase64(url: string) {
   }
 }
 
-function createDocument(title: string, options: PdfOptions) {
+// createDocument movido a funciones individuales para soporte de carga dinámica
+
+/**
+ * Genera un PDF con la lista de pedidos.
+ */
+export async function generateOrdersPdf(
+  orders: Array<any>,
+  opts: PdfOptions = {}
+) {
+  if (typeof window === 'undefined') return;
+  const { jsPDF } = await import('jspdf');
+  const autoTable = (await import('jspdf-autotable')).default;
+
+  const options = { ...DEFAULT_OPTIONS, ...opts };
+  const title = options.title ?? 'Lista de Pedidos';
+  const subtitle = options.subtitle ?? 'Listado de pedidos filtrados';
+
   const doc = new jsPDF({ unit: 'mm', format: 'letter' });
   const margin = 20; // 2cm
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -90,22 +107,6 @@ function createDocument(title: string, options: PdfOptions) {
     doc.text(left, margin, y);
     doc.text(right, pageWidth - margin, y, { align: 'right' });
   };
-
-  return { doc, margin, header, footer };
-}
-
-/**
- * Genera un PDF con la lista de pedidos.
- */
-export async function generateOrdersPdf(
-  orders: Array<any>,
-  opts: PdfOptions = {}
-) {
-  const options = { ...DEFAULT_OPTIONS, ...opts };
-  const title = options.title ?? 'Lista de Pedidos';
-  const subtitle = options.subtitle ?? 'Listado de pedidos filtrados';
-
-  const { doc, margin, header, footer } = createDocument(title, options);
 
   const body = orders.map((o) => {
     const total = (o.detalles ?? []).reduce((sum: number, d: any) => sum + Number(d.precio) * Number(d.cantidad), 0);
@@ -166,10 +167,51 @@ export async function generateOrdersPdf(
  * Genera un PDF con el detalle de un pedido específico.
  */
 export async function generateOrderDetailPdf(order: any, opts: PdfOptions = {}) {
+  if (typeof window === 'undefined') return;
+  const { jsPDF } = await import('jspdf');
+  const autoTable = (await import('jspdf-autotable')).default;
+
   const options = { ...DEFAULT_OPTIONS, ...opts };
   const title = options.title ?? 'Detalle de Pedido';
 
-  const { doc, margin, header, footer } = createDocument(title, options);
+  const doc = new jsPDF({ unit: 'mm', format: 'letter' });
+  const margin = 20; // 2cm
+  const pageWidth = doc.internal.pageSize.getWidth();
+
+  const header = async () => {
+    if (options.logoUrl) {
+      const img = await loadImageAsBase64(options.logoUrl);
+      if (img) {
+        const imgW = 30;
+        const imgH = 30;
+        doc.addImage(img, 'PNG', margin, 12, imgW, imgH);
+      }
+    }
+
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text(title, pageWidth / 2, 18, { align: 'center' });
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    const printedAt = `Fecha: ${formatDateString(new Date())}`;
+    doc.text(printedAt, pageWidth - margin, 18, { align: 'right' });
+
+    if (options.subtitle) {
+      doc.setFontSize(10);
+      doc.text(options.subtitle, pageWidth / 2, 25, { align: 'center' });
+    }
+  };
+
+  const footer = (pageNumber: number, totalPages: number) => {
+    const y = doc.internal.pageSize.getHeight() - 12;
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    const left = `${options.contact?.companyName ?? ''} · ${options.contact?.phone ?? ''} · ${options.contact?.email ?? ''}`.trim();
+    const right = `Página ${pageNumber} de ${totalPages}`;
+    doc.text(left, margin, y);
+    doc.text(right, pageWidth - margin, y, { align: 'right' });
+  };
 
   const orderInfoY = 32;
   const leftX = margin;
@@ -272,11 +314,52 @@ export async function generateClientsPdf(
   clients: Array<any>,
   opts: PdfOptions = {}
 ) {
+  if (typeof window === 'undefined') return;
+  const { jsPDF } = await import('jspdf');
+  const autoTable = (await import('jspdf-autotable')).default;
+
   const options = { ...DEFAULT_OPTIONS, ...opts };
   const title = options.title ?? 'Lista de Clientes';
   const subtitle = options.subtitle ?? 'Listado de clientes filtrados';
 
-  const { doc, margin, header, footer } = createDocument(title, options);
+  const doc = new jsPDF({ unit: 'mm', format: 'letter' });
+  const margin = 20; // 2cm
+  const pageWidth = doc.internal.pageSize.getWidth();
+
+  const header = async () => {
+    if (options.logoUrl) {
+      const img = await loadImageAsBase64(options.logoUrl);
+      if (img) {
+        const imgW = 30;
+        const imgH = 30;
+        doc.addImage(img, 'PNG', margin, 12, imgW, imgH);
+      }
+    }
+
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text(title, pageWidth / 2, 18, { align: 'center' });
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    const printedAt = `Fecha: ${formatDateString(new Date())}`;
+    doc.text(printedAt, pageWidth - margin, 18, { align: 'right' });
+
+    if (options.subtitle) {
+      doc.setFontSize(10);
+      doc.text(options.subtitle, pageWidth / 2, 25, { align: 'center' });
+    }
+  };
+
+  const footer = (pageNumber: number, totalPages: number) => {
+    const y = doc.internal.pageSize.getHeight() - 12;
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    const left = `${options.contact?.companyName ?? ''} · ${options.contact?.phone ?? ''} · ${options.contact?.email ?? ''}`.trim();
+    const right = `Página ${pageNumber} de ${totalPages}`;
+    doc.text(left, margin, y);
+    doc.text(right, pageWidth - margin, y, { align: 'right' });
+  };
 
   const body = clients.map((c) => [
     c.nombre ?? '—',
@@ -320,10 +403,51 @@ export async function generateClientsPdf(
  * Genera un PDF con el detalle de un cliente específico.
  */
 export async function generateClientDetailPdf(client: any, opts: PdfOptions = {}) {
+  if (typeof window === 'undefined') return;
+  const { jsPDF } = await import('jspdf');
+  // const autoTable = (await import('jspdf-autotable')).default;
+
   const options = { ...DEFAULT_OPTIONS, ...opts };
   const title = options.title ?? 'Detalle de Cliente';
 
-  const { doc, margin, header, footer } = createDocument(title, options);
+  const doc = new jsPDF({ unit: 'mm', format: 'letter' });
+  const margin = 20; // 2cm
+  const pageWidth = doc.internal.pageSize.getWidth();
+
+  const header = async () => {
+    if (options.logoUrl) {
+      const img = await loadImageAsBase64(options.logoUrl);
+      if (img) {
+        const imgW = 30;
+        const imgH = 30;
+        doc.addImage(img, 'PNG', margin, 12, imgW, imgH);
+      }
+    }
+
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text(title, pageWidth / 2, 18, { align: 'center' });
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    const printedAt = `Fecha: ${formatDateString(new Date())}`;
+    doc.text(printedAt, pageWidth - margin, 18, { align: 'right' });
+
+    if (options.subtitle) {
+      doc.setFontSize(10);
+      doc.text(options.subtitle, pageWidth / 2, 25, { align: 'center' });
+    }
+  };
+
+  const footer = (pageNumber: number, totalPages: number) => {
+    const y = doc.internal.pageSize.getHeight() - 12;
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    const left = `${options.contact?.companyName ?? ''} · ${options.contact?.phone ?? ''} · ${options.contact?.email ?? ''}`.trim();
+    const right = `Página ${pageNumber} de ${totalPages}`;
+    doc.text(left, margin, y);
+    doc.text(right, pageWidth - margin, y, { align: 'right' });
+  };
 
   // Llamar header al inicio
   await header();

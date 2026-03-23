@@ -61,28 +61,31 @@ export default function NavigationBar() {
           background: #f8fafc;
           color: #64748b;
           border: 1px solid #e2e8f0;
-          padding: 8px 18px;
-          border-radius: 20px;
+          padding: 8px 22px;
+          border-radius: 50px;
           font-size: 0.85rem;
-          font-weight: 600;
+          font-weight: 700;
           white-space: nowrap;
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           cursor: pointer;
+          letter-spacing: 0.3px;
         }
         .btn-filter-category:hover {
-          background: #f1f5f9;
-          border-color: #cbd5e1;
-          color: #1e293b;
-          transform: translateY(-1px);
+          background: white;
+          border-color: var(--primary-dark, #0ea5e9);
+          color: var(--primary-dark, #0ea5e9);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
         .btn-filter-category.active {
           background: var(--primary-dark, #0ea5e9);
           color: white;
           border-color: var(--primary-dark, #0ea5e9);
-          box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+          box-shadow: 0 6px 15px rgba(14, 165, 233, 0.4);
+          transform: translateY(-1px);
         }
         .btn-filter-category:active {
-          transform: scale(0.95);
+          transform: translateY(0) scale(0.95);
         }
       `}</style>
     </div>

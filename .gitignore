@@ -1,14 +1,14 @@
-# Node.js dependencies
+# Node.js
 node_modules/
 
-# Environment variables
-.env
-
-# Next.js build output
+# Next.js
 .next/
 out/
 dist/
 build/
+
+# Environment
+.env
 
 # Logs
 npm-debug.log*
@@ -16,11 +16,11 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Editor files
+# Editor
 .vscode/
 .idea/
 
-# System files
+# System
 .DS_Store
 Thumbs.db
 
@@ -28,7 +28,9 @@ Thumbs.db
 prisma/migrations/
 prisma/.env
 
-# Temporal or cache
+# Temp
 tmp/
-#frontend/public/logonovax.png
-#frontend/public/images/CATALOGO NOVAX PLUS/
+.cache/
+
+# Coverage
+coverage/

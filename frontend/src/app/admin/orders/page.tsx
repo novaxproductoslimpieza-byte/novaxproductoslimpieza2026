@@ -34,7 +34,7 @@ const BADGE_CLS: Record<EstadoPedido, string> = {
   CANCELADO: "badge-cancelled",
 };
 
-const LOGO_URL = encodeURI("/images/CATALOGO NOVAX PLUS/logonovax.png");
+const LOGO_URL = encodeURI("/images/config_web/logonovax.png");
 const CONTACT_INFO = {
   companyName: "Novax Plus",
   phone: "(000) 000-0000",
@@ -126,7 +126,7 @@ function OrderDetailModal({
             </nav>
             <div className="recibo-modal-header d-flex align-items-center gap-3">
               <img
-                src="/images/CATALOGO NOVAX PLUS/logonovax.png"
+                src="/images/config_web/logonovax.png"
                 alt="Logo Novax"
                 className="recibo-logo"
               />

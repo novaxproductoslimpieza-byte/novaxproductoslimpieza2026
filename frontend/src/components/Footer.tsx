@@ -27,9 +27,10 @@ const Footer: React.FC = () => {
             <h6 className="fw-bold mb-3 text-white">Navegación</h6>
             <ul className="list-unstyled small d-flex flex-column gap-2">
               <li><Link href="/" className="text-white-50 text-decoration-none hover-white">Inicio</Link></li>
-              <li><Link href="/products" className="text-white-50 text-decoration-none hover-white">Productos</Link></li>
-              <li><Link href="/ofertas" className="text-white-50 text-decoration-none hover-white">Ofertas</Link></li>
-              <li><Link href="/nosotros" className="text-white-50 text-decoration-none hover-white">Nosotros</Link></li>
+              <li><Link href="/acercade" className="text-white-50 text-decoration-none hover-white">Acerca de</Link></li>
+              <li><Link href="/productosinfo" className="text-white-50 text-decoration-none hover-white">Productos Info</Link></li>
+              <li><Link href="/sobreempresa" className="text-white-50 text-decoration-none hover-white">Sobre Empresa</Link></li>
+              <li><Link href="/noticias" className="text-white-50 text-decoration-none hover-white">Noticias</Link></li>
             </ul>
           </div>
 
