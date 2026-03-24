@@ -35,7 +35,7 @@ export default function CartPage() {
       <div className="empty-state">
         <div className="empty-state-icon">🛒</div>
         <h2 style={{ marginBottom: '0.5rem', color: 'var(--text)' }}>Tu carrito está vacío</h2>
-        <p className="text-muted" style={{ marginBottom: '1.5rem' }}>Agrega productos desde el catálogo para empezar tu pedido.</p>
+        <p className="text-muted" style={{ marginBottom: '1.5 rem' }}>Agrega productos desde el catálogo para empezar tu pedido.</p>
         <Link href="/" className="btn btn-primary">Ver catálogo</Link>
       </div>
     </div>
@@ -63,7 +63,7 @@ export default function CartPage() {
                         {item.imagen ? <img src={item.imagen} alt={item.nombre} className="img-fluid h-100 w-100 object-fit-cover" /> : <span className="fs-3">🧴</span>}
                       </div>
                     </div>
-                    <div className="col flex-grow-1">
+                    <div className="col grow">
                       <h6 className="text-dark fw-bold mb-1">{item.nombre}</h6>
                       <p className="text-primary-dark small fw-bold mb-0">Bs. {item.precio_minorista.toFixed(2)} c/u</p>
                     </div>
@@ -103,7 +103,7 @@ export default function CartPage() {
                 {items.map(item => (
                   <div key={item.id} className="d-flex justify-content-between mb-2 small text-muted">
                     <span className="text-truncate me-3 text-dark">{item.nombre} <span className="opacity-50">×{item.cantidad}</span></span>
-                    <span className="flex-shrink-0 fw-semibold">Bs. {(item.precio_minorista * item.cantidad).toFixed(2)}</span>
+                    <span className="shrink-0 fw-semibold">Bs. {(item.precio_minorista * item.cantidad).toFixed(2)}</span>
                   </div>
                 ))}
               </div>

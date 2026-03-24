@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
     },
     serverExternalPackages: ['jspdf', 'fflate'],
     turbopack: {
+        root: require('path').resolve(__dirname, '..'),
         resolveAlias: {
             fflate: 'fflate/browser',
         },

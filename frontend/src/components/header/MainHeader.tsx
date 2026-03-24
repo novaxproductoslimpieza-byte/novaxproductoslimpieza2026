@@ -124,8 +124,7 @@ export default function MainHeader() {
                       >
                         <button
                           onClick={() => handleCategoryClick(cat.id)}
-                          className={`btn btn-link text-dark text-decoration-none w-100 text-start d-flex align-items-center justify-content-between py-2 px-3 fw-bold small rounded border-0 mb-1 transition-all ${activeCatId === cat.id ? 'bg-light text-primary-dark' : 'hover-bg-light'
-                            }`}
+                          className={`btn-flat w-100 d-flex align-items-center justify-content-between py-2 px-3 fw-bold small mb-1 ${activeCatId === cat.id ? 'bg-light text-primary-dark' : ''}`}
                         >
                           <span className="d-flex align-items-center gap-2">
                             <Package size={16} className={activeCatId === cat.id ? 'text-primary' : 'text-muted'} />
@@ -133,6 +132,7 @@ export default function MainHeader() {
                           </span>
                           {cat.subcategorias?.length > 0 && <ChevronRight size={14} className="text-muted" />}
                         </button>
+
                       </div>
                     ))}
                   </div>
@@ -227,7 +227,7 @@ export default function MainHeader() {
                 <LayoutDashboard size={16} /> Administrador <ChevronDown size={14} className="chevron-rotate" />
               </Link>
               <div
-                className="dropdown-menu-custom position-absolute top-100 start-0 mt-0 py-2 bg-white rounded shadow-lg border border-light z-3"
+                className="dropdown-menu-custom position-absolute top-100 inset-s-0 mt-0 py-2 bg-white rounded shadow-lg border border-light z-3"
                 style={{ minWidth: '220px', display: isAdminMenuOpen ? 'block' : 'none' }}
               >
                 <Link href="/admin/orders" onClick={handleAdminLinkClick} className="d-block text-dark text-decoration-none small py-2 px-3 hover-bg-light fw-bold">

@@ -14,6 +14,7 @@ import {
   Search,
   Home,
 } from "lucide-react";
+import { AvatarDropdown } from "./AvatarDropdown";
 
 export default function TopBar() {
   const { user, logout } = useAuth();
@@ -65,13 +66,13 @@ export default function TopBar() {
         <Link
           href="/"
           title="Inicio"
-          className="d-flex align-items-center gap-2 text-decoration-none hover-scale flex-shrink-0"
+          className="d-flex align-items-center gap-2 text-decoration-none hover-scale shrink-0"
         >
           <img
             src="/images/config_web/logonovax.png"
             alt="Novax"
             height="50"
-            className="rounded-1 shadow-sm"
+            className="h-12 w-auto object-contain"
           />
           <span className="fw-bold text-white fs-5 font-outfit d-none d-lg-inline">
             Novax
@@ -81,7 +82,7 @@ export default function TopBar() {
         {/* Search Bar MOVED FROM MAIN HEADER */}
         <form
           onSubmit={handleSearch}
-          className="d-flex align-items-center bg-white rounded-pill overflow-hidden shadow-sm flex-grow-1 mx-lg-4"
+          className="d-flex align-items-center bg-white rounded-pill overflow-hidden shadow-sm grow mx-lg-4"
           style={{ maxWidth: "600px", height: "42px" }}
         >
           {/* Selector de Categoría con Hover CSS */}
@@ -100,7 +101,7 @@ export default function TopBar() {
               />
             </button>
             <div
-              className="dropdown-menu-custom position-absolute top-100 start-0 mt-0 p-2 bg-white rounded shadow-lg border border-light z-3"
+              className="dropdown-menu-custom position-absolute top-100 inset-s-0 mt-0 p-2 bg-white rounded shadow-lg border border-light z-3"
               style={{ minWidth: "200px" }}
             >
               <button
@@ -154,7 +155,7 @@ export default function TopBar() {
           </button>
         </form>
 
-        <div className="d-flex align-items-center gap-3 flex-shrink-0">
+        <div className="d-flex align-items-center gap-3 shrink-0">
           {/* Inicio */}
           <Link
             href="/"
@@ -167,113 +168,11 @@ export default function TopBar() {
             />
             <span className="d-none d-lg-inline">Inicio</span>
           </Link>
-          {/* Idioma */}
-          <div className="dropdown-hover position-relative d-none d-md-block">
-            <button className="btn btn-link text-white text-decoration-none p-0 d-flex align-items-center gap-1 small fw-bold font-inter">
-              <img
-                src="/images/config_web/flags/es.svg"
-                alt="ES"
-                width="20"
-                height="20"
-                className="rounded-circle shadow-sm object-fit-cover"
-              />
-              <span title="Idioma" className="d-none d-lg-inline">
-                ES
-              </span>
-              <ChevronDown size={14} className="chevron-icon" />
-            </button>
-            <div className="dropdown-menu-custom position-absolute top-100 start-0 mt-0 p-2 bg-white rounded shadow-lg border border-secondary border-opacity-10 z-3">
-              <button className="btn btn-link text-dark text-decoration-none w-100 text-start d-flex align-items-center gap-2 small py-2 px-3 hover-bg-light rounded fw-bold">
-                <img
-                  src="/images/config_web/flags/es.svg"
-                  alt="ES"
-                  width="16"
-                  height="16"
-                  className="rounded-circle"
-                />{" "}
-                Español
-              </button>
-              <button className="btn btn-link text-muted text-decoration-none w-100 text-start d-flex align-items-center gap-2 small py-2 px-3 opacity-50 cursor-not-allowed fw-bold">
-                <img
-                  src="/images/config_web/flags/us.svg"
-                  alt="US"
-                  width="16"
-                  height="16"
-                  className="rounded-circle"
-                />{" "}
-                English
-              </button>
-            </div>
-          </div>
 
-          {/* Cuenta */}
-          <div className="dropdown-hover position-relative">
-            {user ? (
-              <>
-                <button className="btn btn-link text-white text-decoration-none p-0 d-flex align-items-center gap-1 small fw-bold font-inter">
-                  <User
-                    size={18}
-                    className="text-primary-dark opacity-100 bg-white rounded-circle p-1"
-                  />
-                  <span
-                    className="d-none d-md-inline text-truncate text-white"
-                    style={{ maxWidth: "100px" }}
-                  >
-                    {user.nombre.split(" ")[0]}
-                  </span>
-                  <ChevronDown
-                    size={14}
-                    className="chevron-icon d-none d-md-inline text-white"
-                  />
-                </button>
-                <div
-                  className="dropdown-menu-custom position-absolute top-100 end-0 mt-0 p-3 bg-white rounded shadow-lg border border-secondary border-opacity-10 z-3"
-                  style={{ minWidth: "200px" }}
-                >
-                  <div className="mb-2 pb-2 border-bottom border-light">
-                    <p className="text-dark fw-bold mb-0 small text-truncate">
-                      {user.nombre}
-                    </p>
-                    <p
-                      className="text-muted mb-0 text-truncate"
-                      style={{ fontSize: "0.75rem" }}
-                    >
-                      {user.correo}
-                    </p>
-                  </div>
-                  <Link
-                    href="/profile"
-                    className="d-flex align-items-center gap-2 text-dark text-decoration-none small py-2 px-2 hover-bg-light rounded fw-bold"
-                  >
-                    <User size={16} className="text-primary-dark" /> Tu perfil
-                  </Link>
-                  <Link
-                    href="/orders"
-                    className="d-flex align-items-center gap-2 text-dark text-decoration-none small py-2 px-2 hover-bg-light rounded fw-bold"
-                  >
-                    <ShoppingBag size={16} className="text-primary-dark" /> Tus
-                    pedidos
-                  </Link>
-                  <button
-                    onClick={logout}
-                    className="btn btn-link p-0 d-flex align-items-center gap-2 text-danger text-decoration-none small py-2 px-2 w-100 text-start hover-bg-danger-light rounded mt-1 fw-bold"
-                  >
-                    <LogOut size={16} /> Cierre de sesión
-                  </button>
-                </div>
-              </>
-            ) : (
-              <Link
-                href="/login"
-                className="text-white text-decoration-none d-flex align-items-center gap-1 small fw-bold font-inter hover-text-primary"
-              >
-                <LogIn
-                  size={20}
-                  className="text-primary-dark bg-white rounded-circle p-1 shadow-sm"
-                />
-                <span className="d-none d-md-inline">Cuenta</span>
-              </Link>
-            )}
+
+          {/* Cuenta / Avatar Dropdown */}
+          <div className="flex items-center">
+            <AvatarDropdown user={user} logout={logout} />
           </div>
 
           {/* Carrito */}

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import Button from './ui/Button';
+import { Button } from './ui/Button';
 
 export default function Navbar() {
   const { user, logout, isAdmin } = useAuth();
@@ -24,9 +24,9 @@ export default function Navbar() {
         </Link>
 
         {/* Search Bar - hidden on mobile, shown in menu toggle */}
-        <div className="d-none d-lg-flex flex-grow-1 mx-4 max-w-lg">
+        <div className="d-none d-lg-flex grow mx-4 max-w-lg">
           <div className="position-relative w-100">
-            <span className="position-absolute translate-middle-y top-50 start-0 ps-3 text-muted">🔍</span>
+            <span className="position-absolute translate-middle-y top-50 inset-s-0 ps-3 text-muted">🔍</span>
             <input
               className="form-control ps-5 rounded-pill border-secondary border-opacity-10 bg-card2 text-light w-100"
               style={{ height: '40px', maxWidth: '400px' }}
@@ -65,10 +65,10 @@ export default function Navbar() {
 
             <li className="nav-item ms-lg-2">
               <Link href="/cart" className="nav-link p-0">
-                <Button variant="secondary" pill={true} className="position-relative">
+                <Button variant="secondary" className="position-relative rounded-pill">
                   🛒
                   {itemCount > 0 && (
-                    <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary border border-2 border-dark" style={{ fontSize: '0.65rem' }}>
+                    <span className="position-absolute top-0 inset-s-full translate-middle badge rounded-pill bg-primary border border-dark" style={{ fontSize: '0.65rem' }}>
                       {itemCount}
                     </span>
                   )}

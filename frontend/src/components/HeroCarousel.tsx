@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import Link from 'next/link';
-import Button from './ui/Button';
+import { Button } from './ui/Button';
 import { catalogApi } from '../lib/api';
 
 // Import Swiper styles

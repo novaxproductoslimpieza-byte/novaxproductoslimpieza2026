@@ -1,13 +1,117 @@
+/* 1. Fuentes (siempre arriba) */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
 
-/* ── Reset & Base ── */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* 2. Tailwind */
+@import "tailwindcss";
+
+/* 3. Keyframes (fuera de @layer) */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+
+  to {
+    height: var(--radix-accordion-content-height);
+  }
 }
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+
+  to {
+    height: 0;
+  }
+}
+
+/* 4. Base y variables (Tailwind @layer base) */
+@layer base {
+  :root {
+    /* Variables base (ShadCN / Tailwind tokens) */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+
+    /* Variables mapeadas */
+    --color-border: hsl(var(--border));
+    --color-input: hsl(var(--input));
+    --color-ring: hsl(var(--ring));
+    --color-background: hsl(var(--background));
+    --color-foreground: hsl(var(--foreground));
+    --color-primary: hsl(var(--primary));
+    --color-primary-foreground: hsl(var(--primary-foreground));
+    --color-secondary: hsl(var(--secondary));
+    --color-secondary-foreground: hsl(var(--secondary-foreground));
+    --color-muted: hsl(var(--muted));
+    --color-muted-foreground: hsl(var(--muted-foreground));
+    --color-accent: hsl(var(--accent));
+    --color-accent-foreground: hsl(var(--accent-foreground));
+    --color-card: hsl(var(--card));
+    --color-card-foreground: hsl(var(--card-foreground));
+
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+  }
+
+  /* Modo oscuro */
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+
+  /* Reset global y box-sizing */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    border-color: hsl(var(--border));
+  }
+
+  /* Body base */
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: "Inter", system-ui, sans-serif;
+  }
+}
+
+
 
 :root {
   /* Backgrounds */
@@ -66,16 +170,12 @@ body {
   font-family: "Inter", system-ui, sans-serif;
   background-color: var(--bg);
   background-image:
-    radial-gradient(
-      circle at 0% 0%,
+    radial-gradient(circle at 0% 0%,
       rgba(147, 197, 253, 0.05) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 100% 100%,
+      transparent 50%),
+    radial-gradient(circle at 100% 100%,
       rgba(52, 211, 153, 0.05) 0%,
-      transparent 50%
-    );
+      transparent 50%);
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
@@ -331,6 +431,29 @@ body {
   /* Glow rojo */
   transform: translateY(-1px);
   /* Elevación suave */
+}
+
+/* styles.css o tailwind overrides */
+.btn-flat {
+  background: transparent !important;
+  /* sin fondo */
+  border: none !important;
+  /* sin borde */
+  box-shadow: none !important;
+  /* sin sombra */
+  border-radius: 0 !important;
+  /* sin bordes redondeados */
+  padding: 0.5rem 1rem;
+  /* opcional: ajustar padding */
+}
+
+.btn-flat:hover {
+  background: rgba(0, 0, 0, 0.05);
+  /* hover sutil */
+  color: #0d6efd;
+  /* opcional: cambiar color al hover */
+  box-shadow: none;
+  /* asegurarse que no aparezca sombra */
 }
 
 /* ── Botón de Acción Positiva / Acento (Ver detalle) ── */
@@ -734,9 +857,7 @@ body {
 .form-select {
   appearance: none;
   /* Quita estilo nativo */
-  background: var(--bg-card2)
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")
-    no-repeat right 0.75rem center;
+  background: var(--bg-card2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") no-repeat right 0.75rem center;
   background-size: 1rem;
   /* Flecha SVG */
   border: 1px solid var(--border);
@@ -1217,12 +1338,10 @@ tr:hover td {
 
 /* ── Skeleton ── */
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--bg-card) 25%,
-    var(--bg-card2) 50%,
-    var(--bg-card) 75%
-  );
+  background: linear-gradient(90deg,
+      var(--bg-card) 25%,
+      var(--bg-card2) 50%,
+      var(--bg-card) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius-sm);
@@ -1468,15 +1587,18 @@ h6 {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
 }
+
 @keyframes slideUp {
   from {
     opacity: 0;
     transform: translate(-50%, -48%);
   }
+
   to {
     opacity: 1;
     transform: translate(-50%, -50%);
@@ -1486,13 +1608,16 @@ h6 {
 /* ── Cabecera profesional para tablas ── */
 /* Cabecera profesional para detalle de pedido */
 .thead-detail-professional th {
-  background-color: #f6f5f3; /* gris claro profesional */
-  color: #1f2937; /* texto oscuro */
+  background-color: #f6f5f3;
+  /* gris claro profesional */
+  color: #1f2937;
+  /* texto oscuro */
   font-weight: 700;
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.5px;
-  border-bottom: 2px solid #d1d5db; /* borde para separar del tbody */
+  border-bottom: 2px solid #d1d5db;
+  /* borde para separar del tbody */
 }
 
 /* Filas alternadas en el tbody del detalle */
@@ -1581,7 +1706,8 @@ h6 {
 
 .info-label {
   font-weight: 700;
-  color: #374151; /* gris oscuro */
+  color: #374151;
+  /* gris oscuro */
   font-size: 0.75rem;
   letter-spacing: 0.5px;
   text-transform: uppercase;
@@ -1589,7 +1715,8 @@ h6 {
 
 .info-value {
   font-weight: 600;
-  color: #1f2937; /* texto oscuro */
+  color: #1f2937;
+  /* texto oscuro */
   font-size: 0.875rem;
 }
 
@@ -1597,7 +1724,8 @@ h6 {
 /* ── Recibo/Detalle general ── */
 .recibo-modal {
   font-family: "Inter", sans-serif;
-  color: #1f2937; /* texto oscuro */
+  color: #1f2937;
+  /* texto oscuro */
   background-color: #ffffff;
   border-radius: 0.5rem;
   box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
@@ -1624,13 +1752,15 @@ h6 {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #374151; /* gris oscuro */
+  color: #374151;
+  /* gris oscuro */
   margin-bottom: 0.25rem;
 }
 
 .recibo-modal .info-value {
   font-weight: 600;
-  color: #111827; /* texto principal */
+  color: #111827;
+  /* texto principal */
 }
 
 /* Tabla de productos en recibo */
@@ -1647,11 +1777,13 @@ h6 {
 .recibo-modal .detail-table th,
 .recibo-modal .detail-table td {
   padding: 0.75rem 0.5rem;
-  border-bottom: 1px solid #e5e7eb; /* gris claro */
+  border-bottom: 1px solid #e5e7eb;
+  /* gris claro */
 }
 
 .recibo-modal .detail-table th {
-  background-color: #f6f5f3; /* gris claro profesional */
+  background-color: #f6f5f3;
+  /* gris claro profesional */
   color: #1f2937;
   font-weight: 700;
   text-transform: uppercase;
@@ -1733,15 +1865,20 @@ h6 {
 /* logo en recibo */
 
 .recibo-logo {
-  height: 65px; /* Ajusta según necesites */
+  height: 65px;
+  /* Ajusta según necesites */
   width: auto;
   object-fit: contain;
 }
 
 /* Contenedor cabecera recibo */
 .recibo-modal-header {
-  display: flex; /* Flexbox para alinear horizontal */
-  align-items: center; /* Centrar verticalmente logo y título */
-  gap: 10px; /* Espacio entre logo y título */
-  margin-bottom: 1rem; /* Separación del contenido siguiente */
+  display: flex;
+  /* Flexbox para alinear horizontal */
+  align-items: center;
+  /* Centrar verticalmente logo y título */
+  gap: 10px;
+  /* Espacio entre logo y título */
+  margin-bottom: 1rem;
+  /* Separación del contenido siguiente */
 }

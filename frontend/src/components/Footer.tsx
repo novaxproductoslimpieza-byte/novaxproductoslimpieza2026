@@ -9,7 +9,8 @@ const Footer: React.FC = () => {
         <div className="row g-4">
           <div className="col-lg-4">
             <div className="d-flex align-items-center gap-2 mb-3">
-              <img src="/images/config_web/logonovax.png" alt="Logo" height="50" className="rounded-1" />
+              <img src="/images/config_web/logonovax.png" alt="Logo" height="50"
+                className="h-12 w-auto object-contain" />
               <span className="footer-logo fs-4 text-white">Novax</span>
             </div>
             <p className="text-white-50 small">
