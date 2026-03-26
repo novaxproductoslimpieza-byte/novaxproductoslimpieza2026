@@ -3,8 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from './ui/Button';
 import { catalogApi } from '../lib/api';
+import { useAuth } from '../context/AuthContext';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -25,6 +27,8 @@ const sampleBtnTexts = ['Ver Productos', 'Explorar Línea', 'Comprar Ahora', 'Ve
 const HeroCarousel: React.FC = () => {
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const { user } = useAuth();
 
   useEffect(() => {
     catalogApi.getCategories()
@@ -92,10 +96,21 @@ const HeroCarousel: React.FC = () => {
                         {cat.descripcion || `Descubrí nuestra línea completa de ${cat.nombre}. Calidad y efectividad garantizada.`}
                       </p>
                       <div className="d-flex gap-3">
-                        <Link href={`/?category_id=${cat.id}`}>
-                          <Button size="lg" className="px-5">{btnText}</Button>
-                        </Link>
-                        <Button variant="outline" size="lg" className="px-4">Más Info</Button>
+                        <Button
+                          size="lg"
+                          className="px-5"
+                          onClick={() => router.push(user ? `/?category_id=${cat.id}` : '/login')}
+                        >
+                          {btnText}
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="lg" 
+                          className="px-4"
+                          onClick={() => router.push(user ? `/productosinfo` : '/login')}
+                        >
+                          Más Info
+                        </Button>
                       </div>
                     </div>
                     <div className="col-lg-6 d-none d-lg-flex justify-content-center">

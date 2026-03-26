@@ -64,8 +64,8 @@ export default function Navbar() {
             )}
 
             <li className="nav-item ms-lg-2">
-              <Link href="/cart" className="nav-link p-0">
-                <Button variant="secondary" className="position-relative rounded-pill">
+              <Link href={user ? "/cart" : "/login"} className="nav-link p-0">
+                <Button variant="secondary" className={`position-relative rounded-pill ${!user && 'opacity-50'}`}>
                   🛒
                   {itemCount > 0 && (
                     <span className="position-absolute top-0 inset-s-full translate-middle badge rounded-pill bg-primary border border-dark" style={{ fontSize: '0.65rem' }}>

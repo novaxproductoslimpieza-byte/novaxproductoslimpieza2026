@@ -1,8 +1,10 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
 
+
+
 function getToken(): string | null {
   if (typeof window === 'undefined') return null;
-  return localStorage.getItem('novax_token');
+  return sessionStorage.getItem('novax_token');
 }
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -16,12 +18,17 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   const res = await fetch(`${API_BASE}${endpoint}`, { ...options, headers });
 
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: 'Error desconocido' }));
-    throw new Error(err.error || `Error ${res.status}`);
+    const text = await res.text(); // lee la respuesta completa
+    console.error('API error:', res.status, text); // log en consola del navegador
+    throw new Error(`Error ${res.status}: ${text}`);
   }
+
+
 
   return res.json() as Promise<T>;
 }
+
+export { request }; // ✅ exporta una sola vez
 
 // ── Auth ──
 export const authApi = {
@@ -101,4 +108,15 @@ export const userApi = {
   updateProfile: (data: any) => request<any>('/users/profile', { method: 'PUT', body: JSON.stringify(data) }),
   getClients: () => request<any[]>('/admin/clients'),
   deleteClient: (id: number) => request<any>(`/admin/clients/${id}`, { method: 'DELETE' }),
+};
+
+// ── Categoria ──
+export const categoriaApi = {
+  getCategorias: () => request<any[]>('/admin/categoria'),
+  createCategoria: (data: { nombre: string; descripcion?: string }) =>
+    request<any>('/admin/categoria', { method: 'POST', body: JSON.stringify(data) }),
+  updateCategoria: (id: number, data: { nombre: string; descripcion?: string }) =>
+    request<any>(`/admin/categoria/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteCategoria: (id: number) =>
+    request<any>(`/admin/categoria/${id}`, { method: 'DELETE' }),
 };

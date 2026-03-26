@@ -25,12 +25,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('novax_cart');
+    const saved = sessionStorage.getItem('novax_cart');
     if (saved) setItems(JSON.parse(saved));
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('novax_cart', JSON.stringify(items));
+    sessionStorage.setItem('novax_cart', JSON.stringify(items));
   }, [items]);
 
   const addItem = (product: any, cantidad = 1) => {

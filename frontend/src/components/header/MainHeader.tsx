@@ -213,6 +213,7 @@ export default function MainHeader() {
             </li>
           )}
           {/* Enlace Administrador con Popup Multinivel */}
+
           {isAdmin && (
             <li
               className="nav-item position-relative admin-dropdown"
@@ -249,8 +250,8 @@ export default function MainHeader() {
                     <Link href="/admin/categories" onClick={handleAdminLinkClick} className="d-block text-dark text-decoration-none small py-2 px-3 hover-bg-light fw-bold">
                       Grupo Producto
                     </Link>
-                    <Link href="/admin/categories" onClick={handleAdminLinkClick} className="d-block text-dark text-decoration-none small py-2 px-3 hover-bg-light fw-bold text-truncate">
-                      Subgrupo Producto
+                    <Link href="/admin/categoria" onClick={handleAdminLinkClick} className="d-block text-dark text-decoration-none small py-2 px-3 hover-bg-light fw-bold text-truncate">
+                      Subcategoria
                     </Link>
                   </div>
                 </div>
@@ -318,6 +319,7 @@ export default function MainHeader() {
               </div>
             </li>
           )}
+
           {/* Nuevos enlaces (Acerca de, Productos, vender, Como Funciona ,  Sobre empresa) */}
           {/*Acerca del sitio web Novax */}
           <li>

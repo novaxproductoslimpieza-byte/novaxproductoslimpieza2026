@@ -16,6 +16,36 @@ import {
 } from "lucide-react";
 import { AvatarDropdown } from "./AvatarDropdown";
 
+
+
+// ── Componente de Icono de Carrito ─────────────────────────────
+function CartIcon({ itemCount }: { itemCount: number }) {
+  return (
+    <div className="position-relative">
+      <img
+        src="/images/config_web/carrito.jpg"
+        alt="Cart"
+        width="21"
+        height="21"
+        className="rounded-circle object-fit-cover shadow-sm border border-white"
+      />
+      {itemCount > 0 && (
+        <span
+          className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm border border-white"
+          style={{
+            fontSize: "0.65rem",
+            padding: "0.35em 0.5em",
+            zIndex: 5,
+          }}
+        >
+          {itemCount}
+        </span>
+      )}
+    </div>
+  );
+}
+
+
 export default function TopBar() {
   const { user, logout } = useAuth();
   const { itemCount } = useCart();
@@ -59,13 +89,15 @@ export default function TopBar() {
     router.push(`/?${params.toString()}`);
   };
 
+
+
   return (
     <div className="bg-navbar py-2 border-bottom border-secondary border-opacity-10 position-relative z-index-top">
       <div className="container d-flex justify-content-between align-items-center gap-3">
         {/* Logo */}
         <Link
           href="/"
-          title="Inicio"
+          title="Pagina principal"
           className="d-flex align-items-center gap-2 text-decoration-none hover-scale shrink-0"
         >
           <img
@@ -83,10 +115,10 @@ export default function TopBar() {
         <form
           onSubmit={handleSearch}
           className="d-flex align-items-center bg-white rounded-pill overflow-hidden shadow-sm grow mx-lg-4"
-          style={{ maxWidth: "600px", height: "42px" }}
+          style={{ maxWidth: "500px", height: "42px" }}
         >
           {/* Selector de Categoría con Hover CSS */}
-          <div className="dropdown-hover h-100 position-relative border-end border-light d-none d-md-block">
+          <div className="dropdown-hover h-90 position-relative border-end border-light d-none d-md-block">
             <button
               type="button"
               className="btn-category-selector h-100 px-3 d-flex align-items-center gap-2"
@@ -102,7 +134,7 @@ export default function TopBar() {
             </button>
             <div
               className="dropdown-menu-custom position-absolute top-100 inset-s-0 mt-0 p-2 bg-white rounded shadow-lg border border-light z-3"
-              style={{ minWidth: "200px" }}
+              style={{ minWidth: "px" }}
             >
               <button
                 type="button"
@@ -159,14 +191,15 @@ export default function TopBar() {
           {/* Inicio */}
           <Link
             href="/"
-            title="Inicio"
+            title="Pagina principal"
             className="text-white text-decoration-none d-flex align-items-center gap-1 small fw-bold font-inter hover-scale home-icon-btn"
           >
             <Home
               size={20}
               className="text-primary-dark bg-white rounded-circle p-1 shadow-sm"
             />
-            <span className="d-none d-lg-inline">Inicio</span>
+            {/*<span className="d-none d-lg-inline">Inicio</span>*/}
+            
           </Link>
 
 
@@ -176,35 +209,37 @@ export default function TopBar() {
           </div>
 
           {/* Carrito */}
+
           <Link
-            href="/cart"
-            title="Carrito de compras"
-            className="text-white text-decoration-none d-flex align-items-center gap-2 small position-relative fw-bold font-inter hover-scale"
+            href={user ? "/cart" : "/"} // Invitado → login
+            title={user ? "Carrito de compras" : "Inicia sesión para ver tu carrito"}
+            className={`text-white d-flex align-items-center gap-2 small position-relative fw-bold font-inter ${user ? "hover-scale" : "opacity-50 pointer-events-none" // desactiva click si invitado
+              }`}
           >
             <div className="position-relative">
               <img
                 src="/images/config_web/carrito.jpg"
                 alt="Cart"
-                width="26"
-                height="26"
+                width="22"
+                height="22"
                 className="rounded-circle object-fit-cover shadow-sm border border-white"
               />
               {itemCount > 0 && (
                 <span
                   className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm border border-white"
-                  style={{
-                    fontSize: "0.65rem",
-                    padding: "0.35em 0.5em",
-                    zIndex: 5,
-                  }}
+                  style={{ fontSize: "0.65rem", padding: "0.35em 0.5em", zIndex: 5 }}
                 >
                   {itemCount}
                 </span>
               )}
             </div>
 
-            <span className="d-none d-lg-inline">Carrito</span>
+            {/*<span className="d-none d-lg-inline">Carrito</span>*/}
           </Link>
+
+
+
+
         </div>
       </div>
 

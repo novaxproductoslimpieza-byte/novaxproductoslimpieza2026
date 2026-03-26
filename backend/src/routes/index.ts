@@ -5,6 +5,7 @@ import categoryRoutes from './categoryRoutes';
 import orderRoutes from './orderRoutes';
 import userRoutes from './userRoutes';
 import geolocationRoutes from './geolocationRoutes';
+import categoriaRoutes from './categoriaRoutes';
 
 const router = Router();
 
@@ -20,5 +21,6 @@ router.use('/', categoryRoutes);
 router.use('/', productRoutes);
 router.use('/', orderRoutes);
 router.use('/', userRoutes);
+router.use('/', categoriaRoutes);
 
 export default router;
