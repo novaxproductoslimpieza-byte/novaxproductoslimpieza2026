@@ -3,10 +3,9 @@ import { Label } from "@/components/ui/label";
 import { Categoria } from "./categoriaApi";
 
 interface CategoriaFormProps {
-  formData: Omit<Categoria, "id" | "createdAt">;
-  setFormData: React.Dispatch<React.SetStateAction<Omit<Categoria, "id" | "createdAt">>>;
+  formData: Categoria;
+  setFormData: React.Dispatch<React.SetStateAction<Categoria | null>>;
 }
-
 export default function CategoriaForm({ formData, setFormData }: CategoriaFormProps) {
   return (
     <div className="space-y-4">

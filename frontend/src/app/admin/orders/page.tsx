@@ -502,7 +502,7 @@ export default function AdminOrdersPage() {
                 }}
               />
               <span
-                className="position-absolute top-50 end-0 translate-middle-y me-1 d-flex align-items-center justify-content-center"
+                className="position-absolute top-50 inset-0 translate-middle-y me-1 d-flex align-items-center justify-content-center"
                 style={{
                   width: "36px",
                   height: "36px",

@@ -439,3 +439,70 @@ export function printClientDetail(
 
   openPrintWindow(`${header}${clienteHtml}${observations}${footer}`);
 }
+
+export function printCategoriasList(
+  categorias: Array<any>,
+  opts: { logoUrl?: string; title?: string; subtitle?: string } = {}
+) {
+  const title = opts.title ?? "Lista de Categorías";
+  const subtitle = opts.subtitle ?? "Categorías filtradas";
+
+  const header = buildHeaderHTML(title, subtitle, opts.logoUrl);
+
+  const rows = categorias
+    .map(
+      (c) => `
+      <tr>
+        <td>#${c.id}</td>
+        <td>${c.nombre ?? "—"}</td>
+        <td>${c.descripcion ?? "—"}</td>
+        <td>${c.createdAt ? formatDateString(c.createdAt) : "—"}</td>
+      </tr>
+    `
+    )
+    .join("");
+
+  const table = `
+    <table class="print-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Fecha de creación</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows}
+      </tbody>
+    </table>
+  `;
+
+  const footer = buildFooterHTML();
+
+  openPrintWindow(`${header}${table}${footer}`);
+}
+
+export function printCategoriaDetail(
+  categoria: any,
+  opts: { logoUrl?: string; title?: string; subtitle?: string } = {}
+) {
+  const title = opts.title ?? "Detalle de Categoría";
+  const subtitle = opts.subtitle ?? `Categoría #${categoria.id}`;
+
+  const header = buildHeaderHTML(title, subtitle, opts.logoUrl);
+
+  const detalleHtml = `
+    <div style="margin-top:12px;">
+      <div style="font-weight:700; margin-bottom:4px;">Información de la Categoría</div>
+      <div><strong>Nombre:</strong> ${categoria.nombre ?? "—"}</div>
+      <div><strong>Descripción:</strong> ${categoria.descripcion ?? "—"}</div>
+      <div><strong>Fecha de creación:</strong> ${categoria.createdAt ? formatDateString(categoria.createdAt) : "—"
+    }</div>
+    </div>
+  `;
+
+  const footer = buildFooterHTML();
+
+  openPrintWindow(`${header}${detalleHtml}${footer}`);
+}

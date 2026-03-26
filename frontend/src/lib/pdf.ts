@@ -127,7 +127,7 @@ export async function generateOrdersPdf(
   autoTable(doc, {
     startY: 32,
     margin: { left: margin, right: margin, top: margin, bottom: margin },
-    head: [[ 'N° Pedido', 'Cliente', 'Fecha', 'Estado', 'Total' ]],
+    head: [['N° Pedido', 'Cliente', 'Fecha', 'Estado', 'Total']],
     body,
     styles: {
       font: 'helvetica',
@@ -241,7 +241,7 @@ export async function generateOrderDetailPdf(order: any, opts: PdfOptions = {}) 
   autoTable(doc, {
     startY: orderInfoY + 46,
     margin: { left: margin, right: margin, bottom: margin },
-    head: [[ '#', 'Producto', 'Cantidad', 'Precio Unit.', 'Subtotal' ]],
+    head: [['#', 'Producto', 'Cantidad', 'Precio Unit.', 'Subtotal']],
     body: items,
     styles: {
       font: 'helvetica',
@@ -496,4 +496,100 @@ export async function generateClientDetailPdf(client: any, opts: PdfOptions = {}
   footer(pageNumber, totalPages);
 
   doc.save(options.fileName ?? `novax_detalle_cliente_${client.id}.pdf`);
+}
+
+export async function generateCategoriasPdf(
+  categorias: Array<any>,
+  opts: PdfOptions = {}
+) {
+  if (typeof window === "undefined") return;
+  const { jsPDF } = await import("jspdf");
+  const autoTable = (await import("jspdf-autotable")).default;
+
+  const options = { ...DEFAULT_OPTIONS, ...opts };
+  const title = options.title ?? "Lista de Categorías";
+  const subtitle = options.subtitle ?? "Listado de categorías filtradas";
+
+  const doc = new jsPDF({ unit: "mm", format: "letter" });
+  const margin = 20;
+  const pageWidth = doc.internal.pageSize.getWidth();
+
+  const header = async () => {
+    if (options.logoUrl) {
+      const img = await loadImageAsBase64(options.logoUrl);
+      if (img) doc.addImage(img, "PNG", margin, 12, 30, 30);
+    }
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text(title, pageWidth / 2, 18, { align: "center" });
+    doc.setFontSize(9);
+    doc.text(`Fecha: ${formatDateString(new Date())}`, pageWidth - margin, 18, { align: "right" });
+    if (options.subtitle) {
+      doc.setFontSize(10);
+      doc.text(options.subtitle, pageWidth / 2, 25, { align: "center" });
+    }
+  };
+
+  const body = categorias.map((c) => [
+    `#${c.id}`,
+    c.nombre ?? "—",
+    c.descripcion ?? "—",
+    c.createdAt ? formatDateString(c.createdAt) : "—",
+  ]);
+
+autoTable(doc, {
+  startY: 32,
+  margin: { left: margin, right: margin, top: margin, bottom: margin },
+  head: [["ID", "Nombre", "Descripción", "Fecha de creación"]],
+  body,
+  styles: { font: "helvetica", fontSize: 10, textColor: "#000", cellPadding: 4 },
+  headStyles: { fillColor: "#f0f4ff", textColor: "#0c2461", fontStyle: "bold", halign: "center" },
+  alternateRowStyles: { fillColor: "#f8f9ff" },
+  didDrawPage: (data) => {
+    header(); // asegúrate que header sea síncrono
+  },
+});
+
+
+  doc.save(options.fileName ?? "novax_categorias.pdf");
+}
+
+export async function generateCategoriaDetailPdf(categoria: any, opts: PdfOptions = {}) {
+  if (typeof window === "undefined") return;
+  const { jsPDF } = await import("jspdf");
+
+  const options = { ...DEFAULT_OPTIONS, ...opts };
+  const title = options.title ?? "Detalle de Categoría";
+
+  const doc = new jsPDF({ unit: "mm", format: "letter" });
+  const margin = 20;
+  const pageWidth = doc.internal.pageSize.getWidth();
+
+  const header = async () => {
+    if (options.logoUrl) {
+      const img = await loadImageAsBase64(options.logoUrl);
+      if (img) doc.addImage(img, "PNG", margin, 12, 30, 30);
+    }
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text(title, pageWidth / 2, 18, { align: "center" });
+    doc.setFontSize(9);
+    doc.text(`Fecha: ${formatDateString(new Date())}`, pageWidth - margin, 18, { align: "right" });
+    if (options.subtitle) {
+      doc.setFontSize(10);
+      doc.text(options.subtitle, pageWidth / 2, 25, { align: "center" });
+    }
+  };
+
+  await header();
+
+  const infoY = 32;
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.text(`ID: #${categoria.id}`, margin, infoY + 8);
+  doc.text(`Nombre: ${categoria.nombre ?? "—"}`, margin, infoY + 15);
+  doc.text(`Descripción: ${categoria.descripcion ?? "—"}`, margin, infoY + 22);
+  doc.text(`Fecha de creación: ${categoria.createdAt ? formatDateString(categoria.createdAt) : "—"}`, margin, infoY + 29);
+
+  doc.save(options.fileName ?? `novax_categoria_${categoria.id}.pdf`);
 }
