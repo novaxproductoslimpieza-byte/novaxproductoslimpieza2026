@@ -2,19 +2,18 @@
 import React, { useState, useEffect } from 'react';
 import { catalogApi } from '../../lib/api';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-
-
+import { useCategoryStore } from "@/store/categoryStore";
 
 export default function NavigationBar() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentCatId = searchParams.get('category_id');
-  const [categories, setCategories] = useState<any[]>([]);
+  const { categories, fetchCategories } = useCategoryStore();
   const pathname = usePathname();
   const isHomePage = pathname === '/';
 
   useEffect(() => {
-    catalogApi.getCategories().then(setCategories).catch(console.error);
+    fetchCategories();
   }, []);
 
   const handleCategoryClick = (id: number | null) => {
@@ -29,28 +28,28 @@ export default function NavigationBar() {
     <div className="bg-white border-bottom border-light py-2 shadow-sm sticky-top" style={{ zIndex: 1000 }}>
       <div className="container">
         {/* Carrusel de Categorías (Grupos) */}
-{isHomePage && (
-        <div className="category-carousel-container" style={{ overflow: 'hidden' }}>
-          <div className="d-flex align-items-center gap-2 overflow-auto hide-scrollbar" style={{ whiteSpace: 'nowrap' }}>
-            <button
-              onClick={() => handleCategoryClick(null)}
-              className={`btn-filter-category ${!currentCatId && !searchParams.get('search') ? 'active' : ''}`}
-            >
-              Todos
-            </button>
-            {categories.map((cat: any) => (
+        {isHomePage && (
+          <div className="category-carousel-container" style={{ overflow: 'hidden' }}>
+            <div className="d-flex align-items-center gap-2 overflow-auto hide-scrollbar" style={{ whiteSpace: 'nowrap' }}>
               <button
-                key={cat.id}
-                onClick={() => handleCategoryClick(cat.id)}
-                className={`btn-filter-category ${Number(currentCatId) === cat.id ? 'active' : ''}`}
+                onClick={() => handleCategoryClick(null)}
+                className={`btn-filter-category ${!currentCatId && !searchParams.get('search') ? 'active' : ''}`}
               >
-                {cat.nombre}
+                Todos
               </button>
-            ))}
+              {categories.map((cat: any) => (
+                <button
+                  key={cat.id}
+                  onClick={() => handleCategoryClick(cat.id)}
+                  className={`btn-filter-category ${Number(currentCatId) === cat.id ? 'active' : ''}`}
+                >
+                  {cat.nombre}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-)}
+        )}
       </div>
 
       <style jsx>{`

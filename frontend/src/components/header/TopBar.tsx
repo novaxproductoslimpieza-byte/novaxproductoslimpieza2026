@@ -15,10 +15,10 @@ import {
   Home,
 } from "lucide-react";
 import { AvatarDropdown } from "./AvatarDropdown";
+import { useCategoryStore } from "@/store/categoryStore"; // ✅ NUEVO
 
 
 
-// ── Componente de Icono de Carrito ─────────────────────────────
 function CartIcon({ itemCount }: { itemCount: number }) {
   return (
     <div className="position-relative">
@@ -45,7 +45,6 @@ function CartIcon({ itemCount }: { itemCount: number }) {
   );
 }
 
-
 export default function TopBar() {
   const { user, logout } = useAuth();
   const { itemCount } = useCart();
@@ -53,7 +52,7 @@ export default function TopBar() {
   const searchParams = useSearchParams();
 
   // Search state
-  const [categories, setCategories] = useState<any[]>([]);
+  const { categories, fetchCategories } = useCategoryStore();
   const [selectedCat, setSelectedCat] = useState("Todas");
   const [selectedCatId, setSelectedCatId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState(
@@ -61,9 +60,25 @@ export default function TopBar() {
   );
 
   useEffect(() => {
-    catalogApi.getCategories().then(setCategories).catch(console.error);
+    fetchCategories();
   }, []);
 
+  // 🔹 ESTE YA EXISTÍA → NO SE TOCA (event system)
+  useEffect(() => {
+    fetchCategories();
+
+    const handleUpdate = () => {
+      fetchCategories();
+    };
+
+    window.addEventListener("categoriesUpdated", handleUpdate);
+
+    return () => {
+      window.removeEventListener("categoriesUpdated", handleUpdate);
+    };
+  }, []);
+
+  // 🔹 ESTE YA EXISTÍA → NO SE TOCA
   useEffect(() => {
     if (categories.length > 0) {
       const catId = searchParams.get("category_id");
@@ -88,7 +103,6 @@ export default function TopBar() {
     if (selectedCatId) params.set("category_id", String(selectedCatId));
     router.push(`/?${params.toString()}`);
   };
-
 
 
   return (
@@ -199,7 +213,7 @@ export default function TopBar() {
               className="text-primary-dark bg-white rounded-circle p-1 shadow-sm"
             />
             {/*<span className="d-none d-lg-inline">Inicio</span>*/}
-            
+
           </Link>
 
 

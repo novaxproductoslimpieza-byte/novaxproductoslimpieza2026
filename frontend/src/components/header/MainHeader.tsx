@@ -8,7 +8,7 @@ import {
   Menu, ChevronRight, ChevronDown, Package, User, LogOut,
   MapPin, CreditCard, Info, Tag, LayoutDashboard
 } from 'lucide-react';
-
+import { useCategoryStore } from "@/store/categoryStore";
 
 export default function MainHeader() {
   const router = useRouter();
@@ -30,8 +30,28 @@ export default function MainHeader() {
     setIsAdminMenuOpen(false);
   };
 
+  const fetchCategories = async () => {
+    try {
+      const data = await catalogApi.getCategories();
+      setCategories(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
   useEffect(() => {
-    catalogApi.getCategories().then(setCategories).catch(console.error);
+    fetchCategories();
+
+    const handleUpdate = () => {
+      fetchCategories();
+    };
+
+    window.addEventListener("categoriesUpdated", handleUpdate);
+
+    return () => {
+      window.removeEventListener("categoriesUpdated", handleUpdate);
+    };
   }, []);
 
   const handleCategoryClick = (id: number | null, subId: number | null = null) => {

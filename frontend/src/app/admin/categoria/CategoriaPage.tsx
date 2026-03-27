@@ -7,6 +7,7 @@ import CategoriaDialog from "./CategoriaDialog";
 import { Info } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useCategoryStore } from "@/store/categoryStore";
 
 
 
@@ -28,6 +29,8 @@ export default function CategoriaPage() {
     const [open, setOpen] = useState(false);
 
     const [page, setPage] = useState(1);
+
+    const { fetchCategories } = useCategoryStore();
 
 
     // Filtros
@@ -92,12 +95,17 @@ export default function CategoriaPage() {
                     nombre: data.nombre!,
                     descripcion: data.descripcion!,
                 });
+
             }
+            await fetchCategories();
+            // 🔥 NOTIFICAR CAMBIO
+            window.dispatchEvent(new Event("categoriesUpdated"));
+
             setOpen(false);
             setSelectedCategoria(null);
             load();
+
         } catch (error) {
-            // Re-lanzar para que el componente CategoriaForm lo capture
             throw error;
         }
     };
@@ -105,11 +113,15 @@ export default function CategoriaPage() {
     const handleDelete = async (id: number) => {
         try {
             await categoriaApi.deleteCategoria(id);
+
+            // 🔥 NOTIFICAR CAMBIO
+            window.dispatchEvent(new Event("categoriesUpdated"));
+            await fetchCategories();
             setOpen(false);
             setSelectedCategoria(null);
             load();
+
         } catch (error: any) {
-            // Re-lanzar para que CategoriaDialog lo capture en su propio modal
             throw error;
         }
     };
