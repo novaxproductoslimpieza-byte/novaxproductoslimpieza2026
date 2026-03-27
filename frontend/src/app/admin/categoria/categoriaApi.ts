@@ -1,5 +1,6 @@
 import { request } from '@/lib/api';
 
+
 export interface Categoria {
   id: number;
   nombre: string;

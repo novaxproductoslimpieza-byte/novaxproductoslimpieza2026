@@ -4,6 +4,11 @@ import { Categoria, categoriaApi } from "./categoriaApi";
 import { printCategoriasList } from "@/lib/print";
 import { generateCategoriasPdf } from "@/lib/pdf";
 import CategoriaDialog from "./CategoriaDialog";
+import { Info } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+
+
 
 const LOGO_URL = encodeURI("/images/config_web/logonovax.png");
 const PAGE_SIZE = 8;
@@ -23,6 +28,7 @@ export default function CategoriaPage() {
     const [open, setOpen] = useState(false);
 
     const [page, setPage] = useState(1);
+
 
     // Filtros
     const [search, setSearch] = useState("");
@@ -74,29 +80,38 @@ export default function CategoriaPage() {
     };
 
     // Acciones CRUD
-    const handleSave = async () => {
-        if (selectedCategoria?.id) {
-            await categoriaApi.updateCategoria(selectedCategoria.id, {
-                nombre: selectedCategoria.nombre,
-                descripcion: selectedCategoria.descripcion,
-            });
-        } else if (selectedCategoria) {
-            await categoriaApi.createCategoria({
-                nombre: selectedCategoria.nombre,
-                descripcion: selectedCategoria.descripcion,
-            });
+    const handleSave = async (data: Partial<Categoria>) => {
+        try {
+            if (data.id) {
+                await categoriaApi.updateCategoria(data.id, {
+                    nombre: data.nombre!,
+                    descripcion: data.descripcion!,
+                });
+            } else {
+                await categoriaApi.createCategoria({
+                    nombre: data.nombre!,
+                    descripcion: data.descripcion!,
+                });
+            }
+            setOpen(false);
+            setSelectedCategoria(null);
+            load();
+        } catch (error) {
+            // Re-lanzar para que el componente CategoriaForm lo capture
+            throw error;
         }
-        setOpen(false);
-        setSelectedCategoria(null);
-        load();
     };
 
     const handleDelete = async (id: number) => {
-        if (!confirm(`¿Eliminar categoría #${id}? Esta acción no se puede deshacer.`)) return;
-        await categoriaApi.deleteCategoria(id);
-        setOpen(false);
-        setSelectedCategoria(null);
-        load();
+        try {
+            await categoriaApi.deleteCategoria(id);
+            setOpen(false);
+            setSelectedCategoria(null);
+            load();
+        } catch (error: any) {
+            // Re-lanzar para que CategoriaDialog lo capture en su propio modal
+            throw error;
+        }
     };
 
     // Print / PDF
@@ -121,10 +136,32 @@ export default function CategoriaPage() {
             {/* ── Cabecera ── */}
             <div className="module-header d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
                 <div>
-                    <h1 className="h3 fw-bold text-dark mb-0 window-title">GESTIÓN DE CATEGORÍAS</h1>
+
+                    <div className="flex items-center justify-between mb-4">
+
+                        <h1 className="h3 fw-bold text-dark mb-0 window-title">GESTIÓN DE CATEGORÍAS</h1>
+                        <Popover >
+                            <PopoverTrigger asChild>
+                                <Button size="icon" variant="ghost">
+                                    <Info className="h-4 w-4" />
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="bg-white shadow-lg rounded-md">
+                                <div className="space-y-2 text-sm">
+                                    <p><strong>Categorias:</strong> Una categoría es la división principal del catálogo donde se agrupan productos según su uso o tipo, permitiendo un mejor control, orden y gestión comercial.</p>
+
+                                </div>
+                            </PopoverContent>
+                        </Popover>
+
+                    </div>
+
                     <p className="text-muted small mb-0 mt-1">
                         {filtered.length} categoría{filtered.length !== 1 ? "s" : ""} encontrada{filtered.length !== 1 ? "s" : ""}
                     </p>
+
+
+
                 </div>
 
                 <div className="d-flex gap-2">
@@ -335,13 +372,7 @@ export default function CategoriaPage() {
                     createdAt: selectedCategoria?.createdAt ?? "",
                 }}
 
-                setFormData={(data) =>
-                    setSelectedCategoria((prev) =>
-                        prev
-                            ? { ...prev, ...data }
-                            : { id: 0, nombre: "", descripcion: "", createdAt: "" }
-                    )
-                }
+                setFormData={setSelectedCategoria}
 
                 onSave={handleSave}
                 onDelete={() => handleDelete(selectedCategoria!.id)}

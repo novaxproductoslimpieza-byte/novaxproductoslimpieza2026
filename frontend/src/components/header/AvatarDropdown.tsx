@@ -65,181 +65,174 @@ export function AvatarDropdown({ user, logout }: AvatarDropdownProps) {
   }
 
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="p-0"
-          onClick={() => {
-            if (!user) router.push("/login")
-            else setOpen(prev => !prev)
-          }}
-        >
-          <div
-            className={`rounded-circle h-6 w-6 flex items-center justify-center border border-black ${user ? "bg-white shadow-sm overflow-hidden" : "bg-muted"
-              }`}
+    <div
+      onMouseLeave={() => {
+        setOpen(false)
+        setOpenConfig(false)
+      }}
+    >
+      <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className="p-0 hover:bg-transparent"
+            onMouseEnter={() => setOpen(true)}
+            onClick={() => {
+              if (!user) router.push("/login")
+              else setOpen(prev => !prev)
+            }}
           >
-            {user ? (
-              <Avatar className="h-full w-full">
-                <AvatarImage
-                  src={user.avatar || ""}
-                  alt={user.nombre || "Usuario"}
-                  className="object-cover"
-                />
-                <AvatarFallback className="bg-black text-white flex items-center justify-center">
-                  {user.nombre.substring(0, 2).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-            ) : (
-              <User className="h-4 w-4 text-white" />
-            )}
-          </div>
-        </Button>
-      </DropdownMenuTrigger>
+            <div
+              className={`rounded-circle h-7 w-7 flex items-center justify-center border border-white/20 shadow-sm transition-transform active:scale-95 ${
+                user ? "bg-white overflow-hidden" : "bg-muted"
+              }`}
+            >
+              {user ? (
+                <Avatar className="h-full w-full">
+                  <AvatarImage
+                    src={user.avatar || ""}
+                    alt={user.nombre || "Usuario"}
+                    className="object-cover"
+                  />
+                  <AvatarFallback className="bg-primary-dark text-white flex items-center justify-center text-[10px] font-bold">
+                    {user.nombre.substring(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              ) : (
+                <User className="h-4 w-4 text-white" />
+              )}
+            </div>
+          </Button>
+        </DropdownMenuTrigger>
 
-      {user && (
-        <DropdownMenuContent
-          className="w-40 z-1200 bg-white shadow-lg rounded-md"
-          align="end"
-          forceMount
-        >
-          {/* Info usuario */}
-          <DropdownMenuLabel className="font-normal">
-            <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">{user.nombre}</p>
-              <p className="text-xs leading-none text-muted-foreground">
+        {user && (
+          <DropdownMenuContent
+            className="w-56 z-1200 bg-white shadow-2xl rounded-xl border border-gray-100 p-1 mt-1 animate-in fade-in zoom-in-95"
+            align="end"
+            onMouseLeave={() => setOpenConfig(false)}
+          >
+            {/* Info usuario - Cabecera mejorada */}
+            <div className="px-3 py-3 mb-1 bg-gray-50/50 rounded-t-lg border-bottom border-light">
+              <p className="text-sm font-bold text-gray-900 leading-none">{user.nombre}</p>
+              <p className="text-[11px] mt-1.5 leading-none text-muted-foreground font-medium">
                 {user.correo}
               </p>
             </div>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
 
-          {/* Opciones de usuario */}
-          <DropdownMenuItem
-            onClick={() => {
-              router.push("/profile")
-              setOpen(false)
-            }}
-            className="cursor-pointer w-full flex items-center"
-          >
-            <User className="mr-2 h-4 w-4 text-primary" />
-            <span>Tu perfil</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              router.push("/orders")
-              setOpen(false)
-            }}
-            className="cursor-pointer w-full flex items-center"
-          >
-            <ShoppingBag className="mr-2 h-4 w-4 text-primary" />
-            <span>Tus pedidos</span>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
+            {/* Opciones de usuario con menor espaciado */}
+            <DropdownMenuItem
+              onClick={() => {
+                router.push("/profile")
+                setOpen(false)
+              }}
+              className="cursor-pointer flex items-center py-1.5 px-3 hover:bg-gray-50 rounded-md transition-colors"
+            >
+              <User className="mr-2 h-4 w-4 text-primary" />
+              <span className="text-sm font-medium">Tu perfil</span>
+            </DropdownMenuItem>
 
-          {user.rol === "ADMINISTRADOR" && (
-            <>
+            <DropdownMenuItem
+              onClick={() => {
+                router.push("/orders")
+                setOpen(false)
+              }}
+              className="cursor-pointer flex items-center py-1.5 px-3 hover:bg-gray-50 rounded-md transition-colors"
+            >
+              <ShoppingBag className="mr-2 h-4 w-4 text-primary" />
+              <span className="text-sm font-medium">Tus pedidos</span>
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator className="my-1 bg-gray-100" />
+
+            {/* Configuración con Submenú Lateral */}
+            <div className="relative">
               <DropdownMenuItem
-                onClick={() => {
-                  router.push("/admin/orders")
-                  setOpen(false)
-                }}
-                className="cursor-pointer w-full flex items-center font-bold text-primary"
+                className={`flex justify-between items-center cursor-pointer py-1.5 px-3 rounded-md transition-colors ${
+                  openConfig ? "bg-gray-50" : "hover:bg-gray-50"
+                }`}
+                onMouseEnter={() => setOpenConfig(true)}
               >
-                <Settings className="mr-2 h-4 w-4 text-primary" />
-                <span>Administrador</span>
+                <div className="flex items-center">
+                  <Settings className="mr-2 h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium">Configuración</span>
+                </div>
+                <ChevronRight className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${openConfig ? "rotate-90 md:rotate-0" : ""}`} />
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-            </>
-          )}
 
-
-
-          {/* Configuración */}
-
-          <DropdownMenuItem
-            className="flex justify-between items-center cursor-pointer relative"
-            onMouseEnter={() => setOpenConfig(true)}
-            onMouseLeave={() => setOpenConfig(false)}
-          >
-            <span className="text-sm">Configuración</span>
-            <ChevronRight className="h-4 w-4 ml-2 text-muted-foreground" />
-
-            {openConfig && (
-              <div
-                className="absolute top-0 left-full w-80 bg-white shadow-lg rounded-md p-3 z-80"
-              >
-                {/* Tema */}
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-1">
-                    {theme === "dark" ? (
-                      <Moon className="h-4 w-4 text-primary" />
-                    ) : (
-                      <Sun className="h-4 w-4 text-primary" />
-                    )}
-                    <span className="text-sm">Tema</span>
+              {openConfig && (
+                <div
+                  className="absolute top-0 right-[calc(100%+8px)] w-64 bg-white shadow-2xl rounded-xl p-4 border border-gray-100 animate-in fade-in slide-in-from-right-2 z-50"
+                  onMouseEnter={() => setOpenConfig(true)}
+                >
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Preferencias</p>
+                  
+                  {/* Tema */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                      <div className="p-1.5 bg-primary/10 rounded-lg">
+                        {theme === "dark" ? (
+                          <Moon className="h-4 w-4 text-primary" />
+                        ) : (
+                          <Sun className="h-4 w-4 text-primary" />
+                        )}
+                      </div>
+                      <span className="text-xs font-bold text-gray-700">Modo Oscuro</span>
+                    </div>
+                    <div className="flex bg-gray-100 p-1 rounded-lg">
+                      <Button
+                        variant={theme === "light" ? "secondary" : "ghost"}
+                        size="icon"
+                        className={`h-7 w-7 rounded-md ${theme === "light" ? "bg-white shadow-sm" : ""}`}
+                        onClick={() => setTheme("light")}
+                      >
+                        <Sun className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button
+                        variant={theme === "dark" ? "secondary" : "ghost"}
+                        size="icon"
+                        className={`h-7 w-7 rounded-md ${theme === "dark" ? "bg-white shadow-sm" : ""}`}
+                        onClick={() => setTheme("dark")}
+                      >
+                        <Moon className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1 bg-muted p-1 rounded-md">
-                    <Button
-                      variant={theme === "light" ? "default" : "ghost"}
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => setTheme("light")}
-                    >
-                      <Sun className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      variant={theme === "dark" ? "default" : "ghost"}
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => setTheme("dark")}
-                    >
-                      <Moon className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      variant={theme === "system" ? "default" : "ghost"}
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => setTheme("system")}
-                    >
-                      <Monitor className="h-3 w-3" />
-                    </Button>
+
+                  {/* Idioma */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                       <div className="p-1.5 bg-blue-50 rounded-lg">
+                          <Languages className="h-4 w-4 text-blue-600" />
+                       </div>
+                      <span className="text-xs font-bold text-gray-700">Idioma</span>
+                    </div>
+                    <Select defaultValue="es" disabled>
+                      <SelectTrigger className="h-8 w-[95px] text-[11px] font-bold border-gray-200">
+                        <SelectValue placeholder="Idioma" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="es">Español</SelectItem>
+                        <SelectItem value="en">English</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
+              )}
+            </div>
 
-                {/* Idioma */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Languages className="h-3.5 w-3.5 text-primary" />
-                    <span className="text-sm">Idioma</span>
-                  </div>
-                  <Select defaultValue="es" disabled>
-                    <SelectTrigger className="h-7 w-[90px] text-xs">
-                      <SelectValue placeholder="Idioma" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="es">Español</SelectItem>
-                      <SelectItem value="en">English</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            )}
-          </DropdownMenuItem>
+            <DropdownMenuSeparator className="my-1 bg-gray-100" />
 
-
-
-          {/* Logout */}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={handleLogout}
-            className="text-destructive focus:bg-destructive focus:text-destructive-foreground cursor-pointer"
-          >
-            <LogOut className="text-red-500 mr-2 h-4 w-4" />
-            <span className="text-red-500">Cerrar Sesión</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      )}
-    </DropdownMenu>
+            {/* Logout */}
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="mt-1 cursor-pointer flex items-center py-2 px-3 hover:bg-red-50 text-red-600 rounded-md transition-colors"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              <span className="text-sm font-bold">Cerrar Sesión</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        )}
+      </DropdownMenu>
+    </div>
   )
 }
